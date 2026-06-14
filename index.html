@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoyaTV — Viewership Insights</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <script src="viewport.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], display: ['DM Serif Display', 'serif'] },
+          colors: { brand: { 50: '#f0f4ff', 100: '#dce6ff', 500: '#3d5fc4', 600: '#2d4db8', 700: '#1e3799', 900: '#0f1f5c' }, accent: '#e8a838' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f1f4f9; color: #1a1f2e; }
+    #password-screen { position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:#0f1f5c; }
+    #password-screen.hidden { display:none!important; }
+    #pwd-input:focus { outline:none;border-color:#3d5fc4;box-shadow:0 0 0 3px rgba(61,95,196,.15); }
+    #loader { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f1f5c; gap: 1.25rem; }
+    #loader.hidden { display: none !important; }
+    .loader-ring { width: 52px; height: 52px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #e8a838; border-radius: 50%; animation: spin 0.85s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .kpi-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem 1.75rem; position: relative; overflow: hidden; }
+    .kpi-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3d5fc4, #e8a838); }
+    .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem; }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25em; padding-right: 2.5rem; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f4f9; }
+    ::-webkit-scrollbar-thumb { background: #c7d0e8; border-radius: 4px; }
+    .time-btn.active { background: white; color: #1e3799; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+
+<div id="password-screen">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4">
+    <div class="flex items-center gap-3 mb-6">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg"
+        alt="Roya TV" class="h-8 w-auto object-contain" />
+      <div>
+        <p class="text-xs text-gray-400 uppercase tracking-widest">Roya TV · Research</p>
+        <p class="text-sm font-semibold text-brand-900">Viewership Dashboard</p>
+      </div>
+    </div>
+    <p class="text-xs text-gray-400 mb-4">Enter your access password to continue</p>
+    <input type="password" id="pwd-input"
+      placeholder="Password"
+      class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 mb-3 transition-all"
+    />
+    <p id="pwd-error" class="text-xs text-red-500 mb-3 hidden">Incorrect password. Please try again.</p>
+    <button id="pwd-submit"
+      class="w-full bg-brand-700 hover:bg-brand-900 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors">
+      Access Dashboard
+    </button>
+  </div>
+</div>
+
+<div id="loader">
+  <div class="loader-ring"></div>
+  <p class="text-white/70 text-sm tracking-widest uppercase">Calculating live data directly from responses…</p>
+</div>
+
+<div id="error-banner" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-red-50 p-8">
+  <div class="max-w-lg text-center">
+    <p class="text-2xl font-bold text-red-700 mb-2">Failed to load data</p>
+    <p id="error-msg" class="text-red-600 text-sm"></p>
+    <button onclick="location.reload()" class="mt-4 px-5 py-2 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700">Retry</button>
+  </div>
+</div>
+
+<div id="app" class="hidden min-h-screen">
+  <header class="bg-brand-900 text-white shadow-xl">
+    <div class="max-w-screen-xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg" alt="Roya TV Logo" class="h-10 w-auto object-contain brightness-0 invert" />
+        <div>
+          <p class="text-accent text-xs font-semibold tracking-widest uppercase mb-0.5">Roya TV · Research</p>
+          <h1 class="font-display text-2xl sm:text-3xl leading-tight">Viewership Insights Dashboard</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-xs">
+          <span class="live-dot inline-block w-2 h-2 rounded-full bg-green-400"></span>
+          <span class="text-white/80">Live · Natively Calculated</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div id="last-updated" class="text-white/50 text-xs"></div>
+          <button id="refresh-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg> Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
+    <div class="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center gap-6">
+
+      <div class="flex items-center bg-gray-100 p-1 rounded-lg" id="quick-buttons">
+        <button data-days="all" class="time-btn active px-3 py-1.5 text-xs font-semibold rounded text-gray-500 hover:text-gray-800 transition-colors">All Time</button>
+        <button data-days="7" class="time-btn px-3 py-1.5 text-xs font-medium rounded text-gray-500 hover:text-gray-800 transition-colors">7 Days</button>
+        <button data-days="30" class="time-btn px-3 py-1.5 text-xs font-medium rounded text-gray-500 hover:text-gray-800 transition-colors">30 Days</button>
+        <button data-days="90" class="time-btn px-3 py-1.5 text-xs font-medium rounded text-gray-500 hover:text-gray-800 transition-colors">3 Months</button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Dates:</label>
+        <input type="date" id="date-start" class="text-xs border border-gray-200 rounded-md px-2 py-1.5 text-gray-700 focus:outline-none focus:border-brand-500">
+        <span class="text-gray-300 text-xs">to</span>
+        <input type="date" id="date-end" class="text-xs border border-gray-200 rounded-md px-2 py-1.5 text-gray-700 focus:outline-none focus:border-brand-500">
+      </div>
+
+      <div class="flex items-center gap-2 ml-auto">
+        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter Day:</label>
+        <select id="period-select" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-brand-500 text-gray-800 min-w-[140px]">
+          <option value="All Days">All Days</option>
+          <option value="Sunday">Sunday</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <section>
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-total" class="text-4xl font-bold text-brand-700">—</p></div>
+        <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched Yesterday</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+        <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch Yesterday</p><p id="kpi-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+        <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p><p id="kpi-gen" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-gen-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+      </div>
+    </section>
+
+    <section class="space-y-6">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="chart-card flex flex-col">
+          <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — In General</h2>
+          <p class="text-xs text-gray-400 mb-4">Do they watch TV at all?</p>
+          <div class="flex-1 flex items-center justify-center" style="min-height:260px"><canvas id="chart-status-general"></canvas></div>
+        </div>
+        <div class="chart-card flex flex-col">
+          <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — Yesterday</h2>
+          <p class="text-xs text-gray-400 mb-4">Did they watch TV yesterday?</p>
+          <div class="flex-1 flex items-center justify-center" style="min-height:260px"><canvas id="chart-status-yesterday"></canvas></div>
+        </div>
+      </div>
+      <div class="chart-card flex flex-col">
+        <h2 class="text-sm font-semibold text-gray-700 mb-1">Daily Comparison</h2>
+        <p class="text-xs text-gray-400 mb-4">Avg % Watched Yesterday for the selected dates</p>
+        <div class="flex-1" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div><h2 class="text-sm font-semibold text-gray-700">Main TV Channels</h2><p class="text-xs text-gray-400">Click legend items to show/hide channels</p></div>
+        <div class="flex items-center gap-2">
+          <label class="text-xs text-gray-500">View:</label>
+          <select id="channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="pct_total">% of Total Calls</option>
+            <option value="pct_yesterday">% of Yesterday's Viewers</option>
+            <option value="pct_general">% of General Viewers</option>
+            <option value="count">Raw Count</option>
+          </select>
+        </div>
+      </div>
+      <div style="min-height:320px"><canvas id="chart-channels"></canvas></div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="chart-card flex flex-col">
+        <h2 class="text-sm font-semibold text-gray-700 mb-1">Watches TV in GENERAL Trend</h2>
+        <p class="text-xs text-gray-400 mb-4">Comparing Total General Viewers (Count) vs % of Total Calls</p>
+        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-general"></canvas></div>
+      </div>
+      <div class="chart-card flex flex-col">
+        <h2 class="text-sm font-semibold text-gray-700 mb-1">Watched TV - Yesterday Trend</h2>
+        <p class="text-xs text-gray-400 mb-4">Comparing Total Yesterday Viewers (Count) vs Channel %</p>
+        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
+      </div>
+    </section>
+<section class="chart-card">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-sm font-semibold text-gray-700">Show Viewership Trend</h2>
+          <p class="text-xs text-gray-400">% of channel viewers who watched a specific show, per day</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <label class="text-xs text-gray-500">Channel:</label>
+          <select id="show-channel-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="">— Pick a Channel —</option>
+            <option value="Roya TV">Roya TV</option>
+            <option value="Jordan TV">Jordan TV</option>
+            <option value="Amman TV">Amman TV</option>
+          </select>
+          <label class="text-xs text-gray-500">Show:</label>
+          <select id="show-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 min-w-[180px]" disabled>
+            <option value="">— Pick a Channel First —</option>
+          </select>
+        </div>
+      </div>
+      <div style="min-height:300px" id="show-trend-container">
+        <div id="show-trend-placeholder" class="flex items-center justify-center h-full" style="min-height:300px">
+          <p class="text-gray-300 text-sm">Select a channel and a show to display the trend</p>
+        </div>
+        <canvas id="chart-show-trend" class="hidden"></canvas>
+      </div>
+    </section>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="chart-card flex flex-col">
+        <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Roya viewers</p></div>
+        <div class="flex-1" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
+      </div>
+      <div class="chart-card flex flex-col">
+        <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Jordan TV viewers</p></div>
+        <div class="flex-1" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
+      </div>
+      <div class="chart-card flex flex-col">
+        <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Amman TV viewers</p></div>
+        <div class="flex-1" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const FORM_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQf6dQpybX3EWUebDS9ZXbpPkurD75NyAdtIwAK5u1Ctu7QmrvvSYB19CcRqknrNRl9pcgELjBWNf41/pub?gid=805558787&single=true&output=csv';
+const PROXY = 'https://api.allorigins.win/raw?url=';
+
+const COL_WATCH_GEN = 8;
+const COL_WATCH_YDA = 9;
+
+const MAIN_CHANNELS = { 'Jordan TV': 10, 'Amman TV': 13, 'MBC': 16, 'Al Mamlaka': 19, 'Roya TV': 22, 'Roya News': 55, 'Al Jazeera': 58, 'Al Jazeera Mubasher': 61, 'Al Arabiya': 64 };
+const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:30 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42 };
+const JORDAN_SHOWS = { 'Yes3ed Sabahak': 43, 'Yawm Jadeed': 44, 'Nashama Al Watan': 45, 'Tahadi Al Nashama': 46, 'Trend Show': 47, '60 Daqiqa': 48, 'JTV Kitchen': 49 };
+const AMMAN_SHOWS = { 'Sa7 Se7': 50, 'Bhar o Nar': 51, 'Sahten o Hana': 52, 'Bisara7a': 53, 'Saba7 El Kher Ya Ordon': 54 };
+
+const PALETTE = ['#3d5fc4','#e8a838','#22b573','#e84040','#9b59b6','#1abc9c','#e67e22','#2980b9','#d35400','#16a085','#8e44ad','#c0392b'];
+const CHANNEL_COLORS = { 'Jordan TV':'#3d5fc4', 'Amman TV':'#e8a838', 'MBC':'#22b573', 'Al Mamlaka':'#e84040', 'Roya TV':'#9b59b6', 'Roya News':'#1abc9c', 'Al Jazeera':'#e67e22', 'Al Jazeera Mubasher':'#2980b9', 'Al Arabiya':'#c0392b' };
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const CHARTS = {};
+
+let GLOBAL_FORM_ROWS = []; 
+
+/* =================================================================
+   UI INTERACTIONS & FILTERING LOGIC
+================================================================= */
+const inputStart = document.getElementById('date-start');
+const inputEnd = document.getElementById('date-end');
+const selectDay = document.getElementById('period-select');
+const timeBtns = document.querySelectorAll('.time-btn');
+
+// Parse timestamp string to Date Object
+function parseDateStr(timestampStr) {
+  if(!timestampStr) return null;
+  const datePart = timestampStr.split(' ')[0];
+  const [d, m, y] = datePart.split('/').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+// 1. Handle Time Buttons
+timeBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    // Styling toggle
+    timeBtns.forEach(b => b.classList.remove('active', 'bg-white', 'text-brand-700', 'shadow-sm'));
+    timeBtns.forEach(b => b.classList.add('text-gray-500'));
+    e.target.classList.remove('text-gray-500');
+    e.target.classList.add('active', 'bg-white', 'text-brand-700', 'shadow-sm');
+
+    const daysAgo = e.target.getAttribute('data-days');
+    if (daysAgo === 'all') {
+      inputStart.value = '';
+      inputEnd.value = '';
+    } else {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - parseInt(daysAgo));
+      
+      // Keep local timezone formatting for the input boxes
+      inputStart.value = new Date(start.getTime() - start.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+      inputEnd.value = new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    }
+    
+    // Auto-reset day dropdown if range is selected
+    selectDay.value = 'All Days';
+    updateDashboard();
+  });
+});
+
+// 2. Handle Custom Calendar (Smart Detection)
+function handleDateChange() {
+  // Remove active styling from quick buttons since we are using custom dates
+  timeBtns.forEach(b => {
+    b.classList.remove('active', 'bg-white', 'text-brand-700', 'shadow-sm');
+    b.classList.add('text-gray-500');
+  });
+
+  const s = inputStart.value;
+  const e = inputEnd.value;
+  
+  if (s && e && s === e) {
+    // If they picked a single specific day, auto-change the Day Dropdown
+    const d = new Date(s);
+    selectDay.value = DAY_NAMES[d.getDay()];
+  } else if (s && e && s !== e) {
+    // If they picked a range, reset to All Days
+    selectDay.value = 'All Days';
+  }
+  
+  updateDashboard();
+}
+
+inputStart.addEventListener('change', handleDateChange);
+inputEnd.addEventListener('change', handleDateChange);
+selectDay.addEventListener('change', updateDashboard);
+document.getElementById('channel-metric').addEventListener('change', updateDashboard);
+
+/* =================================================================
+   MAIN DASHBOARD ENGINE
+================================================================= */
+function updateDashboard() {
+  if(!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+
+  // 1. Get Dates
+  const sVal = inputStart.value;
+  const eVal = inputEnd.value;
+  const sDate = sVal ? new Date(sVal) : null;
+  const eDate = eVal ? new Date(eVal) : null;
+  
+  if(sDate) sDate.setHours(0,0,0,0);
+  if(eDate) eDate.setHours(23,59,59,999);
+
+  const selectedDay = selectDay.value;
+
+  // 2. FILTER ROWS (By Date AND Day)
+  const filteredRows = [];
+  const dateOnlyFilteredRows = []; // Used for the Daily Comparison Chart
+  
+  for(let i=1; i<GLOBAL_FORM_ROWS.length; i++) {
+    const r = GLOBAL_FORM_ROWS[i];
+    if(!r[0] || !r[0].trim()) continue;
+    const rowDate = parseDateStr(r[0]);
+    if(!rowDate) continue;
+
+    // Filter by Custom Date Range
+    if(sDate && rowDate < sDate) continue;
+    if(eDate && rowDate > eDate) continue;
+    
+    // Save these for charts that span all days in the range
+    dateOnlyFilteredRows.push(r); 
+
+    // Filter by Dropdown Day
+    if(selectedDay !== 'All Days') {
+      if(DAY_NAMES[rowDate.getDay()] !== selectedDay) continue;
+    }
+
+    filteredRows.push(r);
+  }
+
+  // 3. CALCULATE KPIs (using fully filtered rows)
+  const totalCalls = filteredRows.filter(r => r[1] && r[1].trim() !== '').length;
+  const watchesGen = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+  const noWatchGen = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'لا').length;
+  const watchedYDA = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+  const didNotWatch = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'لا').length;
+
+  document.getElementById('kpi-total').textContent = totalCalls;
+  document.getElementById('kpi-watched').textContent = watchedYDA;
+  document.getElementById('kpi-watched-pct').textContent = totalCalls ? `${(watchedYDA/totalCalls*100).toFixed(1)}% of respondents` : '0%';
+  document.getElementById('kpi-no-watch').textContent = didNotWatch;
+  document.getElementById('kpi-no-watch-pct').textContent = totalCalls ? `${(didNotWatch/totalCalls*100).toFixed(1)}%` : '0%';
+  document.getElementById('kpi-gen').textContent = watchesGen;
+  document.getElementById('kpi-gen-pct').textContent = totalCalls ? `${(watchesGen/totalCalls*100).toFixed(1)}%` : '0%';
+
+  // PIE 1 — In General
+  destroyChart('status-general');
+  CHARTS['status-general'] = new Chart(document.getElementById('chart-status-general').getContext('2d'), {
+    type: 'pie',
+    data: {
+      labels: ['Watches TV Generally', "Doesn't Watch TV"],
+      datasets: [{ data: [watchesGen, noWatchGen], backgroundColor: ['#3d5fc4','#cbd5e1'], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
+        tooltip: { callbacks: { label: c => {
+          const t = c.dataset.data.reduce((a,b)=>a+b,0);
+          return ` ${c.label}: ${c.parsed} (${t?((c.parsed/t)*100).toFixed(1):'0'}%)`;
+        }}}
+      }
+    }
+  });
+
+  // PIE 2 — Yesterday
+  destroyChart('status-yesterday');
+  CHARTS['status-yesterday'] = new Chart(document.getElementById('chart-status-yesterday').getContext('2d'), {
+    type: 'pie',
+    data: {
+      labels: ['Watched Yesterday', "Didn't Watch Yesterday"],
+      datasets: [{ data: [watchedYDA, didNotWatch], backgroundColor: ['#22b573','#e8a838'], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
+        tooltip: { callbacks: { label: c => {
+          const t = c.dataset.data.reduce((a,b)=>a+b,0);
+          return ` ${c.label}: ${c.parsed} (${t?((c.parsed/t)*100).toFixed(1):'0'}%)`;
+        }}}
+      }
+    }
+  });
+
+  // 4. CALCULATE LISTS (Channels & Shows)
+  function calculateList(configObj, denominatorCount) {
+    const arr = [];
+    for (const [name, colIdx] of Object.entries(configObj)) {
+      const count = filteredRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
+      arr.push({
+        name: name,
+        count: count,
+        pct_total: totalCalls ? parseFloat((count/totalCalls*100).toFixed(2)) : 0,
+        pct_yesterday: watchedYDA ? parseFloat((count/watchedYDA*100).toFixed(2)) : 0,
+        pct_general: watchesGen ? parseFloat((count/watchesGen*100).toFixed(2)) : 0,
+        pct_specific: denominatorCount ? parseFloat((count/denominatorCount*100).toFixed(2)) : 0
+      });
+    }
+    return arr;
+  }
+
+  const metric = document.getElementById('channel-metric').value;
+  renderChannels(calculateList(MAIN_CHANNELS, watchedYDA), metric);
+  
+  const royaCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV'] && r[MAIN_CHANNELS['Roya TV']].trim() === 'نعم').length;
+  renderShowsChart('chart-roya', calculateList(ROYA_SHOWS, royaCount), 'pct_specific', 'roya', '#7c3aed');
+  
+  const jordanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV'] && r[MAIN_CHANNELS['Jordan TV']].trim() === 'نعم').length;
+  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), 'pct_specific', 'jordan', '#16a34a');
+  
+  const ammanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV'] && r[MAIN_CHANNELS['Amman TV']].trim() === 'نعم').length;
+  renderShowsChart('chart-amman', calculateList(AMMAN_SHOWS, ammanCount), 'pct_specific', 'amman', '#ea580c');
+
+  // 5. DAILY COMPARISON CHART (Uses Date-Filtered Rows, ignoring Day Dropdown so it shows all days)
+  destroyChart('period-compare');
+  const dayAverages = [0,0,0,0,0,0,0]; // Sun to Sat
+  for(let i=0; i<7; i++) {
+     const dayRows = dateOnlyFilteredRows.filter(r => parseDateStr(r[0]).getDay() === i);
+     const dTotal = dayRows.filter(r => r[1] && r[1].trim() !== '').length;
+     const dWatched = dayRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+     dayAverages[i] = dTotal ? parseFloat((dWatched/dTotal*100).toFixed(1)) : 0;
+  }
+  
+  CHARTS['period-compare'] = new Chart(document.getElementById('chart-period-compare').getContext('2d'), {
+    type: 'bar',
+    data: { labels: DAY_NAMES, datasets: [{ label: '% Watched Yesterday', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.x}% watched yesterday`
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: 100, ticks: { callback: v => v+'%' }, grid: { color: '#f1f4f9' } },
+        y: { ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+
+  // 6. TREND GRAPHS
+  destroyChart('trend-general');
+  destroyChart('trend-yesterday');
+
+  const byDate = {};
+  filteredRows.forEach(row => {
+    const dateStr = row[0].trim().split(' ')[0];
+    if (!byDate[dateStr]) byDate[dateStr] = [];
+    byDate[dateStr].push(row);
+  });
+
+  const sortedDates = Object.keys(byDate).sort((a, b) => {
+    const [da, ma, ya] = a.split('/').map(Number);
+    const [db, mb, yb] = b.split('/').map(Number);
+    return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db);
+  });
+
+  const labels = sortedDates.map(dateStr => {
+    const [d, m, y] = dateStr.split('/').map(Number);
+    return `${DAY_NAMES[new Date(y, m - 1, d).getDay()]} (${dateStr.slice(0, 5)})`;
+  });
+
+  const tVals = { genCount: [], genPct: [], ydaCount: [], totalCalls: [] };
+  const chYda = {};
+  Object.keys(MAIN_CHANNELS).forEach(ch => chYda[ch] = []);
+
+  sortedDates.forEach((dateStr) => {
+    const rws = byDate[dateStr];
+    const tCalls = rws.filter(r => r[1] && r[1].trim() !== '').length;
+    const tGen = rws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+    const tYda = rws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+
+    tVals.totalCalls.push(tCalls);
+    tVals.genCount.push(tGen);
+    tVals.genPct.push(tCalls ? parseFloat((tGen / tCalls * 100).toFixed(1)) : 0);
+    tVals.ydaCount.push(tYda);
+
+    Object.entries(MAIN_CHANNELS).forEach(([ch, col]) => {
+      const cnt = rws.filter(r => r.length > col && r[col].trim() === 'نعم').length;
+      chYda[ch].push(tYda ? parseFloat((cnt / tYda * 100).toFixed(1)) : 0);
+    });
+  });
+
+  CHARTS['trend-general'] = new Chart(document.getElementById('chart-trend-general').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: '% Watches TV Generally', data: tVals.genPct, borderColor: '#3d5fc4', backgroundColor: '#3d5fc4', borderWidth: 3, pointRadius: 5, tension: 0.3, yAxisID: 'y' },
+        { label: 'Watches TV Generally (Count)', data: tVals.genCount, borderColor: '#e8a838', backgroundColor: '#e8a838', borderWidth: 2, borderDash: [5, 5], pointRadius: 4, tension: 0.3, yAxisID: 'y1' },
+        { label: 'Total Successful Calls', data: tVals.totalCalls, borderColor: '#000000', backgroundColor: '#000000', borderWidth: 2, borderDash: [2, 2], pointRadius: 4, tension: 0.3, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.dataset.yAxisID === 'y' ? ` ${ctx.dataset.label}: ${ctx.raw}%` : ` ${ctx.dataset.label}: ${ctx.raw}` } } },
+      scales: { y: { type: 'linear', position: 'left', beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } } }
+    }
+  });
+
+  const datasetsYda = [
+    { label: 'Watched TV Yesterday (Count)', data: tVals.ydaCount, borderColor: '#1a1f2e', backgroundColor: '#1a1f2e', borderWidth: 3, borderDash: [5, 5], pointRadius: 5, tension: 0.3, yAxisID: 'y1' },
+    ...Object.keys(MAIN_CHANNELS).map(ch => ({ label: ch, data: chYda[ch], borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch], borderWidth: 1.5, pointRadius: 3, tension: 0.3, yAxisID: 'y' }))
+  ];
+
+  CHARTS['trend-yesterday'] = new Chart(document.getElementById('chart-trend-yesterday').getContext('2d'), {
+    type: 'line',
+    data: { labels: labels, datasets: datasetsYda },
+    options: {
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.dataset.yAxisID === 'y' ? ` ${ctx.dataset.label}: ${ctx.raw}%` : ` ${ctx.dataset.label}: ${ctx.raw}` } } },
+      scales: { y: { type: 'linear', position: 'left', beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } } }
+    }
+  });
+}
+
+function destroyChart(id) { if (CHARTS[id]) { CHARTS[id].destroy(); delete CHARTS[id]; } }
+function renderChannels(channels, metric) {
+  destroyChart('channels');
+  const sorted = [...channels].sort((a,b) => (b[metric]||0) - (a[metric]||0));
+  CHARTS['channels'] = new Chart(document.getElementById('chart-channels').getContext('2d'), {
+    type: 'bar',
+    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: sorted.map((_, i) => PALETTE[i % PALETTE.length]), borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } }
+  });
+}
+function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
+  destroyChart(chartKey);
+  if (!shows.length) return;
+  const sorted = [...shows].sort((a,b) => (b[pctKey]||0) - (a[pctKey]||0));
+  document.getElementById(canvasId).height = Math.max(260, sorted.length * 36);
+  CHARTS[chartKey] = new Chart(document.getElementById(canvasId).getContext('2d'), {
+    type: 'bar',
+    data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: color + 'cc', borderColor: color, borderWidth: 1.5, borderRadius: 5 }] },
+    options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } }
+  });
+}
+
+function showError(msg) {
+  document.getElementById('loader').classList.add('hidden');
+  document.getElementById('error-banner').classList.remove('hidden');
+  document.getElementById('error-msg').textContent = msg;
+}
+
+function initData(useProxy = false) {
+  const url = useProxy ? PROXY + encodeURIComponent(FORM_CSV_URL) : FORM_CSV_URL;
+  Papa.parse(url, {
+    download: true, skipEmptyLines: false,
+    complete: function(results) {
+      try {
+        if (!results.data || results.data.length < 2) { if(!useProxy) return initData(true); throw new Error("No form data loaded."); }
+        GLOBAL_FORM_ROWS = results.data;
+        document.getElementById('last-updated').textContent = 'Last loaded: ' + new Date().toLocaleTimeString('en-GB');
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loader').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        document.getElementById('app').style.display = 'block';
+        updateDashboard();
+      } catch(err) { console.error(err); showError('Calculation error: ' + err.message); }
+    },
+    error: function(err) { if(!useProxy) { initData(true); } else { showError('Network error fetching CSV: ' + err.message); } }
+  });
+}
+
+initData();
+document.getElementById('refresh-btn').addEventListener('click', () => {
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true; btn.textContent = 'Refreshing...';
+  Papa.parse(FORM_CSV_URL, {
+    download: true,
+    complete: function(results) {
+      if (results.data && results.data.length >= 2) { GLOBAL_FORM_ROWS = results.data; document.getElementById('last-updated').textContent = 'Last loaded: ' + new Date().toLocaleTimeString('en-GB'); updateDashboard(); }
+      btn.disabled = false; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg> Refresh';
+    }
+  });
+});
+setInterval(() => initData(false), 5 * 60 * 1000);
+/* =================================================================
+   SHOW TREND GRAPH
+================================================================= */
+const SHOW_CHANNEL_COLS = {
+  'Roya TV':  MAIN_CHANNELS['Roya TV'],
+  'Jordan TV': MAIN_CHANNELS['Jordan TV'],
+  'Amman TV':  MAIN_CHANNELS['Amman TV'],
+};
+
+const SHOW_MAP = {
+  'Roya TV':   ROYA_SHOWS,
+  'Jordan TV': JORDAN_SHOWS,
+  'Amman TV':  AMMAN_SHOWS,
+};
+
+const showChannelSelect = document.getElementById('show-channel-select');
+const showSelect        = document.getElementById('show-select');
+
+showChannelSelect.addEventListener('change', function() {
+  const ch = this.value;
+  showSelect.innerHTML = '';
+
+  if (!ch) {
+    showSelect.innerHTML = '<option value="">— Pick a Channel First —</option>';
+    showSelect.disabled = true;
+    resetShowTrend();
+    return;
+  }
+
+  const firstOpt = document.createElement('option');
+  firstOpt.value = '';
+  firstOpt.textContent = '— Pick a Show —';
+  showSelect.appendChild(firstOpt);
+
+  Object.keys(SHOW_MAP[ch]).forEach(showName => {
+    const opt = document.createElement('option');
+    opt.value = showName;
+    opt.textContent = showName;
+    showSelect.appendChild(opt);
+  });
+
+  showSelect.disabled = false;
+  resetShowTrend();
+});
+
+showSelect.addEventListener('change', function() {
+  const ch   = showChannelSelect.value;
+  const show = this.value;
+  if (!ch || !show) { resetShowTrend(); return; }
+  renderShowTrend(ch, show);
+});
+
+function resetShowTrend() {
+  destroyChart('show-trend');
+  document.getElementById('chart-show-trend').classList.add('hidden');
+  document.getElementById('show-trend-placeholder').classList.remove('hidden');
+}
+
+function renderShowTrend(channelName, showName) {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+
+  const channelCol = SHOW_CHANNEL_COLS[channelName];
+  const showCol    = SHOW_MAP[channelName][showName];
+
+  // Apply same date + day filters currently active
+  const sVal  = document.getElementById('date-start').value;
+  const eVal  = document.getElementById('date-end').value;
+  const sDate = sVal ? new Date(sVal) : null;
+  const eDate = eVal ? new Date(eVal) : null;
+  if (sDate) sDate.setHours(0,0,0,0);
+  if (eDate) eDate.setHours(23,59,59,999);
+  const selectedDay = document.getElementById('period-select').value;
+
+  // Filter rows
+  const filtered = [];
+  for (let i = 1; i < GLOBAL_FORM_ROWS.length; i++) {
+    const r = GLOBAL_FORM_ROWS[i];
+    if (!r[0] || !r[0].trim()) continue;
+    const rowDate = parseDateStr(r[0]);
+    if (!rowDate) continue;
+    if (sDate && rowDate < sDate) continue;
+    if (eDate && rowDate > eDate) continue;
+    if (selectedDay !== 'All Days' && DAY_NAMES[rowDate.getDay()] !== selectedDay) continue;
+    filtered.push(r);
+  }
+
+  // Group by date
+  const byDate = {};
+  filtered.forEach(r => {
+    const d = r[0].trim().split(' ')[0];
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(r);
+  });
+
+  const sortedDates = Object.keys(byDate).sort((a,b) => {
+    const [da,ma,ya] = a.split('/').map(Number);
+    const [db,mb,yb] = b.split('/').map(Number);
+    return new Date(ya,ma-1,da) - new Date(yb,mb-1,db);
+  });
+
+  const labels   = sortedDates.map(d => {
+    const [day,mon,yr] = d.split('/').map(Number);
+    return DAY_NAMES[new Date(yr,mon-1,day).getDay()].slice(0,3) + ' ' + d.slice(0,5);
+  });
+  const pctData  = sortedDates.map(d => {
+    const rws        = byDate[d];
+    const chViewers  = rws.filter(r => r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+    const showViewers= rws.filter(r => r.length > showCol && r[showCol].trim() === 'نعم' && r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+    const pct = chViewers ? parseFloat((showViewers / chViewers * 100).toFixed(1)) : 0;
+    return Math.min(pct, 100);
+  });
+
+  // Show canvas, hide placeholder
+  document.getElementById('show-trend-placeholder').classList.add('hidden');
+  const canvas = document.getElementById('chart-show-trend');
+  canvas.classList.remove('hidden');
+
+  destroyChart('show-trend');
+  CHARTS['show-trend'] = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: `${showName} — % of ${channelName} viewers`,
+        data: pctData,
+        borderColor: '#3d5fc4',
+        backgroundColor: 'rgba(61,95,196,0.08)',
+        fill: false,
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          min: 0,
+          max: 105,
+          ticks: { callback: v => v > 100 ? '' : v+'%', stepSize: 10 },
+          grid: { color: '#f1f4f9' }
+        },
+        x: { ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+/* PASSWORD GATE */
+(function() {
+  if (sessionStorage.getItem('_rv_ok') === '1') {
+    document.getElementById('password-screen').classList.add('hidden');
+    return;
+  }
+  document.getElementById('password-screen'); // make sure it's visible by default
+
+  document.getElementById('pwd-submit').addEventListener('click', _attemptAccess);
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') _attemptAccess();
+  });
+
+  function _attemptAccess() {
+    const input = document.getElementById('pwd-input').value;
+    window._vp.check(input).then(ok => {
+      if (ok) {
+        sessionStorage.setItem('_rv_ok', '1');
+        document.getElementById('password-screen').classList.add('hidden');
+      } else {
+        document.getElementById('pwd-error').classList.remove('hidden');
+        document.getElementById('pwd-input').value = '';
+        document.getElementById('pwd-input').focus();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
