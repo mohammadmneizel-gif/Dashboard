@@ -609,6 +609,9 @@ function initData(useProxy = false) {
         document.getElementById('app').classList.remove('hidden');
         document.getElementById('app').style.display = 'block';
         updateDashboard();
+        setTimeout(function() {
+          Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
+          }, 500);
       } catch(err) { console.error(err); showError('Calculation error: ' + err.message); }
     },
     error: function(err) { if(!useProxy) { initData(true); } else { showError('Network error fetching CSV: ' + err.message); } }
@@ -809,6 +812,19 @@ function renderShowTrend(channelName, showName) {
     });
   }
 })();
+  /* MOBILE FIX */
+window.addEventListener('orientationchange', function() {
+  setTimeout(function() {
+    Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
+  }, 400);
+});
+
+window.addEventListener('resize', function() {
+  clearTimeout(window._resizeTimer);
+  window._resizeTimer = setTimeout(function() {
+    Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
+  }, 200);
+});
 </script>
 </body>
 </html>
