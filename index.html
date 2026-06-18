@@ -143,7 +143,7 @@
   <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-8">
     <section>
       <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-total" class="text-4xl font-bold text-brand-700">—</p></div>
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched Yesterday</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
@@ -157,18 +157,18 @@
         <div class="chart-card flex flex-col">
           <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — In General</h2>
           <p class="text-xs text-gray-400 mb-4">Do they watch TV at all?</p>
-          <div class="flex-1 flex items-center justify-center" style="min-height:260px"><canvas id="chart-status-general"></canvas></div>
+          <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-general"></canvas></div>
         </div>
         <div class="chart-card flex flex-col">
           <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — Yesterday</h2>
           <p class="text-xs text-gray-400 mb-4">Did they watch TV yesterday?</p>
-          <div class="flex-1 flex items-center justify-center" style="min-height:260px"><canvas id="chart-status-yesterday"></canvas></div>
+          <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-yesterday"></canvas></div>
         </div>
       </div>
       <div class="chart-card flex flex-col">
         <h2 class="text-sm font-semibold text-gray-700 mb-1">Daily Comparison</h2>
         <p class="text-xs text-gray-400 mb-4">Avg % Watched Yesterday for the selected dates</p>
-        <div class="flex-1" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
+        <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
       </div>
     </section>
 
@@ -189,7 +189,7 @@
           </select>
         </div>
       </div>
-      <div style="min-height:320px"><canvas id="chart-channels"></canvas></div>
+      <div class="w-full h-[50vh] md:h-auto" style="min-height:320px"><canvas id="chart-channels"></canvas></div>
     </section>
 <section class="chart-card">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -228,8 +228,9 @@
           </div>
         </div>
       </div>
-      <div style="min-height:320px"><canvas id="chart-perweek"></canvas></div>
+      <div class="w-full h-[50vh] md:h-auto" style="min-height:320px"><canvas id="chart-perweek"></canvas></div>
     </section>
+
     <section class="grid md:grid-cols-2 gap-6">
       <div class="chart-card flex flex-col">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -258,7 +259,7 @@
             </div>
           </div>
         </div>
-        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-general"></canvas></div>
+        <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-trend-general"></canvas></div>
       </div>
       <div class="chart-card flex flex-col">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -287,10 +288,11 @@
             </div>
           </div>
         </div>
-        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
+        <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
       </div>
     </section>
-<section class="chart-card">
+
+    <section class="chart-card">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
           <h2 class="text-sm font-semibold text-gray-700">Show Viewership Trend</h2>
@@ -310,7 +312,7 @@
           </select>
         </div>
       </div>
-      <div style="min-height:300px" id="show-trend-container">
+      <div class="w-full h-[50vh] md:h-auto" style="min-height:300px" id="show-trend-container">
         <div id="show-trend-placeholder" class="flex items-center justify-center h-full" style="min-height:300px">
           <p class="text-gray-300 text-sm">Select a channel and a show to display the trend</p>
         </div>
@@ -321,15 +323,15 @@
     <div class="grid lg:grid-cols-3 gap-6">
       <div class="chart-card flex flex-col">
         <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Roya viewers</p></div>
-        <div class="flex-1" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
+        <div class="flex-1 w-full" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
       </div>
       <div class="chart-card flex flex-col">
         <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Jordan TV viewers</p></div>
-        <div class="flex-1" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
+        <div class="flex-1 w-full" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
       </div>
       <div class="chart-card flex flex-col">
         <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Amman TV viewers</p></div>
-        <div class="flex-1" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
+        <div class="flex-1 w-full" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
       </div>
     </div>
   </main>
@@ -493,6 +495,7 @@ function updateDashboard() {
       datasets: [{ data: [watchesGen, noWatchGen], backgroundColor: ['#3d5fc4','#cbd5e1'], borderWidth: 2, borderColor: '#fff' }]
     },
     options: {
+      maintainAspectRatio: false, // ADDED
       plugins: {
         legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
         tooltip: { callbacks: { label: c => {
@@ -512,6 +515,7 @@ function updateDashboard() {
       datasets: [{ data: [watchedYDA, didNotWatch], backgroundColor: ['#22b573','#e8a838'], borderWidth: 2, borderColor: '#fff' }]
     },
     options: {
+      maintainAspectRatio: false, // ADDED
       plugins: {
         legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
         tooltip: { callbacks: { label: c => {
@@ -562,6 +566,7 @@ function updateDashboard() {
     type: 'bar',
     data: { labels: DAY_NAMES, datasets: [{ label: '% Watched Yesterday', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
     options: {
+      maintainAspectRatio: false, // ADDED
       indexAxis: 'y',
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% watched yesterday` } } },
       scales: {
@@ -677,6 +682,7 @@ function updateDashboard() {
     type: 'line',
     data: { labels, datasets: tgDatasets },
     options: {
+      maintainAspectRatio: false, // ADDED
       responsive: true, interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
@@ -743,6 +749,7 @@ function updateDashboard() {
     type: 'line',
     data: { labels, datasets: tyDatasets },
     options: {
+      maintainAspectRatio: false, // ADDED
       responsive: true, interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
@@ -771,7 +778,7 @@ function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, 
   CHARTS['channels'] = new Chart(document.getElementById('chart-channels').getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
-    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } }
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } } // ADDED
   });
 }
 function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
@@ -782,7 +789,7 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
   CHARTS[chartKey] = new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: color + 'cc', borderColor: color, borderWidth: 1.5, borderRadius: 5 }] },
-    options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } }
+    options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } } // ADDED
   });
 }
 function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watchesGen) {
@@ -878,6 +885,7 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
       datasets: datasets
     },
     options: {
+      maintainAspectRatio: false, // ADDED
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       plugins: {
@@ -1066,6 +1074,7 @@ function renderShowTrend(channelName, showName) {
       }]
     },
     options: {
+      maintainAspectRatio: false, // ADDED
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       plugins: {
