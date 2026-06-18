@@ -45,8 +45,7 @@
   </style>
 </head>
 <body>
-
-<div id="password-screen">
+  <div id="password-screen">
   <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4">
     <div class="flex items-center gap-3 mb-6">
       <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg"
@@ -144,8 +143,9 @@
   <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-8">
     <section>
       <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-total" class="text-4xl font-bold text-brand-700">—</p></div>
+        <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched Yesterday</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch Yesterday</p><p id="kpi-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
         <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p><p id="kpi-gen" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-gen-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
@@ -174,11 +174,15 @@
 
     <section class="chart-card">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div><h2 class="text-sm font-semibold text-gray-700">Main TV Channels</h2><p class="text-xs text-gray-400">Click legend items to show/hide channels</p></div>
+        <div>
+          <h2 class="text-sm font-semibold text-gray-700">Main TV Channels</h2>
+          <p class="text-xs text-gray-400">Click legend items to show/hide channels</p>
+          <p id="channels-day-note" class="text-xs text-green-600 font-medium mt-1">Numbers shown for a given day reflect the <em>previous</em> day's viewership (e.g. Sunday data = Saturday's viewing)</p>
+        </div>
         <div class="flex items-center gap-2">
           <label class="text-xs text-gray-500">View:</label>
           <select id="channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-            <option value="pct_total">% of Total Calls</option>
+            <option value="pct_successful">% of Successful Calls</option>
             <option value="pct_yesterday">% of Yesterday's Viewers</option>
             <option value="pct_general">% of General Viewers</option>
             <option value="count">Raw Count</option>
@@ -187,17 +191,103 @@
       </div>
       <div style="min-height:320px"><canvas id="chart-channels"></canvas></div>
     </section>
-
+<section class="chart-card">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-sm font-semibold text-gray-700">Per Week</h2>
+          <p class="text-xs text-gray-400">Weekly breakdown of viewership by channel</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <label class="text-xs text-gray-500">View:</label>
+          <select id="perweek-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="pct_successful">% of Successful Calls</option>
+            <option value="pct_yesterday">% of Yesterday's Viewers</option>
+            <option value="pct_general">% of General Viewers</option>
+            <option value="count">Raw Count</option>
+          </select>
+          <label class="text-xs text-gray-500">Channel:</label>
+          <select id="perweek-channel" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="all">All Channels</option>
+            <option value="Jordan TV">Jordan TV</option>
+            <option value="Amman TV">Amman TV</option>
+            <option value="MBC">MBC</option>
+            <option value="Al Mamlaka">Al Mamlaka</option>
+            <option value="Roya TV">Roya TV</option>
+            <option value="Roya News">Roya News</option>
+            <option value="Al Jazeera">Al Jazeera</option>
+            <option value="Al Jazeera Mubasher">Al Jazeera Mubasher</option>
+            <option value="Al Arabiya">Al Arabiya</option>
+          </select>
+          <label class="text-xs text-gray-500">Show:</label>
+          <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg">
+            <button id="perweek-toggle-cumulative" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Cumulative</button>
+            <button id="perweek-toggle-w1" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 1</button>
+            <button id="perweek-toggle-w2" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 2</button>
+            <button id="perweek-toggle-w3" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 3</button>
+            <button id="perweek-toggle-w4" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 4</button>
+          </div>
+        </div>
+      </div>
+      <div style="min-height:320px"><canvas id="chart-perweek"></canvas></div>
+    </section>
     <section class="grid md:grid-cols-2 gap-6">
       <div class="chart-card flex flex-col">
-        <h2 class="text-sm font-semibold text-gray-700 mb-1">Watches TV in GENERAL Trend</h2>
-        <p class="text-xs text-gray-400 mb-4">Comparing Total General Viewers (Count) vs % of Total Calls</p>
-        <div class="flex-1" style="min-height:320px;height:320px"><canvas id="chart-trend-general"></canvas></div>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <h2 class="text-sm font-semibold text-gray-700">Watches TV in GENERAL Trend</h2>
+            <p class="text-xs text-gray-400">Comparing Total General Viewers (Count) vs % of Total Calls</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="text-xs text-gray-500">View:</label>
+            <select id="trend-general-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="pct_successful">% of Successful Calls</option>
+              <option value="pct_general">% of General Viewers</option>
+              <option value="count">Raw Count</option>
+            </select>
+            <label class="text-xs text-gray-500">Channels:</label>
+            <div id="trend-general-channel-checkboxes" class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 max-w-xs">
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Jordan TV"> Jordan TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Amman TV"> Amman TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="MBC"> MBC</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Al Mamlaka"> Al Mamlaka</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Roya TV"> Roya TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Roya News"> Roya News</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Al Jazeera"> Al Jazeera</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Al Jazeera Mubasher"> Al Jazeera Mubasher</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="tg-ch-check" value="Al Arabiya"> Al Arabiya</label>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-general"></canvas></div>
       </div>
       <div class="chart-card flex flex-col">
-        <h2 class="text-sm font-semibold text-gray-700 mb-1">Watched TV - Yesterday Trend</h2>
-        <p class="text-xs text-gray-400 mb-4">Comparing Total Yesterday Viewers (Count) vs Channel %</p>
-        <div class="flex-1" style="min-height:320px;height:320px"><canvas id="chart-trend-yesterday"></canvas></div>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <h2 class="text-sm font-semibold text-gray-700">Watched TV - Yesterday Trend</h2>
+            <p class="text-xs text-gray-400">Comparing Total Yesterday Viewers (Count) vs Channel %</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="text-xs text-gray-500">View:</label>
+            <select id="trend-yesterday-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="pct_successful">% of Successful Calls</option>
+              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="count">Raw Count</option>
+            </select>
+            <label class="text-xs text-gray-500">Channels:</label>
+            <div id="trend-yesterday-channel-checkboxes" class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 max-w-xs">
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Jordan TV"> Jordan TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Amman TV"> Amman TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="MBC"> MBC</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Al Mamlaka"> Al Mamlaka</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Roya TV"> Roya TV</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Roya News"> Roya News</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Al Jazeera"> Al Jazeera</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Al Jazeera Mubasher"> Al Jazeera Mubasher</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="ty-ch-check" value="Al Arabiya"> Al Arabiya</label>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
       </div>
     </section>
 <section class="chart-card">
@@ -348,45 +438,45 @@ function updateDashboard() {
   const eVal = inputEnd.value;
   const sDate = sVal ? new Date(sVal) : null;
   const eDate = eVal ? new Date(eVal) : null;
-  
+
   if(sDate) sDate.setHours(0,0,0,0);
   if(eDate) eDate.setHours(23,59,59,999);
 
   const selectedDay = selectDay.value;
 
-  // 2. FILTER ROWS (By Date AND Day)
+  // 2. FILTER ROWS
   const filteredRows = [];
-  const dateOnlyFilteredRows = []; // Used for the Daily Comparison Chart
-  
+  const dateOnlyFilteredRows = [];
+
   for(let i=1; i<GLOBAL_FORM_ROWS.length; i++) {
     const r = GLOBAL_FORM_ROWS[i];
     if(!r[0] || !r[0].trim()) continue;
     const rowDate = parseDateStr(r[0]);
     if(!rowDate) continue;
-
-    // Filter by Custom Date Range
     if(sDate && rowDate < sDate) continue;
     if(eDate && rowDate > eDate) continue;
-    
-    // Save these for charts that span all days in the range
-    dateOnlyFilteredRows.push(r); 
-
-    // Filter by Dropdown Day
+    dateOnlyFilteredRows.push(r);
     if(selectedDay !== 'All Days') {
       if(DAY_NAMES[rowDate.getDay()] !== selectedDay) continue;
     }
-
     filteredRows.push(r);
   }
 
-  // 3. CALCULATE KPIs (using fully filtered rows)
+  // 3. CALCULATE KPIs
   const totalCalls = filteredRows.filter(r => r[1] && r[1].trim() !== '').length;
-  const watchesGen = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
-  const noWatchGen = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'لا').length;
-  const watchedYDA = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+  const COL_BP = 67;
+  const successfulCalls = filteredRows.filter(r => {
+    const bp = r[COL_BP] ? r[COL_BP].trim() : '';
+    return bp === 'Yes' || bp === '';
+  }).length;
+  const watchesGen  = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+  const noWatchGen  = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'لا').length;
+  const watchedYDA  = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
   const didNotWatch = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'لا').length;
 
   document.getElementById('kpi-total').textContent = totalCalls;
+  document.getElementById('kpi-successful').textContent = successfulCalls;
+  document.getElementById('kpi-successful-pct').textContent = totalCalls ? `${(successfulCalls/totalCalls*100).toFixed(1)}% of respondents` : '0%';
   document.getElementById('kpi-watched').textContent = watchedYDA;
   document.getElementById('kpi-watched-pct').textContent = totalCalls ? `${(watchedYDA/totalCalls*100).toFixed(1)}% of respondents` : '0%';
   document.getElementById('kpi-no-watch').textContent = didNotWatch;
@@ -432,58 +522,48 @@ function updateDashboard() {
     }
   });
 
-  // 4. CALCULATE LISTS (Channels & Shows)
+  // 4. CALCULATE LISTS
   function calculateList(configObj, denominatorCount) {
     const arr = [];
     for (const [name, colIdx] of Object.entries(configObj)) {
       const count = filteredRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
       arr.push({
-        name: name,
-        count: count,
-        pct_total: totalCalls ? parseFloat((count/totalCalls*100).toFixed(2)) : 0,
-        pct_yesterday: watchedYDA ? parseFloat((count/watchedYDA*100).toFixed(2)) : 0,
-        pct_general: watchesGen ? parseFloat((count/watchesGen*100).toFixed(2)) : 0,
-        pct_specific: denominatorCount ? parseFloat((count/denominatorCount*100).toFixed(2)) : 0
+        name, count,
+        pct_successful: successfulCalls ? parseFloat((count/successfulCalls*100).toFixed(2)) : 0,
+        pct_yesterday:  watchedYDA      ? parseFloat((count/watchedYDA*100).toFixed(2))      : 0,
+        pct_general:    watchesGen      ? parseFloat((count/watchesGen*100).toFixed(2))       : 0,
+        pct_specific:   denominatorCount? parseFloat((count/denominatorCount*100).toFixed(2)) : 0
       });
     }
     return arr;
   }
 
   const metric = document.getElementById('channel-metric').value;
-  renderChannels(calculateList(MAIN_CHANNELS, watchedYDA), metric);
-  
-  const royaCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV'] && r[MAIN_CHANNELS['Roya TV']].trim() === 'نعم').length;
-  renderShowsChart('chart-roya', calculateList(ROYA_SHOWS, royaCount), 'pct_specific', 'roya', '#7c3aed');
-  
-  const jordanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV'] && r[MAIN_CHANNELS['Jordan TV']].trim() === 'نعم').length;
-  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), 'pct_specific', 'jordan', '#16a34a');
-  
-  const ammanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV'] && r[MAIN_CHANNELS['Amman TV']].trim() === 'نعم').length;
-  renderShowsChart('chart-amman', calculateList(AMMAN_SHOWS, ammanCount), 'pct_specific', 'amman', '#ea580c');
+  renderChannels(calculateList(MAIN_CHANNELS, watchedYDA), metric, filteredRows, totalCalls, watchedYDA, watchesGen, successfulCalls);
+  renderPerWeek(filteredRows, document.getElementById('perweek-metric').value, successfulCalls, watchedYDA, watchesGen);
 
-  // 5. DAILY COMPARISON CHART (Uses Date-Filtered Rows, ignoring Day Dropdown so it shows all days)
+  const royaCount   = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV']   && r[MAIN_CHANNELS['Roya TV']].trim()   === 'نعم').length;
+  const jordanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV'] && r[MAIN_CHANNELS['Jordan TV']].trim() === 'نعم').length;
+  const ammanCount  = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV']  && r[MAIN_CHANNELS['Amman TV']].trim()  === 'نعم').length;
+  renderShowsChart('chart-roya',   calculateList(ROYA_SHOWS,   royaCount),   'pct_specific', 'roya',   '#7c3aed');
+  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), 'pct_specific', 'jordan', '#16a34a');
+  renderShowsChart('chart-amman',  calculateList(AMMAN_SHOWS,  ammanCount),  'pct_specific', 'amman',  '#ea580c');
+
+  // 5. DAILY COMPARISON CHART
   destroyChart('period-compare');
-  const dayAverages = [0,0,0,0,0,0,0]; // Sun to Sat
+  const dayAverages = [0,0,0,0,0,0,0];
   for(let i=0; i<7; i++) {
-     const dayRows = dateOnlyFilteredRows.filter(r => parseDateStr(r[0]).getDay() === i);
-     const dTotal = dayRows.filter(r => r[1] && r[1].trim() !== '').length;
-     const dWatched = dayRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
-     dayAverages[i] = dTotal ? parseFloat((dWatched/dTotal*100).toFixed(1)) : 0;
+    const dayRows  = dateOnlyFilteredRows.filter(r => parseDateStr(r[0]).getDay() === i);
+    const dTotal   = dayRows.filter(r => r[1] && r[1].trim() !== '').length;
+    const dWatched = dayRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    dayAverages[i] = dTotal ? parseFloat((dWatched/dTotal*100).toFixed(1)) : 0;
   }
-  
   CHARTS['period-compare'] = new Chart(document.getElementById('chart-period-compare').getContext('2d'), {
     type: 'bar',
     data: { labels: DAY_NAMES, datasets: [{ label: '% Watched Yesterday', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
     options: {
       indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.x}% watched yesterday`
-          }
-        }
-      },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% watched yesterday` } } },
       scales: {
         x: { beginAtZero: true, max: 100, ticks: { callback: v => v+'%' }, grid: { color: '#f1f4f9' } },
         y: { ticks: { font: { size: 12 } } }
@@ -503,74 +583,194 @@ function updateDashboard() {
   });
 
   const sortedDates = Object.keys(byDate).sort((a, b) => {
-    const [da, ma, ya] = a.split('/').map(Number);
-    const [db, mb, yb] = b.split('/').map(Number);
-    return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db);
+    const [da,ma,ya] = a.split('/').map(Number);
+    const [db,mb,yb] = b.split('/').map(Number);
+    return new Date(ya,ma-1,da) - new Date(yb,mb-1,db);
   });
 
   const labels = sortedDates.map(dateStr => {
-    const [d, m, y] = dateStr.split('/').map(Number);
-    return `${DAY_NAMES[new Date(y, m - 1, d).getDay()]} (${dateStr.slice(0, 5)})`;
+    const [d,m,y] = dateStr.split('/').map(Number);
+    return `${DAY_NAMES[new Date(y,m-1,d).getDay()]} (${dateStr.slice(0,5)})`;
   });
 
-  const tVals = { genCount: [], genPct: [], ydaCount: [], totalCalls: [] };
-  const chYda = {};
-  Object.keys(MAIN_CHANNELS).forEach(ch => chYda[ch] = []);
+  // Pre-calculate per-date values for all channels
+  const tVals = { genCount: [], genPct: [], ydaCount: [], succCount: [], totalCalls: [] };
+  const chData = {};
+  Object.keys(MAIN_CHANNELS).forEach(ch => {
+    chData[ch] = { count: [], pct_successful: [], pct_yesterday: [], pct_general: [] };
+  });
 
-  sortedDates.forEach((dateStr) => {
-    const rws = byDate[dateStr];
+  sortedDates.forEach(dateStr => {
+    const rws   = byDate[dateStr];
     const tCalls = rws.filter(r => r[1] && r[1].trim() !== '').length;
-    const tGen = rws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
-    const tYda = rws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    const tGen   = rws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+    const tYda   = rws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    const tSucc  = rws.filter(r => { const bp = r[COL_BP] ? r[COL_BP].trim() : ''; return bp === 'Yes' || bp === ''; }).length;
 
     tVals.totalCalls.push(tCalls);
     tVals.genCount.push(tGen);
-    tVals.genPct.push(tCalls ? parseFloat((tGen / tCalls * 100).toFixed(1)) : 0);
+    tVals.genPct.push(tCalls ? parseFloat((tGen/tCalls*100).toFixed(1)) : 0);
     tVals.ydaCount.push(tYda);
+    tVals.succCount.push(tSucc);
 
     Object.entries(MAIN_CHANNELS).forEach(([ch, col]) => {
       const cnt = rws.filter(r => r.length > col && r[col].trim() === 'نعم').length;
-      chYda[ch].push(tYda ? parseFloat((cnt / tYda * 100).toFixed(1)) : 0);
+      chData[ch].count.push(cnt);
+      chData[ch].pct_successful.push(tSucc ? parseFloat((cnt/tSucc*100).toFixed(1)) : 0);
+      chData[ch].pct_yesterday.push(tYda   ? parseFloat((cnt/tYda*100).toFixed(1))  : 0);
+      chData[ch].pct_general.push(tGen     ? parseFloat((cnt/tGen*100).toFixed(1))  : 0);
     });
   });
 
-CHARTS['trend-general'] = new Chart(document.getElementById('chart-trend-general').getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [
-        { label: '% Watches TV Generally', data: tVals.genPct, borderColor: '#3d5fc4', backgroundColor: '#3d5fc4', borderWidth: 3, pointRadius: 5, tension: 0.3, yAxisID: 'y' },
-        { label: 'Watches TV Generally (Count)', data: tVals.genCount, borderColor: '#e8a838', backgroundColor: '#e8a838', borderWidth: 2, borderDash: [5, 5], pointRadius: 4, tension: 0.3, yAxisID: 'y1' },
-        { label: 'Total Successful Calls', data: tVals.totalCalls, borderColor: '#000000', backgroundColor: '#000000', borderWidth: 2, borderDash: [2, 2], pointRadius: 4, tension: 0.3, yAxisID: 'y1' }
-      ]
+  // --- GENERAL TREND ---
+  const tgMetric = document.getElementById('trend-general-metric').value;
+  const tgSuffix = tgMetric === 'count' ? '' : '%';
+
+  const tgBaseData = tgMetric === 'count'
+    ? tVals.genCount
+    : tgMetric === 'pct_successful'
+      ? tVals.succCount.map((s,i) => s ? parseFloat((tVals.genCount[i]/s*100).toFixed(1)) : 0)
+      : tVals.genCount.map((g,i) => { const t = tVals.totalCalls[i]; return t ? parseFloat((g/t*100).toFixed(1)) : 0; });
+
+  // Total Successful Calls — dynamically calculate % of Total Calls
+  const tgSuccData = tgMetric === 'count'
+    ? tVals.succCount
+    : tVals.succCount.map((s, i) => {
+        const t = tVals.totalCalls[i];
+        return t ? parseFloat((s / t * 100).toFixed(1)) : 0;
+    });
+
+  const tgDatasets = [
+    {
+      label: 'Total Successful Calls',
+      data: tgSuccData,
+      borderColor: '#000000', backgroundColor: '#000000',
+      borderWidth: 2, borderDash: [2,2], pointRadius: 4, tension: 0.3,
+      yAxisID: 'y', order: 0
     },
+    {
+      label: 'Watches TV Generally',
+      data: tgBaseData,
+      borderColor: '#3d5fc4', backgroundColor: '#3d5fc4',
+      borderWidth: 3, pointRadius: 5, tension: 0.3,
+      yAxisID: 'y', order: 1
+    }
+  ];
+
+  const tgChecked = [...document.querySelectorAll('.tg-ch-check:checked')].map(cb => cb.value);
+  tgChecked.forEach((ch, idx) => {
+    const chMetricData = tgMetric === 'count'
+      ? chData[ch].count
+      : tgMetric === 'pct_successful'
+        ? tVals.succCount.map((s,i) => s ? parseFloat((chData[ch].count[i]/s*100).toFixed(1)) : 0)
+        : tVals.genCount.map((g,i) => g ? parseFloat((chData[ch].count[i]/g*100).toFixed(1)) : 0);
+    tgDatasets.push({
+      label: ch,
+      data: chMetricData,
+      borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch],
+      borderWidth: 1.5, pointRadius: 3, tension: 0.3,
+      yAxisID: 'y', order: 2 + idx
+    });
+  });
+
+  CHARTS['trend-general'] = new Chart(document.getElementById('chart-trend-general').getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets: tgDatasets },
     options: {
-      responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.dataset.yAxisID === 'y' ? ` ${ctx.dataset.label}: ${ctx.raw}%` : ` ${ctx.dataset.label}: ${ctx.raw}` } } },
-      scales: { y: { type: 'linear', position: 'left', beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } } }
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}${tgSuffix}` } }
+      },
+      scales: {
+        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tgSuffix } }
+      }
     }
   });
-  const datasetsYda = [
-    { label: 'Watched TV Yesterday (Count)', data: tVals.ydaCount, borderColor: '#1a1f2e', backgroundColor: '#1a1f2e', borderWidth: 3, borderDash: [5, 5], pointRadius: 5, tension: 0.3, yAxisID: 'y1' },
-    ...Object.keys(MAIN_CHANNELS).map(ch => ({ label: ch, data: chYda[ch], borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch], borderWidth: 1.5, pointRadius: 3, tension: 0.3, yAxisID: 'y' }))
+
+  // --- YESTERDAY TREND ---
+  const tyMetric = document.getElementById('trend-yesterday-metric').value;
+  const tySuffix = tyMetric === 'count' ? '' : '%';
+
+  const tyBaseData = tyMetric === 'count'
+    ? tVals.ydaCount
+    : tyMetric === 'pct_successful'
+      ? tVals.succCount.map((s,i) => s ? parseFloat((tVals.ydaCount[i]/s*100).toFixed(1)) : 0)
+      : tVals.ydaCount.map((y,i) => { const t = tVals.totalCalls[i]; return t ? parseFloat((y/t*100).toFixed(1)) : 0; });
+
+  // Total Successful Calls — dynamically calculate % of Total Calls
+  const tySuccData = tyMetric === 'count'
+    ? tVals.succCount
+    : tVals.succCount.map((s, i) => {
+        const t = tVals.totalCalls[i];
+        return t ? parseFloat((s / t * 100).toFixed(1)) : 0;
+    });
+
+  const tyDatasets = [
+    {
+      label: 'Total Successful Calls',
+      data: tySuccData,
+      borderColor: '#9b59b6', backgroundColor: '#9b59b6',
+      borderWidth: 2, borderDash: [2,2], pointRadius: 4, tension: 0.3,
+      yAxisID: 'y', order: 0
+    },
+    {
+      label: 'Watched TV Yesterday',
+      data: tyBaseData,
+      borderColor: '#1a1f2e', backgroundColor: '#1a1f2e',
+      borderWidth: 3, borderDash: [5,5], pointRadius: 5, tension: 0.3,
+      yAxisID: 'y', order: 1
+    }
   ];
+
+  const tyChecked = [...document.querySelectorAll('.ty-ch-check:checked')].map(cb => cb.value);
+  tyChecked.forEach((ch, idx) => {
+    const chMetricData = tyMetric === 'count'
+      ? chData[ch].count
+      : tyMetric === 'pct_successful'
+        ? tVals.succCount.map((s,i) => s ? parseFloat((chData[ch].count[i]/s*100).toFixed(1)) : 0)
+        : tVals.ydaCount.map((y,i) => y ? parseFloat((chData[ch].count[i]/y*100).toFixed(1)) : 0);
+    tyDatasets.push({
+      label: ch,
+      data: chMetricData,
+      borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch],
+      borderWidth: 1.5, pointRadius: 3, tension: 0.3,
+      yAxisID: 'y', order: 2 + idx
+    });
+  });
+
   CHARTS['trend-yesterday'] = new Chart(document.getElementById('chart-trend-yesterday').getContext('2d'), {
     type: 'line',
-    data: { labels: labels, datasets: datasetsYda },
+    data: { labels, datasets: tyDatasets },
     options: {
-      responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.dataset.yAxisID === 'y' ? ` ${ctx.dataset.label}: ${ctx.raw}%` : ` ${ctx.dataset.label}: ${ctx.raw}` } } },
-      scales: { y: { type: 'linear', position: 'left', beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } } }
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}${tySuffix}` } }
+      },
+      scales: {
+        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tySuffix } }
+      }
     }
   });
 }
 function destroyChart(id) { if (CHARTS[id]) { CHARTS[id].destroy(); delete CHARTS[id]; } }
-function renderChannels(channels, metric) {
+function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, watchesGen, successfulCalls) {
   destroyChart('channels');
-  const sorted = [...channels].sort((a,b) => (b[metric]||0) - (a[metric]||0));
+  const totalTVCount = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+  const totalTVEntry = {
+    name: 'Total TV (Yesterday)',
+    count: totalTVCount,
+    pct_successful: successfulCalls ? parseFloat((totalTVCount / successfulCalls * 100).toFixed(2)) : 0,
+    pct_yesterday: watchedYDA ? parseFloat((totalTVCount / watchedYDA * 100).toFixed(2)) : 0,
+    pct_general:   watchesGen ? parseFloat((totalTVCount / watchesGen * 100).toFixed(2)) : 0,
+    pct_specific:  watchedYDA ? parseFloat((totalTVCount / watchedYDA * 100).toFixed(2)) : 0,
+  };
+  const sorted = [totalTVEntry, ...[...channels].sort((a, b) => (b[metric] || 0) - (a[metric] || 0))];
+  const bgColors = sorted.map((c, i) => i === 0 ? '#1a1f2e' : PALETTE[(i - 1) % PALETTE.length]);
   CHARTS['channels'] = new Chart(document.getElementById('chart-channels').getContext('2d'), {
     type: 'bar',
-    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: sorted.map((_, i) => PALETTE[i % PALETTE.length]), borderRadius: 6 }] },
+    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
     options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } }
   });
 }
@@ -583,6 +783,112 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
     type: 'bar',
     data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: color + 'cc', borderColor: color, borderWidth: 1.5, borderRadius: 5 }] },
     options: { indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } }
+  });
+}
+function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watchesGen) {
+  destroyChart('perweek');
+
+  if (!filteredRows || filteredRows.length === 0) return;
+
+  // Find the earliest date in the FULL dataset (not filtered) to anchor week numbers
+  let anchorDate = null;
+  for (let i = 1; i < GLOBAL_FORM_ROWS.length; i++) {
+    const d = parseDateStr(GLOBAL_FORM_ROWS[i][0]);
+    if (d && (!anchorDate || d < anchorDate)) anchorDate = d;
+  }
+  if (!anchorDate) return;
+
+  const selectedChannel = document.getElementById('perweek-channel').value;
+
+  // Which week toggles are active
+  const showCumulative = document.getElementById('perweek-toggle-cumulative').dataset.active === 'true';
+  const showW = [1,2,3,4].map(w => document.getElementById(`perweek-toggle-w${w}`).dataset.active === 'true');
+
+  // Channels to show on x-axis
+  const channelsToShow = selectedChannel === 'all'
+    ? [{ name: 'Total TV (Yesterday)', col: COL_WATCH_YDA, isTotalTV: true }, ...Object.entries(MAIN_CHANNELS).map(([name, col]) => ({ name, col, isTotalTV: false }))]
+    : [{ name: selectedChannel, col: MAIN_CHANNELS[selectedChannel], isTotalTV: false }];
+
+  // Cumulative denominators — always calculated from the full filteredRows pool
+  const COL_BP = 67;
+  const cumSucc     = filteredRows.filter(r => { const bp = r[COL_BP] ? r[COL_BP].trim() : ''; return bp === 'Yes' || bp === ''; }).length;
+  const cumWatchYDA = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+  const cumWatchGen = filteredRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+
+  // For a set of rows, calculate the metric value for a channel col
+  function calcMetric(rows, col, isTotalTV) {
+    const watchedYDAl = rows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    const count       = isTotalTV
+      ? watchedYDAl
+      : rows.filter(r => r.length > col && r[col].trim() === 'نعم').length;
+    if (metric === 'count')          return count;
+    if (metric === 'pct_successful') return cumSucc     ? parseFloat((count / cumSucc     * 100).toFixed(1)) : 0;
+    if (metric === 'pct_yesterday')  return cumWatchYDA ? parseFloat((count / cumWatchYDA * 100).toFixed(1)) : 0;
+    if (metric === 'pct_general')    return cumWatchGen ? parseFloat((count / cumWatchGen * 100).toFixed(1)) : 0;
+    return 0;
+  }
+
+  // Sort channels left to right by cumulative value descending
+  channelsToShow.sort((a, b) => calcMetric(filteredRows, b.col, b.isTotalTV) - calcMetric(filteredRows, a.col, a.isTotalTV));
+
+  // Assign each filtered row to a week number (1-based, relative to anchor)
+  function getWeek(row) {
+    const d = parseDateStr(row[0]);
+    if (!d) return null;
+    return Math.floor((d - anchorDate) / (7 * 24 * 3600 * 1000)) + 1;
+  }
+
+  // Separate rows by week
+  const weekRows = { 1: [], 2: [], 3: [], 4: [] };
+  filteredRows.forEach(r => {
+    const w = getWeek(r);
+    if (w >= 1 && w <= 4) weekRows[w].push(r);
+  });
+
+  // Build datasets
+  const weekColors  = ['#3d5fc4', '#e8a838', '#22b573', '#e84040'];
+  const weekLabels  = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+  const datasets    = [];
+
+  if (showCumulative) {
+    datasets.push({
+      label: 'Cumulative',
+      data: channelsToShow.map(ch => calcMetric(filteredRows, ch.col, ch.isTotalTV)),
+      backgroundColor: '#1a1f2e',
+      borderRadius: 5,
+    });
+  }
+
+  [1,2,3,4].forEach((w, i) => {
+    if (!showW[i]) return;
+    datasets.push({
+      label: weekLabels[i],
+      data: channelsToShow.map(ch => calcMetric(weekRows[w], ch.col, ch.isTotalTV)),
+      backgroundColor: weekColors[i],
+      borderRadius: 5,
+    });
+  });
+
+  const suffix = metric === 'count' ? '' : '%';
+
+  CHARTS['perweek'] = new Chart(document.getElementById('chart-perweek').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: channelsToShow.map(ch => ch.name),
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}${suffix}` } }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => v + suffix }, grid: { color: '#f1f4f9' } },
+        x: { ticks: { font: { size: 11 } } }
+      }
+    }
   });
 }
 
@@ -606,9 +912,6 @@ function initData(useProxy = false) {
         document.getElementById('app').classList.remove('hidden');
         document.getElementById('app').style.display = 'block';
         updateDashboard();
-        setTimeout(function() {
-          Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
-          }, 500);
       } catch(err) { console.error(err); showError('Calculation error: ' + err.message); }
     },
     error: function(err) { if(!useProxy) { initData(true); } else { showError('Network error fetching CSV: ' + err.message); } }
@@ -782,7 +1085,38 @@ function renderShowTrend(channelName, showName) {
     }
   });
 }
-/* PASSWORD GATE */
+// Per Week controls
+document.getElementById('perweek-metric').addEventListener('change', () => {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+  updateDashboard();
+});
+document.getElementById('perweek-channel').addEventListener('change', () => {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+  updateDashboard();
+});
+document.querySelectorAll('.perweek-toggle').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const isActive = this.dataset.active === 'true';
+    this.dataset.active = isActive ? 'false' : 'true';
+    if (this.dataset.active === 'true') {
+      this.classList.add('bg-white', 'text-brand-700', 'shadow-sm');
+      this.classList.remove('text-gray-500');
+    } else {
+      this.classList.remove('bg-white', 'text-brand-700', 'shadow-sm');
+      this.classList.add('text-gray-500');
+    }
+    updateDashboard();
+  });
+});
+
+// Trend chart controls
+document.getElementById('trend-general-metric').addEventListener('change', updateDashboard);
+document.getElementById('trend-yesterday-metric').addEventListener('change', updateDashboard);
+document.querySelectorAll('.tg-ch-check').forEach(cb => cb.addEventListener('change', updateDashboard));
+document.querySelectorAll('.ty-ch-check').forEach(cb => cb.addEventListener('change', updateDashboard));
+/* =================================================================
+   PASSWORD GATE & MOBILE FIXES
+================================================================= */
 (function() {
   if (sessionStorage.getItem('_rv_ok') === '1') {
     document.getElementById('password-screen').classList.add('hidden');
@@ -809,7 +1143,7 @@ function renderShowTrend(channelName, showName) {
     });
   }
 })();
-  /* MOBILE FIX */
+
 window.addEventListener('orientationchange', function() {
   setTimeout(function() {
     Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
