@@ -32,9 +32,8 @@
     #loader.hidden { display: none !important; }
     .loader-ring { width: 52px; height: 52px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #e8a838; border-radius: 50%; animation: spin 0.85s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .kpi-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem 1.75rem; position: relative; overflow: hidden; }
-    .kpi-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3d5fc4, #e8a838); }
-    .chart-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem; }
+    .kpi-card { border: 2px solid transparent; border-radius: 14px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #3d5fc4, #e8a838) border-box; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem 1.75rem; }
+    .chart-card { border: 2px solid transparent; border-radius: 14px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #3d5fc4, #e8a838) border-box; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem; min-width: 0; }
     select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25em; padding-right: 2.5rem; }
     @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
     .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
@@ -42,6 +41,8 @@
     ::-webkit-scrollbar-track { background: #f1f4f9; }
     ::-webkit-scrollbar-thumb { background: #c7d0e8; border-radius: 4px; }
     .time-btn.active { background: white; color: #1e3799; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .chart-card > div:last-child, #show-trend-container, .w-full.h-\[40vh\] { overflow-x: auto; min-width: 0; }
+    #chart-channels, #chart-perweek, #chart-trend-general, #chart-trend-yesterday, #chart-show-trend, #chart-news-channels, #chart-news-perweek, #chart-trend-news, #chart-news-where, #chart-news-when { min-width: 700px !important; }
   </style>
 </head>
 <body>
@@ -110,7 +111,7 @@
     </div>
   </header>
 
-  <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
+<div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
     <div class="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center gap-6">
 
       <div class="flex items-center bg-gray-100 p-1 rounded-lg" id="quick-buttons">
@@ -140,19 +141,65 @@
           <option value="Saturday">Saturday</option>
         </select>
       </div>
+    </div>
 
+    <div class="max-w-screen-xl mx-auto px-6 pb-3 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
+        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Demographics:</label>
+        
+        <div class="relative">
+            <button onclick="toggleDrop('drop-gender')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Gender ▾</button>
+            <div id="drop-gender" class="hidden absolute top-full left-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-gender" class="accent-brand-600" checked onchange="toggleAll(this, 'gender-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk gender-chk accent-brand-600" value="ذكر" checked> Male (ذكر)</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk gender-chk accent-brand-600" value="أنثى" checked> Female (أنثى)</label>
+            </div>
+        </div>
+        
+        <div class="relative">
+            <button onclick="toggleDrop('drop-age')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Age ▾</button>
+            <div id="drop-age" class="hidden absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-48 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-age" class="accent-brand-600" checked onchange="toggleAll(this, 'age-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="تحت 18 عاماً" checked> Under 18</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="18-24 عاماً" checked> 18-24</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="25-34 عاماً" checked> 25-34</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="35-44 عاماً" checked> 35-44</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="45-54 عاماً" checked> 45-54</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="55-64 عاماً" checked> 55-64</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk age-chk accent-brand-600" value="65 عاماً فأكثر" checked> 65+</label>
+            </div>
+        </div>
+
+        <div class="relative">
+            <button onclick="toggleDrop('drop-area')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Area ▾</button>
+            <div id="drop-area" class="hidden absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-56 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-area" class="accent-brand-600" checked onchange="toggleAll(this, 'area-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="عمان (شرق)" checked> Amman (East)</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="عمان (غرب)" checked> Amman (West)</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="الزرقاء" checked> Zarqa</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="إربد" checked> Irbid</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="البلقاء" checked> Balqa</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="مادبا" checked> Madaba</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="المفرق" checked> Mafraq</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="جرش" checked> Jerash</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="عجلون" checked> Ajloun</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="الكرك" checked> Karak</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="الطفيلة" checked> Tafilah</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="معان" checked> Ma'an</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="العقبة" checked> Aqaba</label>
+            </div>
+        </div>
     </div>
   </div>
 
-  <div id="main-view">
+<div id="main-view">
     <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       <section>
         <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-total" class="text-4xl font-bold text-brand-700">—</p></div>
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched Yesterday</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch Yesterday</p><p id="kpi-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched TV (Selected Day)</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch TV (Selected Day)</p><p id="kpi-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p><p id="kpi-gen" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-gen-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
         </div>
       </section>
@@ -165,14 +212,14 @@
             <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-general"></canvas></div>
           </div>
           <div class="chart-card flex flex-col">
-            <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — Yesterday</h2>
-            <p class="text-xs text-gray-400 mb-4">Did they watch TV yesterday?</p>
+            <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — Selected Day</h2>
+            <p class="text-xs text-gray-400 mb-4">Did they watch TV that day?</p>
             <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-yesterday"></canvas></div>
           </div>
         </div>
         <div class="chart-card flex flex-col">
           <h2 class="text-sm font-semibold text-gray-700 mb-1">Daily Comparison</h2>
-          <p class="text-xs text-gray-400 mb-4">Avg % Watched Yesterday for the selected dates</p>
+          <p class="text-xs text-gray-400 mb-4">Avg % Watched TV for the selected dates</p>
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
         </div>
       </section>
@@ -182,13 +229,13 @@
           <div>
             <h2 class="text-sm font-semibold text-gray-700">Main TV Channels</h2>
             <p class="text-xs text-gray-400">Click legend items to show/hide channels</p>
-            <p id="channels-day-note" class="text-xs text-green-600 font-medium mt-1">Numbers shown for a given day reflect the <em>previous</em> day's viewership (e.g. Sunday data = Saturday's viewing)</p>
+            <p id="channels-day-note" class="text-xs text-green-600 font-medium mt-0.5">Note: a day's numbers come from calls made the <em>next</em> day (e.g. Thursday's data = Friday's calls)</p>
           </div>
           <div class="flex items-center gap-2">
             <label class="text-xs text-gray-500">View:</label>
             <select id="channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="pct_yesterday">% of That Day's Viewers</option>
               <option value="pct_general">% of General Viewers</option>
               <option value="count">Raw Count</option>
             </select>
@@ -207,7 +254,7 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="perweek-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="pct_yesterday">% of That Day's Viewers</option>
               <option value="pct_general">% of General Viewers</option>
               <option value="count">Raw Count</option>
             </select>
@@ -237,7 +284,7 @@
         <div class="w-full h-[50vh] md:h-auto" style="min-height:320px"><canvas id="chart-perweek"></canvas></div>
       </section>
 
-      <section class="grid md:grid-cols-2 gap-6">
+      <section class="grid grid-cols-1 gap-8">
         <div class="chart-card flex flex-col">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
@@ -270,14 +317,14 @@
         <div class="chart-card flex flex-col">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
-              <h2 class="text-sm font-semibold text-gray-700">Watched TV - Yesterday Trend</h2>
-              <p class="text-xs text-gray-400">Comparing Total Yesterday Viewers (Count) vs Channel %</p>
+              <h2 class="text-sm font-semibold text-gray-700">Watched TV - Daily Trend</h2>
+              <p class="text-xs text-gray-400">Comparing Total Daily Viewers (Count) vs Channel %</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
               <label class="text-xs text-gray-500">View:</label>
               <select id="trend-yesterday-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
                 <option value="pct_successful">% of Successful Calls</option>
-                <option value="pct_yesterday">% of Yesterday's Viewers</option>
+                <option value="pct_yesterday">% of That Day's Viewers</option>
                 <option value="count">Raw Count</option>
               </select>
               <label class="text-xs text-gray-500">Channels:</label>
@@ -295,6 +342,33 @@
             </div>
           </div>
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
+        </div>
+      </section>
+      <section class="chart-card flex flex-col">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <h2 class="text-sm font-semibold text-gray-700">Specific Hourly Viewership</h2>
+            <p class="text-xs text-gray-400">Compare specific hours for a single channel (Data from recent responses)</p>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <label class="text-xs text-gray-500">Channel:</label>
+            <select id="hourly-channel-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة رؤيا أمس؟">Roya TV</option>
+              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني أمس؟">Jordan TV</option>
+              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني الرياضيه أمس؟">Jordan TV Sports</option>
+              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة عمان تي في أمس؟">Amman TV</option>
+              <option value="يرجى تحديد الساعات التي شاهدت فيها م بي سي في أمس؟">MBC</option>
+              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة المملكه في أمس؟">Al Mamlaka</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="text-xs text-gray-500 mb-2 block">Select Times to Compare:</label>
+          <div id="hourly-time-checkboxes" class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 max-h-32 overflow-y-auto">
+            </div>
+        </div>
+        <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:300px">
+          <canvas id="chart-hourly-trend"></canvas>
         </div>
       </section>
 
@@ -360,8 +434,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-news-total" class="text-4xl font-bold text-brand-700">—</p></div>
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-news-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched News Yesterday</p><p id="kpi-news-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch News Yesterday</p><p id="kpi-news-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched News (Selected Day)</p><p id="kpi-news-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch News (Selected Day)</p><p id="kpi-news-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
           <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">TV Watchers Who Watch News</p><p id="kpi-news-pct-of-watchers" class="text-4xl font-bold text-brand-700">—</p><p class="text-sm text-gray-400 mt-0.5">% of those who watch TV generally</p></div>
         </div>
       </section>
@@ -371,13 +445,13 @@
           <div>
             <h2 class="text-sm font-semibold text-gray-700">News Channels</h2>
             <p class="text-xs text-gray-400">Roya News, Al Jazeera, Al Jazeera Mubasher, Al Arabiya, Al Mamlaka</p>
-            <p class="text-xs text-green-600 font-medium mt-1">Numbers shown for a given day reflect the <em>previous</em> day's viewership (e.g. Sunday data = Saturday's viewing)</p>
+            <p class="text-xs text-green-600 font-medium mt-0.5">Note: a day's numbers come from calls made the <em>next</em> day (e.g. Thursday's data = Friday's calls)</p>
           </div>
           <div class="flex items-center gap-2">
             <label class="text-xs text-gray-500">View:</label>
             <select id="news-channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="pct_yesterday">% of That Day's Viewers</option>
               <option value="pct_general">% of General Viewers</option>
               <option value="count">Raw Count</option>
             </select>
@@ -396,7 +470,7 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="news-perweek-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="pct_yesterday">% of That Day's Viewers</option>
               <option value="pct_general">% of General Viewers</option>
               <option value="count">Raw Count</option>
             </select>
@@ -423,7 +497,7 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="trend-news-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of Yesterday's Viewers</option>
+              <option value="pct_yesterday">% of That Day's Viewers</option>
               <option value="count">Raw Count</option>
             </select>
             <label class="text-xs text-gray-500">Channels:</label>
@@ -439,44 +513,45 @@
         <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:300px"><canvas id="chart-trend-news"></canvas></div>
       </section>
 
-      <section class="chart-card">
-        <div class="mb-4">
-          <h2 class="text-sm font-semibold text-gray-700">Where &amp; When They Watched News</h2>
-          <p class="text-xs text-gray-400">Roya News, Al Jazeera, Al Jazeera Mubasher, Al Arabiya only — the survey doesn't ask Al Mamlaka viewers this</p>
+      <section class="grid grid-cols-1 gap-8">
+        <div class="chart-card flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <h2 class="text-sm font-semibold text-gray-700">Where Did They Watch News</h2>
+              <p class="text-xs text-gray-400">Roya News, Al Jazeera, Al Jazeera Mubasher, Al Arabiya only (No Al Mamlaka data)</p>
+            </div>
+            <div class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5">
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Roya News" checked> Roya News</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Jazeera" checked> Al Jazeera</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Jazeera Mubasher" checked> Al J. Mubasher</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Arabiya" checked> Al Arabiya</label>
+            </div>
+          </div>
+          <div class="flex-1 w-full h-[40vh]" style="min-height:280px"><canvas id="chart-news-where"></canvas></div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">Where Did They Watch</h3>
-              <div class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5">
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Roya News" checked> Roya News</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Jazeera" checked> Al Jazeera</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Jazeera Mubasher" checked> Al J. Mubasher</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-where-check" value="Al Arabiya" checked> Al Arabiya</label>
-              </div>
+
+        <div class="chart-card flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <h2 class="text-sm font-semibold text-gray-700">When Did They Watch News</h2>
+              <p class="text-xs text-gray-400">Hourly breakdown of news viewership</p>
             </div>
-            <div class="w-full h-[40vh]" style="min-height:280px"><canvas id="chart-news-where"></canvas></div>
-          </div>
-          <div>
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide">When Did They Watch</h3>
-              <div class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5">
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Roya News" checked> Roya News</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Jazeera" checked> Al Jazeera</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Jazeera Mubasher" checked> Al J. Mubasher</label>
-                <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Arabiya" checked> Al Arabiya</label>
-              </div>
+            <div class="flex flex-wrap gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5">
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Roya News" checked> Roya News</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Jazeera" checked> Al Jazeera</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Jazeera Mubasher" checked> Al J. Mubasher</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Arabiya" checked> Al Arabiya</label>
+              <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer whitespace-nowrap"><input type="checkbox" class="nw-when-check" value="Al Mamlaka" checked> Al Mamlaka</label>
             </div>
-            <div class="w-full h-[40vh]" style="min-height:280px"><canvas id="chart-news-when"></canvas></div>
           </div>
+          <div class="flex-1 w-full h-[40vh]" style="min-height:280px"><canvas id="chart-news-when"></canvas></div>
         </div>
       </section>
 
     </main>
   </div>
   </div>
-
-  <script>
+<script>
 const FORM_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQf6dQpybX3EWUebDS9ZXbpPkurD75NyAdtIwAK5u1Ctu7QmrvvSYB19CcRqknrNRl9pcgELjBWNf41/pub?gid=805558787&single=true&output=csv';
 const PROXY = 'https://api.allorigins.win/raw?url=';
 
@@ -493,7 +568,8 @@ const MAIN_CHANNELS = { 'Jordan TV': 10, 'Amman TV': 13, 'MBC': 16, 'Al Mamlaka'
 const NEWS_CHANNELS = { 'Roya News': 55, 'Al Jazeera': 58, 'Al Jazeera Mubasher': 61, 'Al Arabiya': 64, 'Al Mamlaka': 19 };
 
 // The 4 News channels that have "Where" / "When" questions in the survey (Al Mamlaka does not)
-const NEWS_WW_CHANNELS = { 'Roya News': 55, 'Al Jazeera': 58, 'Al Jazeera Mubasher': 61, 'Al Arabiya': 64 };
+const NEWS_WHEN_CHANNELS = { 'Roya News': 56, 'Al Jazeera': 59, 'Al Jazeera Mubasher': 62, 'Al Arabiya': 65, 'Al Mamlaka': 21 };
+const NEWS_WHERE_CHANNELS = { 'Roya News': 57, 'Al Jazeera': 60, 'Al Jazeera Mubasher': 63, 'Al Arabiya': 66 };
 // Column pattern for each of the 4 channels above: [yes/no col], [period col = +1], [where col = +2]
 
 const PERIOD_CATEGORIES = ['6:00 AM - 9:00 AM', '9:00 AM - 12:00 PM', '12:00 PM - 3:00 PM', '3:00 PM - 6:00 PM', '6:00 PM - 9:00 PM', '9:00 PM - 12:00 AM'];
@@ -514,7 +590,7 @@ function mapWhereValue(raw) {
   if (v.includes('الساتلايت') || v.includes('كيبل')) return 'Satellite / Cable TV';
   return null;
 }
-const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:30 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42 };
+const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:00 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42 };
 const JORDAN_SHOWS = { 'Yes3ed Sabahak': 43, 'Yawm Jadeed': 44, 'Nashama Al Watan': 45, 'Tahadi Al Nashama': 46, 'Trend Show': 47, '60 Daqiqa': 48, 'JTV Kitchen': 49 };
 const AMMAN_SHOWS = { 'Sa7 Se7': 50, 'Bhar o Nar': 51, 'Sahten o Hana': 52, 'Bisara7a': 53, 'Saba7 El Kher Ya Ordon': 54 };
 
@@ -549,13 +625,20 @@ const selectDay = document.getElementById('period-select');
 const timeBtns = document.querySelectorAll('.time-btn');
 
 // Parse timestamp string to Date Object
+// Surveys ask "did you watch TV YESTERDAY", so a call made on day X is reporting on day X-1.
+// This converts a call's date into the day-of-week it is actually describing.
+function getViewingDayIndex(date) {
+  return date.getDay(); 
+}
+
 function parseDateStr(timestampStr) {
   if(!timestampStr) return null;
   const datePart = timestampStr.split(' ')[0];
   const [d, m, y] = datePart.split('/').map(Number);
-  return new Date(y, m - 1, d);
+  const actualDate = new Date(y, m - 1, d);
+  actualDate.setDate(actualDate.getDate() - 1); // Shifts the date back 1 day
+  return actualDate;
 }
-
 // 1. Handle Time Buttons
 timeBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -599,7 +682,7 @@ function handleDateChange() {
   if (s && e && s === e) {
     // If they picked a single specific day, auto-change the Day Dropdown
     const d = new Date(s);
-    selectDay.value = DAY_NAMES[d.getDay()];
+    selectDay.value = DAY_NAMES[getViewingDayIndex(d)];
   } else if (s && e && s !== e) {
     // If they picked a range, reset to All Days
     selectDay.value = 'All Days';
@@ -613,12 +696,230 @@ inputEnd.addEventListener('change', handleDateChange);
 selectDay.addEventListener('change', updateDashboard);
 document.getElementById('channel-metric').addEventListener('change', updateDashboard);
 document.getElementById('news-channel-metric').addEventListener('change', updateDashboard);
+document.getElementById('hourly-channel-select').addEventListener('change', updateDashboard);
 
+let hourlyCheckboxesPopulated = false;
+
+// Translates Arabic survey text into a single line for the checkboxes
+function format24hSingle(arabicStr) {
+  const s = arabicStr.trim();
+  const map = {
+    "من الساعة 6 صباحًا إلى 9 صباحًا": "06:00 - 09:00", "من الساعة 9 صباحًا إلى 12 ظهرًا": "09:00 - 12:00",
+    "من الساعة 12 ظهرًا إلى 3 عصرًا": "12:00 - 15:00", "من الساعة 3 عصرًا إلى 6 مساءً": "15:00 - 18:00",
+    "من الساعة 6 مساءً إلى 9 مساءً": "18:00 - 21:00", "من الساعة 9 مساءً إلى 12 منتصف الليل": "21:00 - 00:00",
+    "من الساعة 6:00 صباحًا إلى 7:00 صباحًا": "06:00 - 07:00", "من الساعة 7:00 صباحًا إلى 8:00 صباحًا": "07:00 - 08:00",
+    "من الساعة 8:00 صباحًا إلى 9:00 صباحًا": "08:00 - 09:00", "من الساعة 9:00 صباحًا إلى 10:00 صباحًا": "09:00 - 10:00",
+    "من الساعة 10:00 صباحًا إلى 11:00 صباحًا": "10:00 - 11:00", "من الساعة 11:00 صباحًا إلى 12:00 ظهرًا": "11:00 - 12:00",
+    "من الساعة 12:00 ظهرًا إلى 1:00 بعد الظهر": "12:00 - 13:00", "من الساعة 1:00 بعد الظهر إلى 2:00 بعد الظهر": "13:00 - 14:00",
+    "من الساعة 2:00 بعد الظهر إلى 3:00 عصرًا": "14:00 - 15:00", "من الساعة 3:00 عصرًا إلى 4:00 عصرًا": "15:00 - 16:00",
+    "من الساعة 4:00 عصرًا إلى 5:00 مساءً": "16:00 - 17:00", "من الساعة 5:00 مساءً إلى 6:00 مساءً": "17:00 - 18:00",
+    "من الساعة 6:00 مساءً إلى 7:00 مساءً": "18:00 - 19:00", "من الساعة 7:00 مساءً إلى 8:00 مساءً": "19:00 - 20:00",
+    "من الساعة 8:00 مساءً إلى 9:00 مساءً": "20:00 - 21:00", "من الساعة 9:00 مساءً إلى 10:00 مساءً": "21:00 - 22:00",
+    "من الساعة 10:00 مساءً إلى 11:00 مساءً": "22:00 - 23:00", "من الساعة 11:00 مساءً إلى 12:00 منتصف الليل": "23:00 - 00:00",
+    "12:00 +": "00:00+"
+  };
+  return map[s] || s;
+}
+
+// Translates Arabic survey text into a 3-line stacked array for the Graph X-Axis (like your image)
+function format24hMulti(arabicStr) {
+  const s = arabicStr.trim();
+  const map = {
+    "من الساعة 6 صباحًا إلى 9 صباحًا": ["06:00", "-", "09:00"], "من الساعة 9 صباحًا إلى 12 ظهرًا": ["09:00", "-", "12:00"],
+    "من الساعة 12 ظهرًا إلى 3 عصرًا": ["12:00", "-", "15:00"], "من الساعة 3 عصرًا إلى 6 مساءً": ["15:00", "-", "18:00"],
+    "من الساعة 6 مساءً إلى 9 مساءً": ["18:00", "-", "21:00"], "من الساعة 9 مساءً إلى 12 منتصف الليل": ["21:00", "-", "00:00"],
+    "من الساعة 6:00 صباحًا إلى 7:00 صباحًا": ["06:00", "-", "07:00"], "من الساعة 7:00 صباحًا إلى 8:00 صباحًا": ["07:00", "-", "08:00"],
+    "من الساعة 8:00 صباحًا إلى 9:00 صباحًا": ["08:00", "-", "09:00"], "من الساعة 9:00 صباحًا إلى 10:00 صباحًا": ["09:00", "-", "10:00"],
+    "من الساعة 10:00 صباحًا إلى 11:00 صباحًا": ["10:00", "-", "11:00"], "من الساعة 11:00 صباحًا إلى 12:00 ظهرًا": ["11:00", "-", "12:00"],
+    "من الساعة 12:00 ظهرًا إلى 1:00 بعد الظهر": ["12:00", "-", "13:00"], "من الساعة 1:00 بعد الظهر إلى 2:00 بعد الظهر": ["13:00", "-", "14:00"],
+    "من الساعة 2:00 بعد الظهر إلى 3:00 عصرًا": ["14:00", "-", "15:00"], "من الساعة 3:00 عصرًا إلى 4:00 عصرًا": ["15:00", "-", "16:00"],
+    "من الساعة 4:00 عصرًا إلى 5:00 مساءً": ["16:00", "-", "17:00"], "من الساعة 5:00 مساءً إلى 6:00 مساءً": ["17:00", "-", "18:00"],
+    "من الساعة 6:00 مساءً إلى 7:00 مساءً": ["18:00", "-", "19:00"], "من الساعة 7:00 مساءً إلى 8:00 مساءً": ["19:00", "-", "20:00"],
+    "من الساعة 8:00 مساءً إلى 9:00 مساءً": ["20:00", "-", "21:00"], "من الساعة 9:00 مساءً إلى 10:00 مساءً": ["21:00", "-", "22:00"],
+    "من الساعة 10:00 مساءً إلى 11:00 مساءً": ["22:00", "-", "23:00"], "من الساعة 11:00 مساءً إلى 12:00 منتصف الليل": ["23:00", "-", "00:00"],
+    "12:00 +": ["00:00", "+", ""]
+  };
+  return map[s] || [s];
+}
+
+// Assigns a chronological weight so morning appears before night
+function getTimeValue(timeStr) {
+  const s = timeStr.trim();
+  const map = {
+    "من الساعة 6 صباحًا إلى 9 صباحًا": 600, "من الساعة 9 صباحًا إلى 12 ظهرًا": 900,
+    "من الساعة 12 ظهرًا إلى 3 عصرًا": 1200, "من الساعة 3 عصرًا إلى 6 مساءً": 1500,
+    "من الساعة 6 مساءً إلى 9 مساءً": 1800, "من الساعة 9 مساءً إلى 12 منتصف الليل": 2100,
+    "من الساعة 6:00 صباحًا إلى 7:00 صباحًا": 600, "من الساعة 7:00 صباحًا إلى 8:00 صباحًا": 700,
+    "من الساعة 8:00 صباحًا إلى 9:00 صباحًا": 800, "من الساعة 9:00 صباحًا إلى 10:00 صباحًا": 900,
+    "من الساعة 10:00 صباحًا إلى 11:00 صباحًا": 1000, "من الساعة 11:00 صباحًا إلى 12:00 ظهرًا": 1100,
+    "من الساعة 12:00 ظهرًا إلى 1:00 بعد الظهر": 1200, "من الساعة 1:00 بعد الظهر إلى 2:00 بعد الظهر": 1300,
+    "من الساعة 2:00 بعد الظهر إلى 3:00 عصرًا": 1400, "من الساعة 3:00 عصرًا إلى 4:00 عصرًا": 1500,
+    "من الساعة 4:00 عصرًا إلى 5:00 مساءً": 1600, "من الساعة 5:00 مساءً إلى 6:00 مساءً": 1700,
+    "من الساعة 6:00 مساءً إلى 7:00 مساءً": 1800, "من الساعة 7:00 مساءً إلى 8:00 مساءً": 1900,
+    "من الساعة 8:00 مساءً إلى 9:00 مساءً": 2000, "من الساعة 9:00 مساءً إلى 10:00 مساءً": 2100,
+    "من الساعة 10:00 مساءً إلى 11:00 مساءً": 2200, "من الساعة 11:00 مساءً إلى 12:00 منتصف الليل": 2300,
+    "12:00 +": 2400
+  };
+  return map[s] !== undefined ? map[s] : 9999;
+}
+
+function populateHourlyCheckboxes() {
+  if (hourlyCheckboxesPopulated || !GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+  const headers = GLOBAL_FORM_ROWS[0];
+  const targetCols = [
+    "يرجى تحديد الساعات التي شاهدت فيها قناة رؤيا أمس؟", "يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني أمس؟",
+    "يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني الرياضيه أمس؟", "يرجى تحديد الساعات التي شاهدت فيها قناة عمان تي في أمس؟",
+    "يرجى تحديد الساعات التي شاهدت فيها م بي سي في أمس؟", "يرجى تحديد الساعات التي شاهدت فيها قناة المملكه في أمس؟"
+  ];
+  const colIndices = targetCols.map(name => headers.indexOf(name)).filter(i => i !== -1);
+
+  const uniqueTimes = new Set();
+  for (let i = 699; i < GLOBAL_FORM_ROWS.length; i++) {
+    const row = GLOBAL_FORM_ROWS[i];
+    colIndices.forEach(colIdx => {
+      if (row.length > colIdx && row[colIdx]) {
+        const times = row[colIdx].split(',').map(t => t.trim()).filter(t => t && !t.includes('لا') && !t.includes('لم يشاهد'));
+        times.forEach(t => uniqueTimes.add(t));
+      }
+    });
+  }
+
+  const container = document.getElementById('hourly-time-checkboxes');
+  container.innerHTML = '';
+  
+  // 1. Inject Select All Button
+  const selectAllLbl = document.createElement('label');
+  selectAllLbl.className = 'flex items-center gap-1.5 text-xs font-bold text-brand-700 cursor-pointer whitespace-nowrap bg-brand-50 border border-brand-200 px-2 py-1 rounded shadow-sm hover:bg-brand-100 mr-2';
+  selectAllLbl.innerHTML = `<input type="checkbox" id="hourly-select-all" class="accent-brand-600" checked> Select All`;
+  container.appendChild(selectAllLbl);
+
+  // 2. Inject Time Blocks
+  Array.from(uniqueTimes).sort((a, b) => getTimeValue(a) - getTimeValue(b)).forEach(time => {
+    const lbl = document.createElement('label');
+    lbl.className = 'flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer whitespace-nowrap bg-white border border-gray-200 px-2 py-1 rounded shadow-sm hover:bg-gray-50';
+    lbl.innerHTML = `<input type="checkbox" class="hourly-time-chk accent-brand-600" value="${time}" checked> ${format24hSingle(time)}`;
+    container.appendChild(lbl);
+  });
+
+  // 3. Connect Checkbox Logic
+  const selectAllBox = document.getElementById('hourly-select-all');
+  const timeBoxes = document.querySelectorAll('.hourly-time-chk');
+
+  selectAllBox.addEventListener('change', function() {
+    timeBoxes.forEach(cb => cb.checked = this.checked);
+    updateDashboard();
+  });
+
+  timeBoxes.forEach(cb => cb.addEventListener('change', function() {
+    if (!this.checked) selectAllBox.checked = false;
+    if (document.querySelectorAll('.hourly-time-chk:not(:checked)').length === 0) selectAllBox.checked = true;
+    updateDashboard();
+  }));
+
+  hourlyCheckboxesPopulated = true;
+}
+
+function renderHourlyTrend() {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+
+  const channelName = document.getElementById('hourly-channel-select').value;
+  const checkedTimesRaw = [...document.querySelectorAll('.hourly-time-chk:checked')].map(cb => cb.value);
+
+  destroyChart('hourly-trend');
+  if (checkedTimesRaw.length === 0) return; 
+
+  const headers = GLOBAL_FORM_ROWS[0];
+  const channelCol = headers.indexOf(channelName);
+  if (channelCol === -1) return;
+
+  const sVal  = document.getElementById('date-start').value;
+  const eVal  = document.getElementById('date-end').value;
+  const sDate = sVal ? new Date(sVal) : null;
+  const eDate = eVal ? new Date(eVal) : null;
+  if (sDate) sDate.setHours(0,0,0,0);
+  if (eDate) eDate.setHours(23,59,59,999);
+  const selectedDay = document.getElementById('period-select').value;
+
+  const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
+  const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
+  const checkedAreas = [...document.querySelectorAll('.area-chk:checked')].map(cb => cb.value);
+
+  const filtered = [];
+  for (let i = 699; i < GLOBAL_FORM_ROWS.length; i++) {
+    const r = GLOBAL_FORM_ROWS[i];
+    if (!r[0] || !r[0].trim()) continue;
+
+    const rowArea = r[3] ? r[3].trim() : '';
+    const rowAge = r[4] ? r[4].trim() : '';
+    const rowGender = r[6] ? r[6].trim() : '';
+
+    if (rowArea !== '' && !checkedAreas.includes(rowArea)) continue;
+    if (rowAge !== '' && !checkedAges.includes(rowAge)) continue;
+    if (rowGender !== '' && !checkedGenders.includes(rowGender)) continue;
+
+    const rowDate = parseDateStr(r[0]);
+    if (!rowDate) continue;
+    if (sDate && rowDate < sDate) continue;
+    if (eDate && rowDate > eDate) continue;
+    if (selectedDay !== 'All Days' && DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
+    
+    filtered.push(r);
+  }
+
+  // Uses the multi-line format to stack the time labels on top of each other!
+  const labels = checkedTimesRaw.map(format24hMulti);
+  
+  // THE FIX FOR LOW NUMBERS: Safely counts if the string includes the time block
+  const dataCounts = checkedTimesRaw.map(timeStr => {
+    return filtered.filter(r => {
+      if (r.length <= channelCol || !r[channelCol]) return false;
+      return r[channelCol].includes(timeStr);
+    }).length;
+  });
+
+  const sel = document.getElementById('hourly-channel-select');
+  const channelLabel = sel.options[sel.selectedIndex].text;
+
+  // Uses colors to match the channel selected
+  const hcColors = {
+    'Roya TV': '#9b59b6', 'Jordan TV': '#3d5fc4', 'Jordan TV Sports': '#1abc9c',
+    'Amman TV': '#e8a838', 'MBC': '#22b573', 'Al Mamlaka': '#e84040'
+  };
+  const color = hcColors[channelLabel] || '#3d5fc4';
+
+  CHARTS['hourly-trend'] = new Chart(document.getElementById('chart-hourly-trend').getContext('2d'), {
+    type: 'line',
+    data: { 
+      labels: labels, 
+      datasets: [{
+        label: channelLabel + ' Viewers',
+        data: dataCounts,
+        borderColor: color, 
+        backgroundColor: color + '1A', // adds transparency for the fill
+        fill: true,
+        borderWidth: 3,
+        pointRadius: 5,
+        tension: 0.4 
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} viewers` } } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
+        // maxRotation and minRotation forced to 0 so the multi-line array stacks perfectly vertical
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+      }
+    }
+  });
+}
 /* =================================================================
    MAIN DASHBOARD ENGINE
 ================================================================= */
 function updateDashboard() {
   if(!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+  populateHourlyCheckboxes();
 
   // 1. Get Dates
   const sVal = inputStart.value;
@@ -631,6 +932,11 @@ function updateDashboard() {
 
   const selectedDay = selectDay.value;
 
+  // Get selected demographics
+  const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
+  const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
+  const checkedAreas = [...document.querySelectorAll('.area-chk:checked')].map(cb => cb.value);
+
   // 2. FILTER ROWS
   const filteredRows = [];
   const dateOnlyFilteredRows = [];
@@ -638,13 +944,24 @@ function updateDashboard() {
   for(let i=1; i<GLOBAL_FORM_ROWS.length; i++) {
     const r = GLOBAL_FORM_ROWS[i];
     if(!r[0] || !r[0].trim()) continue;
+    
+    // Demographics check (Columns: Area=3, Age=4, Gender=6) - zero indexed
+    const rowArea = r[3] ? r[3].trim() : '';
+    const rowAge = r[4] ? r[4].trim() : '';
+    const rowGender = r[6] ? r[6].trim() : '';
+
+    if (rowArea !== '' && !checkedAreas.includes(rowArea)) continue;
+    if (rowAge !== '' && !checkedAges.includes(rowAge)) continue;
+    if (rowGender !== '' && !checkedGenders.includes(rowGender)) continue;
+
     const rowDate = parseDateStr(r[0]);
     if(!rowDate) continue;
     if(sDate && rowDate < sDate) continue;
     if(eDate && rowDate > eDate) continue;
+    
     dateOnlyFilteredRows.push(r);
     if(selectedDay !== 'All Days') {
-      if(DAY_NAMES[rowDate.getDay()] !== selectedDay) continue;
+      if(DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
     }
     filteredRows.push(r);
   }
@@ -708,7 +1025,7 @@ function updateDashboard() {
   CHARTS['status-yesterday'] = new Chart(document.getElementById('chart-status-yesterday').getContext('2d'), {
     type: 'pie',
     data: {
-      labels: ['Watched Yesterday', "Didn't Watch Yesterday"],
+      labels: ['Watched TV', "Didn't Watch TV"],
       datasets: [{ data: [watchedYDA, didNotWatch], backgroundColor: ['#22b573','#e8a838'], borderWidth: 2, borderColor: '#fff' }]
     },
     options: {
@@ -761,18 +1078,18 @@ function updateDashboard() {
   destroyChart('period-compare');
   const dayAverages = [0,0,0,0,0,0,0];
   for(let i=0; i<7; i++) {
-    const dayRows  = dateOnlyFilteredRows.filter(r => parseDateStr(r[0]).getDay() === i);
+    const dayRows  = dateOnlyFilteredRows.filter(r => getViewingDayIndex(parseDateStr(r[0])) === i);
     const dTotal   = dayRows.filter(r => r[1] && r[1].trim() !== '').length;
     const dWatched = dayRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
     dayAverages[i] = dTotal ? parseFloat((dWatched/dTotal*100).toFixed(1)) : 0;
   }
   CHARTS['period-compare'] = new Chart(document.getElementById('chart-period-compare').getContext('2d'), {
     type: 'bar',
-    data: { labels: DAY_NAMES, datasets: [{ label: '% Watched Yesterday', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
+    data: { labels: DAY_NAMES, datasets: [{ label: '% Watched TV', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
     options: {
       maintainAspectRatio: false, // ADDED
       indexAxis: 'y',
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% watched yesterday` } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% watched TV` } } },
       scales: {
         x: { beginAtZero: true, max: 100, ticks: { callback: v => v+'%' }, grid: { color: '#f1f4f9' } },
         y: { ticks: { font: { size: 12 } } }
@@ -786,7 +1103,9 @@ function updateDashboard() {
 
   const byDate = {};
   filteredRows.forEach(row => {
-    const dateStr = row[0].trim().split(' ')[0];
+    const dObj = parseDateStr(row[0]);
+    if (!dObj) return;
+    const dateStr = `${String(dObj.getDate()).padStart(2, '0')}/${String(dObj.getMonth()+1).padStart(2, '0')}/${dObj.getFullYear()}`;
     if (!byDate[dateStr]) byDate[dateStr] = [];
     byDate[dateStr].push(row);
   });
@@ -799,7 +1118,7 @@ function updateDashboard() {
 
   const labels = sortedDates.map(dateStr => {
     const [d,m,y] = dateStr.split('/').map(Number);
-    return `${DAY_NAMES[new Date(y,m-1,d).getDay()]} (${dateStr.slice(0,5)})`;
+    return [DAY_NAMES[getViewingDayIndex(new Date(y,m-1,d))].slice(0,3), `(${dateStr.slice(0,5)})`];
   });
 
   // Pre-calculate per-date values for all channels
@@ -838,11 +1157,11 @@ function updateDashboard() {
 
   const tgBaseData = tgMetric === 'count'
     ? tVals.genCount
-    : tgMetric === 'pct_successful'
-      ? tVals.genCount.map((g,i) => tVals.succCount[i] ? parseFloat((g/tVals.succCount[i]*100).toFixed(1)) : 0)
-      : tVals.genCount.map((g,i) => tVals.genCount[i] ? 100 : 0);
+    : tVals.genCount.map((g,i) => tVals.totalCalls[i] ? parseFloat((g/tVals.totalCalls[i]*100).toFixed(1)) : 0);
 
-  const tgSuccData = tgMetric === 'count' ? tVals.succCount : tVals.succPct;
+  const tgSuccData = tgMetric === 'count'
+    ? tVals.succCount
+    : tVals.succPct;
 
   const tgDatasets = [
     {
@@ -866,8 +1185,8 @@ function updateDashboard() {
     const chMetricData = tgMetric === 'count'
       ? chData[ch].count
       : tgMetric === 'pct_successful'
-        ? chData[ch].count.map((c,i) => tVals.succCount[i] ? parseFloat((c/tVals.succCount[i]*100).toFixed(1)) : 0)
-        : chData[ch].count.map((c,i) => tVals.genCount[i] ? parseFloat((c/tVals.genCount[i]*100).toFixed(1)) : 0);
+         ? chData[ch].count.map((c,i) => tVals.totalCalls[i] ? parseFloat((c/tVals.totalCalls[i]*100).toFixed(1)) : 0)
+         : chData[ch].count.map((c,i) => tVals.genCount[i] ? parseFloat((c/tVals.genCount[i]*100).toFixed(1)) : 0);
     tgDatasets.push({
       label: ch,
       data: chMetricData,
@@ -888,7 +1207,8 @@ function updateDashboard() {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}${tgSuffix}` } }
       },
       scales: {
-        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tgSuffix } }
+        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tgSuffix } },
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -899,24 +1219,24 @@ function updateDashboard() {
 
   const tyBaseData = tyMetric === 'count'
     ? tVals.ydaCount
-    : tyMetric === 'pct_successful'
-      ? tVals.ydaCount.map((y,i) => tVals.succCount[i] ? parseFloat((y/tVals.succCount[i]*100).toFixed(1)) : 0)
-      : tVals.ydaCount.map((y,i) => tVals.ydaCount[i] ? 100 : 0);
+    : tVals.ydaCount.map((y,i) => tVals.genCount[i] ? parseFloat((y/tVals.genCount[i]*100).toFixed(1)) : 0);
 
-  const tySuccData = tyMetric === 'count' ? tVals.succCount : tVals.succPct;
+  const tySuccData = tyMetric === 'count'
+    ? tVals.succCount
+    : tVals.succPct;
 
   const tyDatasets = [
     {
       label: 'Total Successful Calls',
       data: tySuccData,
-      borderColor: '#9b59b6', backgroundColor: '#9b59b6',
+      borderColor: '#000000', backgroundColor: '#000000',
       borderWidth: 2, borderDash: [2,2], pointRadius: 4, tension: 0.3,
       yAxisID: 'y', order: 0
     },
     {
-      label: 'Watched TV Yesterday',
+      label: 'Watched TV',
       data: tyBaseData,
-      borderColor: '#1a1f2e', backgroundColor: '#1a1f2e',
+      borderColor: '#3d5fc4', backgroundColor: '#3d5fc4',
       borderWidth: 3, borderDash: [5,5], pointRadius: 5, tension: 0.3,
       yAxisID: 'y', order: 1
     }
@@ -949,7 +1269,8 @@ function updateDashboard() {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}${tySuffix}` } }
       },
       scales: {
-        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tySuffix } }
+        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tySuffix } },
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -973,7 +1294,7 @@ function updateDashboard() {
 
     const tnDatasets = [
       {
-        label: 'Total News Viewers (Yesterday)',
+        label: 'Total News Viewers',
         data: tnBaseData,
         borderColor: '#1a1f2e', backgroundColor: '#1a1f2e',
         borderWidth: 3, borderDash: [5,5], pointRadius: 5, tension: 0.3,
@@ -1008,21 +1329,22 @@ function updateDashboard() {
           tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}${tnSuffix}` } }
         },
         scales: {
-          y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tnSuffix } }
+          y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tnSuffix } },
+          x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
         }
       }
     });
   }
+  renderHourlyTrend();
 
 }
 
 function destroyChart(id) { if (CHARTS[id]) { CHARTS[id].destroy(); delete CHARTS[id]; } }
-
 function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, watchesGen, successfulCalls) {
   destroyChart('channels');
   const totalTVCount = filteredRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
   const totalTVEntry = {
-    name: 'Total TV (Yesterday)',
+    name: 'Total TV',
     count: totalTVCount,
     pct_successful: successfulCalls ? parseFloat((totalTVCount / successfulCalls * 100).toFixed(2)) : 0,
     pct_yesterday: watchedYDA ? parseFloat((totalTVCount / watchedYDA * 100).toFixed(2)) : 0,
@@ -1034,14 +1356,14 @@ function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, 
   CHARTS['channels'] = new Chart(document.getElementById('chart-channels').getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
-    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } } // ADDED
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } } // ADDED
   });
 }
 
 function renderNewsChannels(channels, metric, successfulCalls, watchedYDA, watchesGen, newsWatchedYDA) {
   destroyChart('news-channels');
   const totalNewsEntry = {
-    name: 'Total News (Yesterday)',
+    name: 'Total News',
     count: newsWatchedYDA,
     pct_successful: successfulCalls ? parseFloat((newsWatchedYDA / successfulCalls * 100).toFixed(2)) : 0,
     pct_yesterday: watchedYDA ? parseFloat((newsWatchedYDA / watchedYDA * 100).toFixed(2)) : 0,
@@ -1053,7 +1375,7 @@ function renderNewsChannels(channels, metric, successfulCalls, watchedYDA, watch
   CHARTS['news-channels'] = new Chart(document.getElementById('chart-news-channels').getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
-    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } } } }
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } }
   });
 }
 
@@ -1061,7 +1383,7 @@ function renderNewsWhere(filteredRows) {
   destroyChart('news-where');
   const checked = [...document.querySelectorAll('.nw-where-check:checked')].map(cb => cb.value);
   const datasets = checked.map((ch, idx) => {
-    const whereCol = NEWS_WW_CHANNELS[ch] + 2;
+    const whereCol = NEWS_WHERE_CHANNELS[ch];
     const counts = WHERE_CATEGORIES.map(cat =>
       filteredRows.filter(r => r.length > whereCol && mapWhereValue(r[whereCol]) === cat).length
     );
@@ -1080,7 +1402,7 @@ function renderNewsWhere(filteredRows) {
       },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { font: { size: 10 } } }
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1090,7 +1412,7 @@ function renderNewsWhen(filteredRows) {
   destroyChart('news-when');
   const checked = [...document.querySelectorAll('.nw-when-check:checked')].map(cb => cb.value);
   const datasets = checked.map((ch, idx) => {
-    const periodCol = NEWS_WW_CHANNELS[ch] + 1;
+    const periodCol = NEWS_WHEN_CHANNELS[ch];
     const counts = PERIOD_CATEGORIES.map(cat =>
       filteredRows.filter(r => r.length > periodCol && mapPeriodValue(r[periodCol]) === cat).length
     );
@@ -1109,7 +1431,7 @@ function renderNewsWhen(filteredRows) {
       },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { font: { size: 10 } } }
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1148,7 +1470,7 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
 
   // Channels to show on x-axis
   const channelsToShow = selectedChannel === 'all'
-    ? [{ name: 'Total TV (Yesterday)', col: COL_WATCH_YDA, isTotalTV: true }, ...Object.entries(MAIN_CHANNELS).map(([name, col]) => ({ name, col, isTotalTV: false }))]
+    ? [{ name: 'Total TV', col: COL_WATCH_YDA, isTotalTV: true }, ...Object.entries(MAIN_CHANNELS).map(([name, col]) => ({ name, col, isTotalTV: false }))]
     : [{ name: selectedChannel, col: MAIN_CHANNELS[selectedChannel], isTotalTV: false }];
 
   // Cumulative denominators — always calculated from the full filteredRows pool
@@ -1228,7 +1550,7 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
       },
       scales: {
         y: { beginAtZero: true, ticks: { callback: v => v + suffix }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { font: { size: 11 } } }
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1249,9 +1571,9 @@ function renderNewsPerWeek(filteredRows, metric, successfulCalls, watchedYDA, wa
   const showCumulative = document.getElementById('news-perweek-toggle-cumulative').dataset.active === 'true';
   const showW = [1,2,3,4].map(w => document.getElementById(`news-perweek-toggle-w${w}`).dataset.active === 'true');
 
-  // Total TV (Yesterday) + the 5 News channels
+  // Total TV + the 5 News channels
   const channelsToShow = [
-    { name: 'Total TV (Yesterday)', col: COL_WATCH_YDA, isTotalTV: true },
+    { name: 'Total TV', col: COL_WATCH_YDA, isTotalTV: true },
     ...Object.entries(NEWS_CHANNELS).map(([name, col]) => ({ name, col, isTotalTV: false }))
   ];
 
@@ -1327,7 +1649,7 @@ function renderNewsPerWeek(filteredRows, metric, successfulCalls, watchedYDA, wa
       },
       scales: {
         y: { beginAtZero: true, ticks: { callback: v => v + suffix }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { font: { size: 11 } } }
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1372,6 +1694,7 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
   });
 });
 setInterval(() => initData(false), 5 * 60 * 1000);
+
 /* =================================================================
    SHOW TREND GRAPH
 ================================================================= */
@@ -1445,23 +1768,38 @@ function renderShowTrend(channelName, showName) {
   if (eDate) eDate.setHours(23,59,59,999);
   const selectedDay = document.getElementById('period-select').value;
 
+  const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
+  const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
+  const checkedAreas = [...document.querySelectorAll('.area-chk:checked')].map(cb => cb.value);
+
   // Filter rows
   const filtered = [];
   for (let i = 1; i < GLOBAL_FORM_ROWS.length; i++) {
     const r = GLOBAL_FORM_ROWS[i];
     if (!r[0] || !r[0].trim()) continue;
+    
+    const rowArea = r[3] ? r[3].trim() : '';
+    const rowAge = r[4] ? r[4].trim() : '';
+    const rowGender = r[6] ? r[6].trim() : '';
+
+    if (rowArea !== '' && !checkedAreas.includes(rowArea)) continue;
+    if (rowAge !== '' && !checkedAges.includes(rowAge)) continue;
+    if (rowGender !== '' && !checkedGenders.includes(rowGender)) continue;
+
     const rowDate = parseDateStr(r[0]);
     if (!rowDate) continue;
     if (sDate && rowDate < sDate) continue;
     if (eDate && rowDate > eDate) continue;
-    if (selectedDay !== 'All Days' && DAY_NAMES[rowDate.getDay()] !== selectedDay) continue;
+    if (selectedDay !== 'All Days' && DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
     filtered.push(r);
   }
 
   // Group by date
   const byDate = {};
   filtered.forEach(r => {
-    const d = r[0].trim().split(' ')[0];
+    const dObj = parseDateStr(r[0]);
+    if (!dObj) return;
+    const d = `${String(dObj.getDate()).padStart(2, '0')}/${String(dObj.getMonth()+1).padStart(2, '0')}/${dObj.getFullYear()}`;
     if (!byDate[d]) byDate[d] = [];
     byDate[d].push(r);
   });
@@ -1474,7 +1812,7 @@ function renderShowTrend(channelName, showName) {
 
   const labels   = sortedDates.map(d => {
     const [day,mon,yr] = d.split('/').map(Number);
-    return DAY_NAMES[new Date(yr,mon-1,day).getDay()].slice(0,3) + ' ' + d.slice(0,5);
+    return [DAY_NAMES[getViewingDayIndex(new Date(yr,mon-1,day))].slice(0,3), `(${d.slice(0,5)})`];
   });
   const pctData  = sortedDates.map(d => {
     const rws        = byDate[d];
@@ -1522,7 +1860,7 @@ function renderShowTrend(channelName, showName) {
           ticks: { callback: v => v > 100 ? '' : v+'%', stepSize: 10 },
           grid: { color: '#f1f4f9' }
         },
-        x: { ticks: { font: { size: 11 } } }
+        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1588,6 +1926,17 @@ if (document.getElementById('trend-news-metric')) {
 document.querySelectorAll('.nw-where-check').forEach(cb => cb.addEventListener('change', updateDashboard));
 document.querySelectorAll('.nw-when-check').forEach(cb => cb.addEventListener('change', updateDashboard));
 
+// Demographics Checkbox controls
+document.querySelectorAll('.demo-chk').forEach(cb => {
+  cb.addEventListener('change', () => {
+    updateDashboard();
+    const ch = document.getElementById('show-channel-select').value;
+    const show = document.getElementById('show-select').value;
+    if (ch && show) renderShowTrend(ch, show);
+  });
+});
+
+
 /* =================================================================
    PASSWORD GATE & MOBILE FIXES
 ================================================================= */
@@ -1629,6 +1978,50 @@ window.addEventListener('resize', function() {
   window._resizeTimer = setTimeout(function() {
     Object.values(CHARTS).forEach(function(chart) { if(chart) chart.resize(); });
   }, 200);
+});
+// --- NEW DEMOGRAPHICS LOGIC ---
+function toggleDrop(id) {
+  const el = document.getElementById(id);
+  const isHidden = el.classList.contains('hidden');
+  
+  // Close all menus first
+  document.getElementById('drop-gender').classList.add('hidden');
+  document.getElementById('drop-age').classList.add('hidden');
+  document.getElementById('drop-area').classList.add('hidden');
+  
+  // Open the one we clicked
+  if (isHidden) el.classList.remove('hidden');
+}
+
+// Close menus when clicking outside of them
+document.addEventListener('click', function(event) {
+  if (!event.target.closest('button[onclick^="toggleDrop"]') && !event.target.closest('div[id^="drop-"]')) {
+    document.getElementById('drop-gender').classList.add('hidden');
+    document.getElementById('drop-age').classList.add('hidden');
+    document.getElementById('drop-area').classList.add('hidden');
+  }
+});
+
+// Select All logic
+function toggleAll(masterCheckbox, targetClass) {
+  document.querySelectorAll('.' + targetClass).forEach(cb => {
+    cb.checked = masterCheckbox.checked;
+  });
+  updateDashboard();
+}
+
+// Uncheck "Select All" if user manually unchecks a single item
+document.querySelectorAll('.demo-chk').forEach(cb => {
+  cb.addEventListener('change', function() {
+    const classList = Array.from(this.classList);
+    const targetClass = classList.find(c => c.endsWith('-chk') && c !== 'demo-chk'); 
+    const type = targetClass.split('-')[0]; 
+    const master = document.getElementById(`all-${type}`);
+    const allBoxes = document.querySelectorAll('.' + targetClass);
+    const allChecked = document.querySelectorAll('.' + targetClass + ':checked');
+    
+    master.checked = (allBoxes.length === allChecked.length);
+  });
 });
   </script>
 </body>
