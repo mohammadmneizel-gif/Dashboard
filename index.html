@@ -239,9 +239,9 @@
               <p id="kpi-successful-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
             </div>
             <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
-              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watched TV (Selected Day)</p>
-              <p id="kpi-watched" class="text-lg font-semibold text-gray-800">—</p>
-              <p id="kpi-watched-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p>
+              <p id="kpi-gen" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-gen-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
             </div>
             <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
               <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch TV (Selected Day)</p>
@@ -249,9 +249,9 @@
               <p id="kpi-no-watch-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
             </div>
             <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
-              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p>
-              <p id="kpi-gen" class="text-lg font-semibold text-gray-800">—</p>
-              <p id="kpi-gen-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watched TV (Selected Day)</p>
+              <p id="kpi-watched" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-watched-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
             </div>
           </div>
         </div>
@@ -272,7 +272,7 @@
         </div>
         <div class="chart-card-soul flex flex-col" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
           <h2 class="text-sm font-semibold text-gray-700 mb-1">Daily Comparison</h2>
-          <p class="text-xs text-gray-400 mb-4">Avg % Watched TV for the selected dates</p>
+          <p class="text-xs text-gray-400 mb-4">Average % of Total Calls who Watched TV</p>
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
         </div>
       </section>
@@ -288,8 +288,8 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of That Day's Viewers</option>
-              <option value="pct_general">% of General Viewers</option>
+              <option value="pct_general">% of General Watch TV</option>
+              <option value="pct_yesterday">% of Yesterday Viewers</option>
               <option value="count">Raw Count</option>
             </select>
           </div>
@@ -307,8 +307,8 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="perweek-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of That Day's Viewers</option>
-              <option value="pct_general">% of General Viewers</option>
+              <option value="pct_general">% of General Watch TV</option>
+              <option value="pct_yesterday">% of Yesterday Viewers</option>
               <option value="count">Raw Count</option>
             </select>
             <label class="text-xs text-gray-500">Channel:</label>
@@ -348,7 +348,7 @@
               <label class="text-xs text-gray-500">View:</label>
               <select id="trend-general-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
                 <option value="pct_successful">% of Successful Calls</option>
-                <option value="pct_general">% of General Viewers</option>
+                <option value="pct_general">% of General Watch TV</option>
                 <option value="count">Raw Count</option>
               </select>
               <label class="text-xs text-gray-500">Channels:</label>
@@ -377,7 +377,7 @@
               <label class="text-xs text-gray-500">View:</label>
               <select id="trend-yesterday-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
                 <option value="pct_successful">% of Successful Calls</option>
-                <option value="pct_yesterday">% of That Day's Viewers</option>
+                <option value="pct_yesterday">% of Yesterday Viewers</option>
                 <option value="count">Raw Count</option>
               </select>
               <label class="text-xs text-gray-500">Channels:</label>
@@ -404,6 +404,8 @@
             <p class="text-xs text-gray-400">Compare specific hours for a single channel (Data from recent responses)</p>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
+            <label class="text-xs text-gray-500">View:</label>
+            <select id="hourly-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
             <label class="text-xs text-gray-500">Channels:</label>
             <div class="relative">
               <button onclick="toggleDrop('drop-hourly')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500 justify-between min-w-[160px]">Select Channels ▾</button>
@@ -436,17 +438,34 @@
             <p class="text-xs text-gray-400">% of channel viewers who watched a specific show, per day</p>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
-            <label class="text-xs text-gray-500">Channel:</label>
-            <select id="show-channel-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-              <option value="">— Pick a Channel —</option>
-              <option value="Roya TV">Roya TV</option>
-              <option value="Jordan TV">Jordan TV</option>
-              <option value="Amman TV">Amman TV</option>
-            </select>
-            <label class="text-xs text-gray-500">Show:</label>
-            <select id="show-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 min-w-[180px]" disabled>
-              <option value="">— Pick a Channel First —</option>
-            </select>
+            <label class="text-xs text-gray-500">View:</label>
+            <select id="show-trend-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+            <label class="text-xs text-gray-500">Channel(s):</label>
+            <div id="show-channel-dd" class="relative">
+              <button type="button" id="show-channel-btn" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 min-w-[170px] justify-between">
+                <span id="show-channel-btn-label" class="text-gray-400 truncate">— Pick Channel(s) —</span>
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" class="flex-shrink-0"><path stroke="#9ca3af" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>
+              </button>
+              <div id="show-channel-panel" class="hidden absolute z-20 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1" style="min-width:180px;">
+                <label class="flex items-center gap-2 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer">
+                  <input type="checkbox" class="show-ch-chk accent-brand-600" value="Roya TV"> Roya TV
+                </label>
+                <label class="flex items-center gap-2 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer">
+                  <input type="checkbox" class="show-ch-chk accent-brand-600" value="Jordan TV"> Jordan TV
+                </label>
+                <label class="flex items-center gap-2 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer">
+                  <input type="checkbox" class="show-ch-chk accent-brand-600" value="Amman TV"> Amman TV
+                </label>
+              </div>
+            </div>
+            <label class="text-xs text-gray-500">Show(s):</label>
+            <div id="show-show-dd" class="relative">
+              <button type="button" id="show-show-btn" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 min-w-[200px] max-w-[280px] justify-between opacity-50 cursor-not-allowed" disabled>
+                <span id="show-show-btn-label" class="text-gray-400 truncate">— Pick a Channel First —</span>
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" class="flex-shrink-0"><path stroke="#9ca3af" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>
+              </button>
+              <div id="show-show-panel" class="hidden absolute z-20 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 overflow-y-auto" style="min-width:220px; max-height:260px;"></div>
+            </div>
           </div>
         </div>
         <div class="w-full h-[50vh] md:h-auto" style="min-height:300px" id="show-trend-container">
@@ -459,15 +478,24 @@
 
       <div class="grid lg:grid-cols-3 gap-6">
         <div class="chart-card-soul flex flex-col">
-          <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Roya viewers</p></div>
+          <div class="mb-4 flex flex-col gap-2">
+            <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
+            <select id="roya-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+          </div>
           <div class="flex-1 w-full" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
         </div>
         <div class="chart-card-soul flex flex-col">
-          <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Jordan TV viewers</p></div>
+          <div class="mb-4 flex flex-col gap-2">
+            <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
+            <select id="jordan-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+          </div>
           <div class="flex-1 w-full" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
         </div>
         <div class="chart-card-soul flex flex-col">
-          <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Amman TV viewers</p></div>
+          <div class="mb-4 flex flex-col gap-2">
+            <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
+            <select id="amman-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+          </div>
           <div class="flex-1 w-full" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
         </div>
       </div>
@@ -528,8 +556,8 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="news-channel-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of That Day's Viewers</option>
-              <option value="pct_general">% of General Viewers</option>
+              <option value="pct_general">% of General Watch TV</option>
+              <option value="pct_yesterday">% of Yesterday Viewers</option>
               <option value="count">Raw Count</option>
             </select>
           </div>
@@ -547,8 +575,8 @@
             <label class="text-xs text-gray-500">View:</label>
             <select id="news-perweek-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
               <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of That Day's Viewers</option>
-              <option value="pct_general">% of General Viewers</option>
+              <option value="pct_general">% of General Watch TV</option>
+              <option value="pct_yesterday">% of Yesterday Viewers</option>
               <option value="count">Raw Count</option>
             </select>
             <label class="text-xs text-gray-500">Show:</label>
@@ -573,8 +601,8 @@
           <div class="flex items-center gap-2 flex-wrap">
             <label class="text-xs text-gray-500">View:</label>
             <select id="trend-news-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-              <option value="pct_successful">% of Successful Calls</option>
-              <option value="pct_yesterday">% of That Day's Viewers</option>
+              <option value="pct_successful">% of Total Successful calls</option>
+              <option value="pct_yesterday">% from yesterday Viewers</option>
               <option value="count">Raw Count</option>
             </select>
             <label class="text-xs text-gray-500">Channels:</label>
@@ -790,6 +818,7 @@ timeBtns.forEach(btn => {
     document.getElementById('all-day').checked = true;
     document.querySelectorAll('.day-chk').forEach(cb => cb.checked = true);
     updateDashboard();
+    renderShowTrend();
   });
 });
 
@@ -819,6 +848,7 @@ function handleDateChange() {
   }
   
   updateDashboard();
+  renderShowTrend();
 }
 
 inputStart.addEventListener('change', handleDateChange);
@@ -846,7 +876,8 @@ function format24hSingle(arabicStr) {
     "من الساعة 10:00 مساءً إلى 11:00 مساءً": "22:00 - 23:00", "من الساعة 11:00 مساءً إلى 12:00 منتصف الليل": "23:00 - 00:00",
     "12:00 +": "00:00+"
   };
-  return map[s] || s;
+  const result = map[s] || s;
+  return typeof result === 'string' ? result.replace(' - ', ' to ') : result;
 }
 
 // Translates Arabic survey text into a 3-line stacked array for the Graph X-Axis (like your image)
@@ -867,7 +898,8 @@ function format24hMulti(arabicStr) {
     "من الساعة 10:00 مساءً إلى 11:00 مساءً": ["22:00", "-", "23:00"], "من الساعة 11:00 مساءً إلى 12:00 منتصف الليل": ["23:00", "-", "00:00"],
     "12:00 +": ["00:00", "+", ""]
   };
-  return map[s] || [s];
+  const result = map[s] || [s];
+  return Array.isArray(result) ? result.map(item => item === '-' ? 'to' : item) : result;
 }
 
 // Assigns a chronological weight so morning appears before night
@@ -1004,13 +1036,25 @@ function renderHourlyTrend() {
     const channelLabel = cb.dataset.label;
     const channelCol = headers.indexOf(channelName);
     
+    const hourlyMetric = document.getElementById('hourly-metric').value;
+    const totalSucc = filtered.filter(isCallSuccessful).length;
+    const totalGen = filtered.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+    const totalYda = filtered.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    const channelTotal = filtered.filter(r => r.length > channelCol && r[channelCol].trim() !== '' && r[channelCol].trim() !== 'لا' && !r[channelCol].includes('لم يشاهد')).length;
+
     let dataCounts = [];
     if (channelCol !== -1) {
       dataCounts = checkedTimesRaw.map(timeStr => {
-        return filtered.filter(r => {
+        const count = filtered.filter(r => {
           if (r.length <= channelCol || !r[channelCol]) return false;
           return r[channelCol].includes(timeStr);
         }).length;
+        if (hourlyMetric === 'count') return count;
+        if (hourlyMetric === 'pct_specific') return channelTotal ? parseFloat((count / channelTotal * 100).toFixed(1)) : 0;
+        if (hourlyMetric === 'pct_yesterday') return totalYda ? parseFloat((count / totalYda * 100).toFixed(1)) : 0;
+        if (hourlyMetric === 'pct_general') return totalGen ? parseFloat((count / totalGen * 100).toFixed(1)) : 0;
+        if (hourlyMetric === 'pct_successful') return totalSucc ? parseFloat((count / totalSucc * 100).toFixed(1)) : 0;
+        return 0;
       });
     }
 
@@ -1028,6 +1072,45 @@ function renderHourlyTrend() {
     };
   });
 
+  const hourlyMetricNow = document.getElementById('hourly-metric').value;
+  if (hourlyMetricNow !== 'pct_specific') {
+    const ALL_HOURLY_COLS_TEXT = [
+      "يرجى تحديد الساعات التي شاهدت فيها قناة رؤيا أمس؟",
+      "يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني أمس؟",
+      "يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني الرياضيه أمس؟",
+      "يرجى تحديد الساعات التي شاهدت فيها قناة عمان تي في أمس؟",
+      "يرجى تحديد الساعات التي شاهدت فيها م بي سي في أمس؟",
+      "يرجى تحديد الساعات التي شاهدت فيها قناة المملكه في أمس؟"
+    ];
+    const allHourlyColIndices = ALL_HOURLY_COLS_TEXT.map(t => headers.indexOf(t)).filter(i => i !== -1);
+
+    const totalGenAll  = filtered.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+    const totalYdaAll  = filtered.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+    const totalSuccAll = filtered.filter(isCallSuccessful).length;
+
+    const generalCounts = checkedTimesRaw.map(timeStr =>
+      filtered.filter(r => allHourlyColIndices.some(colIdx => r.length > colIdx && r[colIdx] && r[colIdx].includes(timeStr))).length
+    );
+
+    let generalData = generalCounts;
+    if (hourlyMetricNow === 'pct_general')    generalData = generalCounts.map(c => totalGenAll  ? parseFloat((c / totalGenAll  * 100).toFixed(1)) : 0);
+    if (hourlyMetricNow === 'pct_yesterday')  generalData = generalCounts.map(c => totalYdaAll  ? parseFloat((c / totalYdaAll  * 100).toFixed(1)) : 0);
+    if (hourlyMetricNow === 'pct_successful') generalData = generalCounts.map(c => totalSuccAll ? parseFloat((c / totalSuccAll * 100).toFixed(1)) : 0);
+
+    datasets.push({
+      label: 'General TV Watchers',
+      data: generalData,
+      borderColor: '#1a1f2e',
+      backgroundColor: '#1a1f2e',
+      borderWidth: 2,
+      borderDash: [6, 4],
+      pointRadius: mobileRadius(3),
+      tension: 0.3,
+      fill: false,
+      order: -1
+    });
+  }
+
   CHARTS['hourly-trend'] = new Chart(document.getElementById('chart-hourly-trend').getContext('2d'), {
     type: 'line',
     data: { 
@@ -1039,10 +1122,10 @@ function renderHourlyTrend() {
       responsive: true,
       plugins: { 
         legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, 
-        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw} viewers` } } 
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}${document.getElementById('hourly-metric').value === 'count' ? ' viewers' : '%'}` } } 
       },
       scales: {
-        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
+        y: { beginAtZero: true, ticks: { callback: v => v + (document.getElementById('hourly-metric').value === 'count' ? '' : '%') }, grid: { color: '#f1f4f9' } },
         x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
@@ -1227,9 +1310,14 @@ function updateDashboard() {
   const royaCount   = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV']   && r[MAIN_CHANNELS['Roya TV']].trim()   === 'نعم').length;
   const jordanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV'] && r[MAIN_CHANNELS['Jordan TV']].trim() === 'نعم').length;
   const ammanCount  = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV']  && r[MAIN_CHANNELS['Amman TV']].trim()  === 'نعم').length;
-  renderShowsChart('chart-roya',   calculateList(ROYA_SHOWS,   royaCount),   'pct_specific', 'roya',   '#7c3aed');
-  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), 'pct_specific', 'jordan', '#16a34a');
-  renderShowsChart('chart-amman',  calculateList(AMMAN_SHOWS,  ammanCount),  'pct_specific', 'amman',  '#ea580c');
+
+  const royaMetric = document.getElementById('roya-metric').value;
+  const jordanMetric = document.getElementById('jordan-metric').value;
+  const ammanMetric = document.getElementById('amman-metric').value;
+
+  renderShowsChart('chart-roya',   calculateList(ROYA_SHOWS,   royaCount),   royaMetric, 'roya',   '#7c3aed');
+  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), jordanMetric, 'jordan', '#16a34a');
+  renderShowsChart('chart-amman',  calculateList(AMMAN_SHOWS,  ammanCount),  ammanMetric, 'amman',  '#ea580c');
 
   // 5. DAILY COMPARISON CHART
   destroyChart('period-compare');
@@ -1604,7 +1692,7 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
   CHARTS[chartKey] = new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: (ctx) => barGradient(ctx, color, true), borderColor: color, borderWidth: 1.5, borderRadius: 10 }] },
-    options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } } // ADDED
+    options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}${pctKey === 'count' ? '' : '%'}` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+(pctKey === 'count' ? '' : '%') } } } } // ADDED
   });
 }
 
@@ -1869,42 +1957,117 @@ const SHOW_MAP = {
   'Amman TV':  AMMAN_SHOWS,
 };
 
-const showChannelSelect = document.getElementById('show-channel-select');
-const showSelect        = document.getElementById('show-select');
+const SHOW_TREND_COLORS = ['#3d5fc4', '#e8a838', '#1D9E75', '#D85A30', '#7c3aed', '#D4537E', '#0F6E56', '#993c1d'];
 
-showChannelSelect.addEventListener('change', function() {
-  const ch = this.value;
-  showSelect.innerHTML = '';
+function hexToRgba(hex, alpha) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0,2), 16);
+  const g = parseInt(h.substring(2,4), 16);
+  const b = parseInt(h.substring(4,6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-  if (!ch) {
-    showSelect.innerHTML = '<option value="">— Pick a Channel First —</option>';
-    showSelect.disabled = true;
-    resetShowTrend();
-    return;
+function darkenColor(hex, amount) {
+  const h = hex.replace('#', '');
+  const r = Math.round(parseInt(h.substring(0,2), 16) * (1 - amount));
+  const g = Math.round(parseInt(h.substring(2,4), 16) * (1 - amount));
+  const b = Math.round(parseInt(h.substring(4,6), 16) * (1 - amount));
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+let selectedShowChannels = [];
+let selectedShowEntries  = [];
+
+const showChannelBtn      = document.getElementById('show-channel-btn');
+const showChannelBtnLabel = document.getElementById('show-channel-btn-label');
+const showChannelPanel    = document.getElementById('show-channel-panel');
+const showShowBtn         = document.getElementById('show-show-btn');
+const showShowBtnLabel    = document.getElementById('show-show-btn-label');
+const showShowPanel       = document.getElementById('show-show-panel');
+
+showChannelBtn.addEventListener('click', () => {
+  showShowPanel.classList.add('hidden');
+  showChannelPanel.classList.toggle('hidden');
+});
+showShowBtn.addEventListener('click', () => {
+  if (showShowBtn.disabled) return;
+  showChannelPanel.classList.add('hidden');
+  showShowPanel.classList.toggle('hidden');
+});
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('show-channel-dd').contains(e.target)) showChannelPanel.classList.add('hidden');
+  if (!document.getElementById('show-show-dd').contains(e.target)) showShowPanel.classList.add('hidden');
+});
+
+document.querySelectorAll('.show-ch-chk').forEach(cb => cb.addEventListener('change', onShowChannelChange));
+
+function onShowChannelChange() {
+  selectedShowChannels = [...document.querySelectorAll('.show-ch-chk:checked')].map(cb => cb.value);
+
+  showChannelBtnLabel.textContent = selectedShowChannels.length ? selectedShowChannels.join(', ') : '— Pick Channel(s) —';
+  showChannelBtnLabel.classList.toggle('text-gray-400', !selectedShowChannels.length);
+
+  selectedShowEntries = selectedShowEntries.filter(entry => selectedShowChannels.includes(entry.channel));
+
+  if (!selectedShowChannels.length) {
+    showShowBtn.disabled = true;
+    showShowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    showShowBtnLabel.textContent = '— Pick a Channel First —';
+    showShowBtnLabel.classList.add('text-gray-400');
+    showShowPanel.classList.add('hidden');
+    showShowPanel.innerHTML = '';
+  } else {
+    showShowBtn.disabled = false;
+    showShowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    rebuildShowPanel();
   }
 
-  const firstOpt = document.createElement('option');
-  firstOpt.value = '';
-  firstOpt.textContent = '— Pick a Show —';
-  showSelect.appendChild(firstOpt);
+  updateShowBtnLabel();
+  renderShowTrend();
+}
 
-  Object.keys(SHOW_MAP[ch]).forEach(showName => {
-    const opt = document.createElement('option');
-    opt.value = showName;
-    opt.textContent = showName;
-    showSelect.appendChild(opt);
+function rebuildShowPanel() {
+  showShowPanel.innerHTML = '';
+  selectedShowChannels.forEach(ch => {
+    const base = CHANNEL_COLORS[ch] || '#3d5fc4';
+    const heading = document.createElement('p');
+    heading.className = 'px-3 py-1.5 text-xs font-semibold';
+    heading.style.background = hexToRgba(base, 0.12);
+    heading.style.borderLeft = `3px solid ${base}`;
+    heading.style.color = darkenColor(base, 0.3);
+    heading.textContent = ch;
+    showShowPanel.appendChild(heading);
+
+    Object.keys(SHOW_MAP[ch]).forEach(showName => {
+      const isChecked = selectedShowEntries.some(entry => entry.channel === ch && entry.show === showName);
+      const label = document.createElement('label');
+      label.className = 'flex items-center gap-2 px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer';
+      label.innerHTML = `<input type="checkbox" class="show-sh-chk accent-brand-600" data-channel="${ch}" data-show="${showName}" ${isChecked ? 'checked' : ''}> <span>${showName}</span>`;
+      showShowPanel.appendChild(label);
+    });
   });
 
-  showSelect.disabled = false;
-  resetShowTrend();
-});
+  document.querySelectorAll('.show-sh-chk').forEach(cb => cb.addEventListener('change', onShowShowChange));
+}
 
-showSelect.addEventListener('change', function() {
-  const ch   = showChannelSelect.value;
-  const show = this.value;
-  if (!ch || !show) { resetShowTrend(); return; }
-  renderShowTrend(ch, show);
-});
+function onShowShowChange() {
+  selectedShowEntries = [...document.querySelectorAll('.show-sh-chk:checked')].map(cb => ({
+    channel: cb.dataset.channel,
+    show: cb.dataset.show
+  }));
+  updateShowBtnLabel();
+  renderShowTrend();
+}
+
+function updateShowBtnLabel() {
+  if (!selectedShowEntries.length) {
+    showShowBtnLabel.textContent = selectedShowChannels.length ? '— Pick Show(s) —' : '— Pick a Channel First —';
+    showShowBtnLabel.classList.add('text-gray-400');
+  } else {
+    showShowBtnLabel.textContent = selectedShowEntries.map(entry => entry.show).join(', ');
+    showShowBtnLabel.classList.remove('text-gray-400');
+  }
+}
 
 function resetShowTrend() {
   destroyChart('show-trend');
@@ -1912,11 +2075,9 @@ function resetShowTrend() {
   document.getElementById('show-trend-placeholder').classList.remove('hidden');
 }
 
-function renderShowTrend(channelName, showName) {
+function renderShowTrend() {
+  if (!selectedShowEntries.length) { resetShowTrend(); return; }
   if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
-
-  const channelCol = SHOW_CHANNEL_COLS[channelName];
-  const showCol    = SHOW_MAP[channelName][showName];
 
   // Apply same date + day filters currently active
   const sVal  = document.getElementById('date-start').value;
@@ -1973,12 +2134,52 @@ function renderShowTrend(channelName, showName) {
     const [day,mon,yr] = d.split('/').map(Number);
     return [DAY_NAMES[getViewingDayIndex(new Date(yr,mon-1,day))].slice(0,3), `(${d.slice(0,5)})`];
   });
-  const pctData  = sortedDates.map(d => {
-    const rws        = byDate[d];
-    const chViewers  = rws.filter(r => r.length > channelCol && r[channelCol].trim() === 'نعم').length;
-    const showViewers= rws.filter(r => r.length > showCol && r[showCol].trim() === 'نعم' && r.length > channelCol && r[channelCol].trim() === 'نعم').length;
-    const pct = chViewers ? parseFloat((showViewers / chViewers * 100).toFixed(1)) : 0;
-    return Math.min(pct, 100);
+
+  const datasets = selectedShowEntries.map((entry, idx) => {
+    const channelCol = SHOW_CHANNEL_COLS[entry.channel];
+    const showCol    = SHOW_MAP[entry.channel][entry.show];
+    const color      = SHOW_TREND_COLORS[idx % SHOW_TREND_COLORS.length];
+
+    const showTrendMetric = document.getElementById('show-trend-metric').value;
+    const nums = [];
+    const dens = [];
+    const pctData = sortedDates.map(d => {
+      const rws = byDate[d];
+      const showViewers = rws.filter(r => r.length > showCol && r[showCol].trim() === 'نعم' && r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+      
+      let denominator = 0;
+      if (showTrendMetric === 'pct_specific') {
+        denominator = rws.filter(r => r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+      } else if (showTrendMetric === 'pct_yesterday') {
+        denominator = rws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+      } else if (showTrendMetric === 'pct_general') {
+        denominator = rws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+      } else if (showTrendMetric === 'pct_successful') {
+        denominator = rws.filter(isCallSuccessful).length;
+      }
+      
+      nums.push(showViewers);
+      dens.push(denominator);
+
+      if (showTrendMetric === 'count') return showViewers;
+      
+      const pct = denominator ? parseFloat((showViewers / denominator * 100).toFixed(1)) : 0;
+      return Math.min(pct, 100);
+    });
+
+    return {
+      label: `${entry.show} (${entry.channel})`,
+      data: pctData,
+      nums: nums,
+      dens: dens,
+      borderColor: color,
+      backgroundColor: (ctx) => lineGradient(ctx, color),
+      fill: selectedShowEntries.length === 1,
+      borderWidth: 2.5,
+      pointRadius: mobileRadius(4),
+      pointHoverRadius: 7,
+      tension: 0.15,
+    };
   });
 
   // Show canvas, hide placeholder
@@ -1991,17 +2192,7 @@ function renderShowTrend(channelName, showName) {
     type: 'line',
     data: {
       labels,
-      datasets: [{
-        label: `${showName} — % of ${channelName} viewers`,
-        data: pctData,
-        borderColor: '#3d5fc4',
-        backgroundColor: (ctx) => lineGradient(ctx, '#3d5fc4'),
-        fill: true,
-        borderWidth: 2.5,
-        pointRadius: mobileRadius(4),
-        pointHoverRadius: 7,
-        tension: 0.15,
-      }]
+      datasets
     },
     options: {
       maintainAspectRatio: false, // ADDED
@@ -2009,14 +2200,19 @@ function renderShowTrend(channelName, showName) {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } },
-        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}%` } }
+        tooltip: { callbacks: { label: c => {
+          const isCount = document.getElementById('show-trend-metric').value === 'count';
+          if (isCount) return ` ${c.dataset.label}: ${c.raw}`;
+          const num = c.dataset.nums[c.dataIndex];
+          const den = c.dataset.dens[c.dataIndex];
+          return ` ${c.dataset.label}: ${c.raw}% (${num} out of ${den})`;
+        } } }
       },
       scales: {
         y: {
           beginAtZero: true,
           min: 0,
-          max: 105,
-          ticks: { callback: v => v > 100 ? '' : v+'%', stepSize: 10 },
+          ticks: { callback: v => v + (document.getElementById('show-trend-metric').value === 'count' ? '' : '%') },
           grid: { color: '#f1f4f9' }
         },
         x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
@@ -2084,14 +2280,17 @@ if (document.getElementById('trend-news-metric')) {
 // News Where/When controls
 document.querySelectorAll('.nw-where-check').forEach(cb => cb.addEventListener('change', updateDashboard));
 document.querySelectorAll('.nw-when-check').forEach(cb => cb.addEventListener('change', updateDashboard));
+document.getElementById('hourly-metric').addEventListener('change', renderHourlyTrend);
+document.getElementById('show-trend-metric').addEventListener('change', renderShowTrend);
+document.getElementById('roya-metric').addEventListener('change', updateDashboard);
+document.getElementById('jordan-metric').addEventListener('change', updateDashboard);
+document.getElementById('amman-metric').addEventListener('change', updateDashboard);
 
 // Demographics Checkbox controls
 document.querySelectorAll('.demo-chk').forEach(cb => {
   cb.addEventListener('change', () => {
     updateDashboard();
-    const ch = document.getElementById('show-channel-select').value;
-    const show = document.getElementById('show-select').value;
-    if (ch && show) renderShowTrend(ch, show);
+    renderShowTrend();
   });
 });
 
@@ -2171,6 +2370,7 @@ function toggleAll(masterCheckbox, targetClass) {
     cb.checked = masterCheckbox.checked;
   });
   updateDashboard();
+  renderShowTrend();
 }
 
 // Uncheck "Select All" if user manually unchecks a single item
