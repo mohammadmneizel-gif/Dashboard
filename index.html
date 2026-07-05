@@ -58,6 +58,7 @@
     }
     @media (max-width: 640px) {
       #app-header-grid { grid-template-columns: 1fr !important; text-align: center !important; gap: 14px !important; }
+      #app-header-grid > div:first-child { justify-content: center !important; }
       #app-header-title { white-space: normal !important; font-size: 18px !important; }
       #app-header-right { align-items: center !important; }
       #app-header-right > div:first-child { flex-wrap: wrap !important; justify-content: center !important; }
@@ -110,15 +111,11 @@
     <div id="app-header-grid" class="max-w-screen-xl mx-auto px-6 py-6" style="display:grid; grid-template-columns: auto 1fr auto; align-items:center; gap:20px;">
 
       <div style="display:flex; align-items:center; gap:12px;">
-        <div style="background: linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838); border-radius:13px; padding:2px; display:inline-flex;">
-          <div style="background:#fff; border-radius:11px; padding:8px; display:flex; align-items:center; justify-content:center;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg" alt="Roya TV Logo" style="height:36px; width:36px; object-fit:contain; display:block;" />
-          </div>
-        </div>
-        <p style="font-family: 'Moralana', 'DM Serif Display', serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#e8a838; margin:0; line-height:1.3;">Roya TV<br>Research</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg" alt="Roya TV Logo" class="h-10 w-auto object-contain brightness-0 invert" />
+        <p class="text-accent text-xs font-semibold tracking-widest uppercase" style="margin:0;">Roya TV · Research</p>
       </div>
 
-      <h1 id="app-header-title" style="font-family: 'Moralana', 'DM Serif Display', serif; font-size:26px; color:#fff; margin:0; white-space:nowrap; text-align:center;">VIEWERSHIP INSIGHTS DASHBOARD</h1>
+      <h1 id="app-header-title" class="font-display" style="font-size:26px; color:#fff; margin:0; white-space:nowrap; text-align:center;">Viewership Insights Dashboard</h1>
 
       <div id="app-header-right" style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
         <div style="display:flex; align-items:center; gap:9px; flex-wrap:nowrap; justify-content:flex-end;">
