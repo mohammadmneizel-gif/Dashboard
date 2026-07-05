@@ -9,7 +9,16 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Moralana';
+      src: url('https://cdn.jsdelivr.net/gh/mohammadmneizel-gif/Dashboard@main/moralana.regular.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
   <script src="viewport.js"></script>
 
   <script>
@@ -32,8 +41,10 @@
     #loader.hidden { display: none !important; }
     .loader-ring { width: 52px; height: 52px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #e8a838; border-radius: 50%; animation: spin 0.85s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .kpi-card { border: 2px solid transparent; border-radius: 14px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #3d5fc4, #e8a838) border-box; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem 1.75rem; }
-    .chart-card { border: 2px solid transparent; border-radius: 14px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #3d5fc4, #e8a838) border-box; box-shadow: 0 2px 12px rgba(15,31,92,.07); padding: 1.5rem; min-width: 0; }
+    .kpi-card { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.12); padding: 1.5rem 1.75rem; }
+    .kpi-hero { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#0f1f5c, #0f1f5c) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.18); padding: 1.5rem 1.75rem; }
+    .chart-card { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.12); padding: 1.5rem; min-width: 0; }
+    .chart-card-soul { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.12); padding: 1.5rem; min-width: 0; }
     select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25em; padding-right: 2.5rem; }
     @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
     .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
@@ -42,7 +53,18 @@
     ::-webkit-scrollbar-thumb { background: #c7d0e8; border-radius: 4px; }
     .time-btn.active { background: white; color: #1e3799; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .chart-card > div:last-child, #show-trend-container, .w-full.h-\[40vh\] { overflow-x: auto; min-width: 0; }
-    #chart-channels, #chart-perweek, #chart-trend-general, #chart-trend-yesterday, #chart-show-trend, #chart-news-channels, #chart-news-perweek, #chart-trend-news, #chart-news-where, #chart-news-when { min-width: 700px !important; }
+    @media (min-width: 701px) {
+      #chart-channels, #chart-perweek, #chart-trend-general, #chart-trend-yesterday, #chart-show-trend, #chart-news-channels, #chart-news-perweek, #chart-trend-news, #chart-news-where, #chart-news-when { min-width: 700px !important; }
+    }
+    @media (max-width: 640px) {
+      #app-header-grid { grid-template-columns: 1fr !important; text-align: center !important; gap: 14px !important; }
+      #app-header-title { white-space: normal !important; font-size: 18px !important; }
+      #app-header-right { align-items: center !important; }
+      #app-header-right > div:first-child { flex-wrap: wrap !important; justify-content: center !important; }
+      #top-toolbar { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+      #top-toolbar > .w-px { display: none !important; }
+      #top-toolbar .ml-auto { margin-left: 0 !important; }
+    }
   </style>
 </head>
 <body>
@@ -84,35 +106,41 @@
 
 <div id="app" class="hidden min-h-screen">
   <header class="bg-brand-900 text-white shadow-xl">
-    <div class="max-w-screen-xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg" alt="Roya TV Logo" class="h-10 w-auto object-contain brightness-0 invert" />
-        <div>
-          <p class="text-accent text-xs font-semibold tracking-widest uppercase mb-0.5">Roya TV · Research</p>
-          <h1 class="font-display text-2xl sm:text-3xl leading-tight">Viewership Insights Dashboard</h1>
+    <div style="height:4px; background: linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838);"></div>
+    <div id="app-header-grid" class="max-w-screen-xl mx-auto px-6 py-6" style="display:grid; grid-template-columns: auto 1fr auto; align-items:center; gap:20px;">
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background: linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838); border-radius:13px; padding:2px; display:inline-flex;">
+          <div style="background:#fff; border-radius:11px; padding:8px; display:flex; align-items:center; justify-content:center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Roya_Tv_Logo.svg" alt="Roya TV Logo" style="height:36px; width:36px; object-fit:contain; display:block;" />
+          </div>
         </div>
+        <p style="font-family: 'Moralana', 'DM Serif Display', serif; font-weight:700; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#e8a838; margin:0; line-height:1.3;">Roya TV<br>Research</p>
       </div>
-      <div class="flex items-center gap-3 flex-wrap">
-        <div class="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-xs">
-          <span class="live-dot inline-block w-2 h-2 rounded-full bg-green-400"></span>
-          <span class="text-white/80">Live · Natively Calculated</span>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="nav-news-btn" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-600 hover:bg-brand-500 border border-brand-400 text-white text-xs font-semibold transition-colors shadow-sm">
-            News Dashboard →
-          </button>
-          
-          <div id="last-updated" class="text-white/50 text-xs"></div>
-          <button id="refresh-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-colors">
+
+      <h1 id="app-header-title" style="font-family: 'Moralana', 'DM Serif Display', serif; font-size:26px; color:#fff; margin:0; white-space:nowrap; text-align:center;">VIEWERSHIP INSIGHTS DASHBOARD</h1>
+
+      <div id="app-header-right" style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+        <div style="display:flex; align-items:center; gap:9px; flex-wrap:nowrap; justify-content:flex-end;">
+          <button id="refresh-btn" class="flex items-center gap-1.5 hover:brightness-110 text-white text-xs font-semibold transition-colors" style="background: linear-gradient(120deg, #3d5fc4, #7c3aed 60%, #e8a838); padding:8px 16px; border-radius:20px; white-space:nowrap;">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg> Refresh
           </button>
+          <button id="nav-news-btn" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+            <span id="nav-news-btn-label">News Dashboard →</span>
+          </button>
+          <div class="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-xs" style="white-space:nowrap;">
+            <span class="live-dot inline-block w-2 h-2 rounded-full bg-green-400"></span>
+            <span class="text-white/80">Live · Natively Calculated</span>
+          </div>
         </div>
+        <div id="last-updated" class="text-white/40 text-xs"></div>
       </div>
+
     </div>
   </header>
 
 <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-    <div class="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center gap-6">
+    <div id="top-toolbar" class="max-w-screen-xl mx-auto px-6 py-3 flex flex-wrap items-center gap-5">
 
       <div class="flex items-center bg-gray-100 p-1 rounded-lg" id="quick-buttons">
         <button data-days="all" class="time-btn active px-3 py-1.5 text-xs font-semibold rounded text-gray-500 hover:text-gray-800 transition-colors">All Time</button>
@@ -121,31 +149,37 @@
         <button data-days="90" class="time-btn px-3 py-1.5 text-xs font-medium rounded text-gray-500 hover:text-gray-800 transition-colors">3 Months</button>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="w-px h-6 bg-gray-200"></div>
+
+      <div class="flex items-center gap-2 flex-wrap">
         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Dates:</label>
         <input type="date" id="date-start" class="text-xs border border-gray-200 rounded-md px-2 py-1.5 text-gray-700 focus:outline-none focus:border-brand-500">
         <span class="text-gray-300 text-xs">to</span>
         <input type="date" id="date-end" class="text-xs border border-gray-200 rounded-md px-2 py-1.5 text-gray-700 focus:outline-none focus:border-brand-500">
       </div>
 
-      <div class="flex items-center gap-2 ml-auto">
-        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter Day:</label>
-        <select id="period-select" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-brand-500 text-gray-800 min-w-[140px]">
-          <option value="All Days">All Days</option>
-          <option value="Sunday">Sunday</option>
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-        </select>
-      </div>
-    </div>
+      <div class="w-px h-6 bg-gray-200"></div>
 
-    <div class="max-w-screen-xl mx-auto px-6 pb-3 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
+      <div class="flex items-center gap-2 relative">
+        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter Day:</label>
+        <button id="day-btn-text" onclick="toggleDrop('drop-day')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500 min-w-[140px] justify-between">Days ▾</button>
+        <div id="drop-day" class="hidden absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-56 overflow-y-auto">
+            <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-day" class="accent-brand-600" checked onchange="toggleAll(this, 'day-chk')"> Select All</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Sunday" checked> Sunday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Monday" checked> Monday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Tuesday" checked> Tuesday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Wednesday" checked> Wednesday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Thursday" checked> Thursday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Friday" checked> Friday</label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk day-chk accent-brand-600" value="Saturday" checked> Saturday</label>
+        </div>
+      </div>
+
+      <div class="w-px h-6 bg-gray-200 hidden lg:block"></div>
+
+      <div class="flex items-center gap-2 flex-wrap ml-auto">
         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Demographics:</label>
-        
+
         <div class="relative">
             <button onclick="toggleDrop('drop-gender')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Gender ▾</button>
             <div id="drop-gender" class="hidden absolute top-full left-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50">
@@ -154,7 +188,7 @@
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk gender-chk accent-brand-600" value="أنثى" checked> Female (أنثى)</label>
             </div>
         </div>
-        
+
         <div class="relative">
             <button onclick="toggleDrop('drop-age')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Age ▾</button>
             <div id="drop-age" class="hidden absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-48 overflow-y-auto">
@@ -171,7 +205,7 @@
 
         <div class="relative">
             <button onclick="toggleDrop('drop-area')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500">Area ▾</button>
-            <div id="drop-area" class="hidden absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-56 overflow-y-auto">
+            <div id="drop-area" class="hidden absolute top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-56 overflow-y-auto">
                 <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-area" class="accent-brand-600" checked onchange="toggleAll(this, 'area-chk')"> Select All</label>
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="عمان (شرق)" checked> Amman (East)</label>
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="عمان (غرب)" checked> Amman (West)</label>
@@ -188,6 +222,7 @@
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk area-chk accent-brand-600" value="العقبة" checked> Aqaba</label>
             </div>
         </div>
+      </div>
     </div>
   </div>
 
@@ -195,36 +230,57 @@
     <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       <section>
         <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-total" class="text-4xl font-bold text-brand-700">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched TV (Selected Day)</p><p id="kpi-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch TV (Selected Day)</p><p id="kpi-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p><p id="kpi-gen" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-gen-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-3">
+          <div class="rounded-xl p-4 text-white flex flex-col items-center justify-center text-center" style="border:2px solid transparent; background: linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+            <p class="text-xs font-medium text-white/50 uppercase tracking-wide mb-2">Total Calls</p>
+            <p id="kpi-total" class="font-display text-6xl">—</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p>
+              <p id="kpi-successful" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-successful-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+            </div>
+            <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watched TV (Selected Day)</p>
+              <p id="kpi-watched" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-watched-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+            </div>
+            <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch TV (Selected Day)</p>
+              <p id="kpi-no-watch" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-no-watch-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+            </div>
+            <div class="rounded-xl p-3" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-1">Watch TV Generally</p>
+              <p id="kpi-gen" class="text-lg font-semibold text-gray-800">—</p>
+              <p id="kpi-gen-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="space-y-6">
         <div class="grid md:grid-cols-2 gap-6">
-          <div class="chart-card flex flex-col">
+          <div class="chart-card-soul flex flex-col">
             <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — In General</h2>
             <p class="text-xs text-gray-400 mb-4">Do they watch TV at all?</p>
             <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-general"></canvas></div>
           </div>
-          <div class="chart-card flex flex-col">
+          <div class="chart-card-soul flex flex-col">
             <h2 class="text-sm font-semibold text-gray-700 mb-1">Viewership Status — Selected Day</h2>
             <p class="text-xs text-gray-400 mb-4">Did they watch TV that day?</p>
             <div class="flex-1 flex items-center justify-center w-full h-[40vh] md:h-auto" style="min-height:260px"><canvas id="chart-status-yesterday"></canvas></div>
           </div>
         </div>
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col" style="border:2px solid transparent; background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
           <h2 class="text-sm font-semibold text-gray-700 mb-1">Daily Comparison</h2>
           <p class="text-xs text-gray-400 mb-4">Avg % Watched TV for the selected dates</p>
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-period-compare"></canvas></div>
         </div>
       </section>
 
-      <section class="chart-card">
+      <section class="chart-card-soul">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h2 class="text-sm font-semibold text-gray-700">Main TV Channels</h2>
@@ -244,7 +300,7 @@
         <div class="w-full h-[50vh] md:h-auto" style="min-height:320px"><canvas id="chart-channels"></canvas></div>
       </section>
 
-      <section class="chart-card">
+      <section class="chart-card-soul">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h2 class="text-sm font-semibold text-gray-700">Per Week</h2>
@@ -272,7 +328,7 @@
               <option value="Al Arabiya">Al Arabiya</option>
             </select>
             <label class="text-xs text-gray-500">Show:</label>
-            <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg">
+            <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg flex-wrap">
               <button id="perweek-toggle-cumulative" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Cumulative</button>
               <button id="perweek-toggle-w1" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 1</button>
               <button id="perweek-toggle-w2" data-active="true" class="perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 2</button>
@@ -285,7 +341,7 @@
       </section>
 
       <section class="grid grid-cols-1 gap-8">
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
               <h2 class="text-sm font-semibold text-gray-700">Watches TV in GENERAL Trend</h2>
@@ -314,7 +370,7 @@
           </div>
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-trend-general"></canvas></div>
         </div>
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col">
           <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
             <div>
               <h2 class="text-sm font-semibold text-gray-700">Watched TV - Daily Trend</h2>
@@ -344,22 +400,26 @@
           <div class="flex-1 w-full h-[50vh] md:h-auto" style="min-height:260px"><canvas id="chart-trend-yesterday"></canvas></div>
         </div>
       </section>
-      <section class="chart-card flex flex-col">
+      <section class="chart-card-soul flex flex-col">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div>
             <h2 class="text-sm font-semibold text-gray-700">Specific Hourly Viewership</h2>
             <p class="text-xs text-gray-400">Compare specific hours for a single channel (Data from recent responses)</p>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
-            <label class="text-xs text-gray-500">Channel:</label>
-            <select id="hourly-channel-select" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة رؤيا أمس؟">Roya TV</option>
-              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني أمس؟">Jordan TV</option>
-              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني الرياضيه أمس؟">Jordan TV Sports</option>
-              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة عمان تي في أمس؟">Amman TV</option>
-              <option value="يرجى تحديد الساعات التي شاهدت فيها م بي سي في أمس؟">MBC</option>
-              <option value="يرجى تحديد الساعات التي شاهدت فيها قناة المملكه في أمس؟">Al Mamlaka</option>
-            </select>
+            <label class="text-xs text-gray-500">Channels:</label>
+            <div class="relative">
+              <button onclick="toggleDrop('drop-hourly')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500 justify-between min-w-[160px]">Select Channels ▾</button>
+              <div id="drop-hourly" class="hidden absolute top-full right-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-hourly" class="accent-brand-600" checked onchange="toggleAll(this, 'hourly-ch-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها قناة رؤيا أمس؟" data-label="Roya TV" checked> Roya TV</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني أمس؟" data-label="Jordan TV" checked> Jordan TV</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها قناة التلفزيون الأردني الرياضيه أمس؟" data-label="Jordan TV Sports" checked> Jordan TV Sports</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها قناة عمان تي في أمس؟" data-label="Amman TV" checked> Amman TV</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها م بي سي في أمس؟" data-label="MBC" checked> MBC</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="demo-chk hourly-ch-chk accent-brand-600" value="يرجى تحديد الساعات التي شاهدت فيها قناة المملكه في أمس؟" data-label="Al Mamlaka" checked> Al Mamlaka</label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="mb-3">
@@ -372,7 +432,7 @@
         </div>
       </section>
 
-      <section class="chart-card">
+      <section class="chart-card-soul">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h2 class="text-sm font-semibold text-gray-700">Show Viewership Trend</h2>
@@ -401,15 +461,15 @@
       </section>
 
       <div class="grid lg:grid-cols-3 gap-6">
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col">
           <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Roya viewers</p></div>
           <div class="flex-1 w-full" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
         </div>
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col">
           <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Jordan TV viewers</p></div>
           <div class="flex-1 w-full" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
         </div>
-        <div class="chart-card flex flex-col">
+        <div class="chart-card-soul flex flex-col">
           <div class="mb-4"><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2><p class="text-xs text-gray-400">% from Amman TV viewers</p></div>
           <div class="flex-1 w-full" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
         </div>
@@ -418,25 +478,45 @@
   </div> 
   
   <div id="news-view" class="hidden">
-    <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
-      <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
-        <button id="nav-main-btn" class="flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:text-brand-900 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-          Back to Main Dashboard
-        </button>
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">News Specific Data</p>
-      </div>
+    <div class="max-w-screen-xl mx-auto px-6 pt-4">
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-400">News Specific Data</p>
     </div>
 
     <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-12 space-y-8">
       <section>
         <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Key Metrics</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Total Calls</p><p id="kpi-news-total" class="text-4xl font-bold text-brand-700">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Successful Calls</p><p id="kpi-news-successful" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-successful-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Watched News (Selected Day)</p><p id="kpi-news-watched" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-watched-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">Didn't Watch News (Selected Day)</p><p id="kpi-news-no-watch" class="text-4xl font-bold text-brand-700">—</p><p id="kpi-news-no-watch-pct" class="text-sm text-gray-400 mt-0.5">—</p></div>
-          <div class="kpi-card"><p class="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">TV Watchers Who Watch News</p><p id="kpi-news-pct-of-watchers" class="text-4xl font-bold text-brand-700">—</p><p class="text-sm text-gray-400 mt-0.5">% of those who watch TV generally</p></div>
+        <div class="grid grid-cols-1 md:grid-cols-[1.55fr_1fr] gap-3">
+          <div class="kpi-hero grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center gap-3 sm:gap-0" style="padding:0.65rem 1.1rem;">
+            <div>
+              <p class="text-[10px] font-medium text-white/50 uppercase tracking-wide mb-0.5">Total Calls</p>
+              <p id="kpi-news-total" class="text-xl font-bold text-white">—</p>
+            </div>
+            <div class="hidden sm:block w-px self-stretch bg-white/15 mx-4" style="height:34px; align-self:center;"></div>
+            <div>
+              <p class="text-[10px] font-medium text-white/50 uppercase tracking-wide mb-0.5">Successful Calls</p>
+              <p id="kpi-news-successful" class="text-xl font-bold text-white">—</p>
+              <p id="kpi-news-successful-pct" class="text-[10px] text-white/40 mt-0.5">—</p>
+            </div>
+            <div class="hidden sm:block w-px self-stretch bg-white/15 mx-4" style="height:34px; align-self:center;"></div>
+            <div>
+              <p class="text-[10px] font-medium text-white/50 uppercase tracking-wide mb-0.5">Watched News (Selected Day)</p>
+              <p id="kpi-news-watched" class="text-xl font-bold" style="color:#e8a838;">—</p>
+              <p id="kpi-news-watched-pct" class="text-[10px] text-white/40 mt-0.5">—</p>
+            </div>
+          </div>
+
+          <div class="grid grid-rows-2 gap-3">
+            <div class="kpi-card flex flex-col justify-center" style="padding:0.4rem 1rem;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5">Didn't Watch News (Selected Day)</p>
+              <p id="kpi-news-no-watch" class="text-base font-bold text-brand-700">—</p>
+              <p id="kpi-news-no-watch-pct" class="text-[10px] text-gray-400 mt-0.5">—</p>
+            </div>
+            <div class="kpi-card flex flex-col justify-center" style="padding:0.4rem 1rem;">
+              <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide mb-0.5">TV Watchers Who Watch News</p>
+              <p id="kpi-news-pct-of-watchers" class="text-base font-bold text-brand-700">—</p>
+              <p class="text-[10px] text-gray-400 mt-0.5">% of those who watch TV generally</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -475,7 +555,7 @@
               <option value="count">Raw Count</option>
             </select>
             <label class="text-xs text-gray-500">Show:</label>
-            <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg">
+            <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-lg flex-wrap">
               <button id="news-perweek-toggle-cumulative" data-active="true" class="news-perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Cumulative</button>
               <button id="news-perweek-toggle-w1" data-active="true" class="news-perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 1</button>
               <button id="news-perweek-toggle-w2" data-active="true" class="news-perweek-toggle active px-2.5 py-1 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Week 2</button>
@@ -595,25 +675,73 @@ const JORDAN_SHOWS = { 'Yes3ed Sabahak': 43, 'Yawm Jadeed': 44, 'Nashama Al Wata
 const AMMAN_SHOWS = { 'Sa7 Se7': 50, 'Bhar o Nar': 51, 'Sahten o Hana': 52, 'Bisara7a': 53, 'Saba7 El Kher Ya Ordon': 54 };
 
 const PALETTE = ['#3d5fc4','#e8a838','#22b573','#e84040','#9b59b6','#1abc9c','#e67e22','#2980b9','#d35400','#16a085','#8e44ad','#c0392b'];
+const PALETTE_DARK = ['#2e4a9c','#b8842c','#1a8a58','#b33232','#7a468f','#14927a','#b3631a','#1f6390','#a34200','#117d68','#6f3587','#962d22'];
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#', ''), 16);
+  let r = (num >> 16) + Math.round(2.55 * percent);
+  let g = ((num >> 8) & 0x00FF) + Math.round(2.55 * percent);
+  let b = (num & 0x0000FF) + Math.round(2.55 * percent);
+  r = Math.max(Math.min(255, r), 0); g = Math.max(Math.min(255, g), 0); b = Math.max(Math.min(255, b), 0);
+  return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+}
+function barGradient(ctx, hex, horizontal) {
+  const area = ctx.chart.chartArea;
+  if (!area) return hex;
+  const c = ctx.chart.ctx;
+  const g = horizontal
+    ? c.createLinearGradient(area.left, 0, area.right, 0)
+    : c.createLinearGradient(0, area.top, 0, area.bottom);
+  g.addColorStop(0, hex);
+  g.addColorStop(1, shadeColor(hex, -22));
+  return g;
+}
+function lineGradient(ctx, hex) {
+  const area = ctx.chart.chartArea;
+  if (!area) return hex + '33';
+  const c = ctx.chart.ctx;
+  const g = c.createLinearGradient(0, area.top, 0, area.bottom);
+  g.addColorStop(0, hex + '55');
+  g.addColorStop(1, hex + '00');
+  return g;
+}
 const CHANNEL_COLORS = { 'Jordan TV':'#3d5fc4', 'Amman TV':'#e8a838', 'MBC':'#22b573', 'Al Mamlaka':'#e84040', 'Roya TV':'#9b59b6', 'Roya News':'#1abc9c', 'Al Jazeera':'#e67e22', 'Al Jazeera Mubasher':'#2980b9', 'Al Arabiya':'#c0392b' };
+function mobileRadius(desktopValue) { return window.innerWidth < 640 ? 0 : desktopValue; }
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const CHARTS = {};
 
-let GLOBAL_FORM_ROWS = []; 
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = '#eef1f7';
+Chart.defaults.plugins.tooltip.backgroundColor = '#0f1f5c';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.titleFont = { weight: '600', family: "'Inter', sans-serif" };
+Chart.defaults.plugins.tooltip.bodyFont = { family: "'Inter', sans-serif" };
+Chart.defaults.plugins.tooltip.displayColors = true;
+
+let GLOBAL_FORM_ROWS = [];
 
 /* =================================================================
    VIEW NAVIGATION LOGIC (Main vs News)
 ================================================================= */
 document.getElementById('nav-news-btn').addEventListener('click', () => {
-  document.getElementById('main-view').classList.add('hidden');
-  document.getElementById('news-view').classList.remove('hidden');
-  window.dispatchEvent(new Event('resize')); // Fix Chart.js glitching on tab swap
-});
+  const mainView = document.getElementById('main-view');
+  const newsView = document.getElementById('news-view');
+  const label = document.getElementById('nav-news-btn-label');
+  const onNewsPage = !newsView.classList.contains('hidden');
 
-document.getElementById('nav-main-btn').addEventListener('click', () => {
-  document.getElementById('news-view').classList.add('hidden');
-  document.getElementById('main-view').classList.remove('hidden');
-  window.dispatchEvent(new Event('resize')); // Fix Chart.js glitching on tab swap
+  if (onNewsPage) {
+    newsView.classList.add('hidden');
+    mainView.classList.remove('hidden');
+    label.textContent = 'News Dashboard →';
+  } else {
+    mainView.classList.add('hidden');
+    newsView.classList.remove('hidden');
+    label.textContent = '← Main Dashboard';
+  }
+  window.dispatchEvent(new Event('resize'));
 });
 
 /* =================================================================
@@ -621,7 +749,6 @@ document.getElementById('nav-main-btn').addEventListener('click', () => {
 ================================================================= */
 const inputStart = document.getElementById('date-start');
 const inputEnd = document.getElementById('date-end');
-const selectDay = document.getElementById('period-select');
 const timeBtns = document.querySelectorAll('.time-btn');
 
 // Parse timestamp string to Date Object
@@ -662,8 +789,9 @@ timeBtns.forEach(btn => {
       inputEnd.value = new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString().split('T')[0];
     }
     
-    // Auto-reset day dropdown if range is selected
-    selectDay.value = 'All Days';
+    // Auto-reset day checkboxes if range is selected
+    document.getElementById('all-day').checked = true;
+    document.querySelectorAll('.day-chk').forEach(cb => cb.checked = true);
     updateDashboard();
   });
 });
@@ -680,12 +808,17 @@ function handleDateChange() {
   const e = inputEnd.value;
   
   if (s && e && s === e) {
-    // If they picked a single specific day, auto-change the Day Dropdown
+    // If they picked a single specific day, auto-change the Day Checkboxes
     const d = new Date(s);
-    selectDay.value = DAY_NAMES[getViewingDayIndex(d)];
+    const targetDay = DAY_NAMES[getViewingDayIndex(d)];
+    document.getElementById('all-day').checked = false;
+    document.querySelectorAll('.day-chk').forEach(cb => {
+      cb.checked = (cb.value === targetDay);
+    });
   } else if (s && e && s !== e) {
     // If they picked a range, reset to All Days
-    selectDay.value = 'All Days';
+    document.getElementById('all-day').checked = true;
+    document.querySelectorAll('.day-chk').forEach(cb => cb.checked = true);
   }
   
   updateDashboard();
@@ -693,10 +826,8 @@ function handleDateChange() {
 
 inputStart.addEventListener('change', handleDateChange);
 inputEnd.addEventListener('change', handleDateChange);
-selectDay.addEventListener('change', updateDashboard);
 document.getElementById('channel-metric').addEventListener('change', updateDashboard);
 document.getElementById('news-channel-metric').addEventListener('change', updateDashboard);
-document.getElementById('hourly-channel-select').addEventListener('change', updateDashboard);
 
 let hourlyCheckboxesPopulated = false;
 
@@ -822,15 +953,13 @@ function populateHourlyCheckboxes() {
 function renderHourlyTrend() {
   if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
 
-  const channelName = document.getElementById('hourly-channel-select').value;
+  const checkedChannels = [...document.querySelectorAll('.hourly-ch-chk:checked')];
   const checkedTimesRaw = [...document.querySelectorAll('.hourly-time-chk:checked')].map(cb => cb.value);
 
   destroyChart('hourly-trend');
-  if (checkedTimesRaw.length === 0) return; 
+  if (checkedTimesRaw.length === 0 || checkedChannels.length === 0) return; 
 
   const headers = GLOBAL_FORM_ROWS[0];
-  const channelCol = headers.indexOf(channelName);
-  if (channelCol === -1) return;
 
   const sVal  = document.getElementById('date-start').value;
   const eVal  = document.getElementById('date-end').value;
@@ -838,8 +967,8 @@ function renderHourlyTrend() {
   const eDate = eVal ? new Date(eVal) : null;
   if (sDate) sDate.setHours(0,0,0,0);
   if (eDate) eDate.setHours(23,59,59,999);
-  const selectedDay = document.getElementById('period-select').value;
-
+  
+  const checkedDays = [...document.querySelectorAll('.day-chk:checked')].map(cb => cb.value);
   const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
   const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
   const checkedAreas = [...document.querySelectorAll('.area-chk:checked')].map(cb => cb.value);
@@ -861,55 +990,63 @@ function renderHourlyTrend() {
     if (!rowDate) continue;
     if (sDate && rowDate < sDate) continue;
     if (eDate && rowDate > eDate) continue;
-    if (selectedDay !== 'All Days' && DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
+    if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
     
     filtered.push(r);
   }
 
-  // Uses the multi-line format to stack the time labels on top of each other!
   const labels = checkedTimesRaw.map(format24hMulti);
   
-  // THE FIX FOR LOW NUMBERS: Safely counts if the string includes the time block
-  const dataCounts = checkedTimesRaw.map(timeStr => {
-    return filtered.filter(r => {
-      if (r.length <= channelCol || !r[channelCol]) return false;
-      return r[channelCol].includes(timeStr);
-    }).length;
-  });
-
-  const sel = document.getElementById('hourly-channel-select');
-  const channelLabel = sel.options[sel.selectedIndex].text;
-
-  // Uses colors to match the channel selected
   const hcColors = {
     'Roya TV': '#9b59b6', 'Jordan TV': '#3d5fc4', 'Jordan TV Sports': '#1abc9c',
     'Amman TV': '#e8a838', 'MBC': '#22b573', 'Al Mamlaka': '#e84040'
   };
-  const color = hcColors[channelLabel] || '#3d5fc4';
+
+  const datasets = checkedChannels.map(cb => {
+    const channelName = cb.value;
+    const channelLabel = cb.dataset.label;
+    const channelCol = headers.indexOf(channelName);
+    
+    let dataCounts = [];
+    if (channelCol !== -1) {
+      dataCounts = checkedTimesRaw.map(timeStr => {
+        return filtered.filter(r => {
+          if (r.length <= channelCol || !r[channelCol]) return false;
+          return r[channelCol].includes(timeStr);
+        }).length;
+      });
+    }
+
+    const color = hcColors[channelLabel] || '#3d5fc4';
+
+    return {
+      label: channelLabel,
+      data: dataCounts,
+      borderColor: color, 
+      backgroundColor: (ctx) => lineGradient(ctx, color), 
+      fill: true,
+      borderWidth: 3,
+      pointRadius: mobileRadius(4),
+      tension: 0.4 
+    };
+  });
 
   CHARTS['hourly-trend'] = new Chart(document.getElementById('chart-hourly-trend').getContext('2d'), {
     type: 'line',
     data: { 
       labels: labels, 
-      datasets: [{
-        label: channelLabel + ' Viewers',
-        data: dataCounts,
-        borderColor: color, 
-        backgroundColor: color + '1A', // adds transparency for the fill
-        fill: true,
-        borderWidth: 3,
-        pointRadius: 5,
-        tension: 0.4 
-      }]
+      datasets: datasets
     },
     options: {
       maintainAspectRatio: false,
       responsive: true,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.raw} viewers` } } },
+      plugins: { 
+        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } }, 
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw} viewers` } } 
+      },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
-        // maxRotation and minRotation forced to 0 so the multi-line array stacks perfectly vertical
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -929,8 +1066,19 @@ function updateDashboard() {
 
   if(sDate) sDate.setHours(0,0,0,0);
   if(eDate) eDate.setHours(23,59,59,999);
+  const checkedDays = [...document.querySelectorAll('.day-chk:checked')].map(cb => cb.value);
 
-  const selectedDay = selectDay.value;
+  // Update the button text to show the user exactly what is selected
+  const dayBtn = document.getElementById('day-btn-text');
+  if (dayBtn) {
+    if (checkedDays.length === 7) {
+      dayBtn.innerText = 'All Days ▾';
+    } else if (checkedDays.length === 1) {
+      dayBtn.innerText = checkedDays[0] + ' ▾'; // Will say "Friday ▾"
+    } else {
+      dayBtn.innerText = checkedDays.length + ' Days Selected ▾'; // Will say "2 Days Selected ▾"
+    }
+  }
 
   // Get selected demographics
   const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
@@ -960,9 +1108,7 @@ function updateDashboard() {
     if(eDate && rowDate > eDate) continue;
     
     dateOnlyFilteredRows.push(r);
-    if(selectedDay !== 'All Days') {
-      if(DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
-    }
+    if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
     filteredRows.push(r);
   }
 
@@ -1003,13 +1149,20 @@ function updateDashboard() {
   // PIE 1 — In General
   destroyChart('status-general');
   CHARTS['status-general'] = new Chart(document.getElementById('chart-status-general').getContext('2d'), {
-    type: 'pie',
+    type: 'doughnut',
     data: {
       labels: ['Watches TV Generally', "Doesn't Watch TV"],
-      datasets: [{ data: [watchesGen, noWatchGen], backgroundColor: ['#3d5fc4','#cbd5e1'], borderWidth: 2, borderColor: '#fff' }]
+      datasets: [{ data: [watchesGen, noWatchGen], backgroundColor: (ctx) => {
+        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+        const stops = [['#5b7de0','#1e3799'], ['#d6dee8','#94a3b8']];
+        const [c1, c2] = stops[ctx.dataIndex] || ['#999','#666'];
+        g.addColorStop(0, c1); g.addColorStop(1, c2);
+        return g;
+      }, borderWidth: 2, borderColor: '#fff' }]
     },
     options: {
       maintainAspectRatio: false, // ADDED
+      cutout: '68%',
       plugins: {
         legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
         tooltip: { callbacks: { label: c => {
@@ -1023,13 +1176,20 @@ function updateDashboard() {
   // PIE 2 — Yesterday
   destroyChart('status-yesterday');
   CHARTS['status-yesterday'] = new Chart(document.getElementById('chart-status-yesterday').getContext('2d'), {
-    type: 'pie',
+    type: 'doughnut',
     data: {
       labels: ['Watched TV', "Didn't Watch TV"],
-      datasets: [{ data: [watchedYDA, didNotWatch], backgroundColor: ['#22b573','#e8a838'], borderWidth: 2, borderColor: '#fff' }]
+      datasets: [{ data: [watchedYDA, didNotWatch], backgroundColor: (ctx) => {
+        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+        const stops = [['#3ed692','#0f8a4f'], ['#f0c368','#c8871e']];
+        const [c1, c2] = stops[ctx.dataIndex] || ['#999','#666'];
+        g.addColorStop(0, c1); g.addColorStop(1, c2);
+        return g;
+      }, borderWidth: 2, borderColor: '#fff' }]
     },
     options: {
       maintainAspectRatio: false, // ADDED
+      cutout: '68%',
       plugins: {
         legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 }, usePointStyle: true } },
         tooltip: { callbacks: { label: c => {
@@ -1085,7 +1245,7 @@ function updateDashboard() {
   }
   CHARTS['period-compare'] = new Chart(document.getElementById('chart-period-compare').getContext('2d'), {
     type: 'bar',
-    data: { labels: DAY_NAMES, datasets: [{ label: '% Watched TV', data: dayAverages, backgroundColor: PALETTE, borderRadius: 6 }] },
+    data: { labels: DAY_NAMES, datasets: [{ label: '% Watched TV', data: dayAverages, backgroundColor: (ctx) => barGradient(ctx, PALETTE_DARK[ctx.dataIndex % PALETTE_DARK.length], true), borderRadius: 10 }] },
     options: {
       maintainAspectRatio: false, // ADDED
       indexAxis: 'y',
@@ -1168,14 +1328,14 @@ function updateDashboard() {
       label: 'Total Successful Calls',
       data: tgSuccData,
       borderColor: '#000000', backgroundColor: '#000000',
-      borderWidth: 2, borderDash: [2,2], pointRadius: 4, tension: 0.3,
+      borderWidth: 2, borderDash: [2,2], pointRadius: mobileRadius(4), tension: 0.3,
       yAxisID: 'y', order: 0
     },
     {
       label: 'Watches TV Generally',
       data: tgBaseData,
-      borderColor: '#3d5fc4', backgroundColor: '#3d5fc4',
-      borderWidth: 3, pointRadius: 5, tension: 0.3,
+      borderColor: '#3d5fc4', backgroundColor: (ctx) => lineGradient(ctx, '#3d5fc4'),
+      borderWidth: 3, pointRadius: mobileRadius(4), tension: 0.35, fill: true,
       yAxisID: 'y', order: 1
     }
   ];
@@ -1191,7 +1351,7 @@ function updateDashboard() {
       label: ch,
       data: chMetricData,
       borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch],
-      borderWidth: 1.5, pointRadius: 3, tension: 0.3,
+      borderWidth: 1.5, pointRadius: mobileRadius(3), tension: 0.3,
       yAxisID: 'y', order: 2 + idx
     });
   });
@@ -1208,7 +1368,7 @@ function updateDashboard() {
       },
       scales: {
         y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tgSuffix } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1230,14 +1390,14 @@ function updateDashboard() {
       label: 'Total Successful Calls',
       data: tySuccData,
       borderColor: '#000000', backgroundColor: '#000000',
-      borderWidth: 2, borderDash: [2,2], pointRadius: 4, tension: 0.3,
+      borderWidth: 2, borderDash: [2,2], pointRadius: mobileRadius(4), tension: 0.3,
       yAxisID: 'y', order: 0
     },
     {
       label: 'Watched TV',
       data: tyBaseData,
-      borderColor: '#3d5fc4', backgroundColor: '#3d5fc4',
-      borderWidth: 3, borderDash: [5,5], pointRadius: 5, tension: 0.3,
+      borderColor: '#3d5fc4', backgroundColor: (ctx) => lineGradient(ctx, '#3d5fc4'),
+      borderWidth: 3, borderDash: [5,5], pointRadius: mobileRadius(4), tension: 0.35, fill: true,
       yAxisID: 'y', order: 1
     }
   ];
@@ -1253,7 +1413,7 @@ function updateDashboard() {
       label: ch,
       data: chMetricData,
       borderColor: CHANNEL_COLORS[ch], backgroundColor: CHANNEL_COLORS[ch],
-      borderWidth: 1.5, pointRadius: 3, tension: 0.3,
+      borderWidth: 1.5, pointRadius: mobileRadius(3), tension: 0.3,
       yAxisID: 'y', order: 2 + idx
     });
   });
@@ -1270,7 +1430,7 @@ function updateDashboard() {
       },
       scales: {
         y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tySuffix } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1297,7 +1457,7 @@ function updateDashboard() {
         label: 'Total News Viewers',
         data: tnBaseData,
         borderColor: '#1a1f2e', backgroundColor: '#1a1f2e',
-        borderWidth: 3, borderDash: [5,5], pointRadius: 5, tension: 0.3,
+        borderWidth: 3, borderDash: [5,5], pointRadius: mobileRadius(5), tension: 0.3,
         yAxisID: 'y', order: 1
       }
     ];
@@ -1313,7 +1473,7 @@ function updateDashboard() {
         label: ch,
         data: chMetricData,
         borderColor: CHANNEL_COLORS[ch] || '#000000', backgroundColor: CHANNEL_COLORS[ch] || '#000000',
-        borderWidth: 1.5, pointRadius: 3, tension: 0.3,
+        borderWidth: 1.5, pointRadius: mobileRadius(3), tension: 0.3,
         yAxisID: 'y', order: 2 + idx
       });
     });
@@ -1330,7 +1490,7 @@ function updateDashboard() {
         },
         scales: {
           y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { callback: v => v + tnSuffix } },
-          x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+          x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
         }
       }
     });
@@ -1355,8 +1515,8 @@ function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, 
   const bgColors = sorted.map((c, i) => i === 0 ? '#1a1f2e' : PALETTE[(i - 1) % PALETTE.length]);
   CHARTS['channels'] = new Chart(document.getElementById('chart-channels').getContext('2d'), {
     type: 'bar',
-    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
-    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } } // ADDED
+    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: (ctx) => barGradient(ctx, bgColors[ctx.dataIndex], false), borderRadius: 10 }] },
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } } // ADDED
   });
 }
 
@@ -1374,8 +1534,8 @@ function renderNewsChannels(channels, metric, successfulCalls, watchedYDA, watch
   const bgColors = sorted.map((c, i) => i === 0 ? '#1a1f2e' : PALETTE[(i - 1) % PALETTE.length]);
   CHARTS['news-channels'] = new Chart(document.getElementById('chart-news-channels').getContext('2d'), {
     type: 'bar',
-    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: bgColors, borderRadius: 6 }] },
-    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } }
+    data: { labels: sorted.map(c => c.name), datasets: [{ label: metric, data: sorted.map(c => c[metric] ?? 0), backgroundColor: (ctx) => barGradient(ctx, bgColors[ctx.dataIndex], false), borderRadius: 10 }] },
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}${metric === 'count'?'':'%'}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => metric === 'count' ? v : v+'%' } }, x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } } } }
   });
 }
 
@@ -1387,7 +1547,8 @@ function renderNewsWhere(filteredRows) {
     const counts = WHERE_CATEGORIES.map(cat =>
       filteredRows.filter(r => r.length > whereCol && mapWhereValue(r[whereCol]) === cat).length
     );
-    return { label: ch, data: counts, backgroundColor: CHANNEL_COLORS[ch] || PALETTE[idx % PALETTE.length], borderRadius: 5 };
+    const baseColor = CHANNEL_COLORS[ch] || PALETTE[idx % PALETTE.length];
+    return { label: ch, data: counts, backgroundColor: (ctx) => barGradient(ctx, baseColor, false), borderRadius: 10 };
   });
   CHARTS['news-where'] = new Chart(document.getElementById('chart-news-where').getContext('2d'), {
     type: 'bar',
@@ -1402,7 +1563,7 @@ function renderNewsWhere(filteredRows) {
       },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1416,7 +1577,8 @@ function renderNewsWhen(filteredRows) {
     const counts = PERIOD_CATEGORIES.map(cat =>
       filteredRows.filter(r => r.length > periodCol && mapPeriodValue(r[periodCol]) === cat).length
     );
-    return { label: ch, data: counts, backgroundColor: CHANNEL_COLORS[ch] || PALETTE[idx % PALETTE.length], borderRadius: 5 };
+    const baseColor = CHANNEL_COLORS[ch] || PALETTE[idx % PALETTE.length];
+    return { label: ch, data: counts, backgroundColor: (ctx) => barGradient(ctx, baseColor, false), borderRadius: 10 };
   });
   CHARTS['news-when'] = new Chart(document.getElementById('chart-news-when').getContext('2d'), {
     type: 'bar',
@@ -1431,7 +1593,7 @@ function renderNewsWhen(filteredRows) {
       },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1444,7 +1606,7 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
   document.getElementById(canvasId).height = Math.max(260, sorted.length * 36);
   CHARTS[chartKey] = new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'bar',
-    data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: color + 'cc', borderColor: color, borderWidth: 1.5, borderRadius: 5 }] },
+    data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: (ctx) => barGradient(ctx, color, true), borderColor: color, borderWidth: 1.5, borderRadius: 10 }] },
     options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}%` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+'%' } } } } // ADDED
   });
 }
@@ -1517,8 +1679,8 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
     datasets.push({
       label: 'Cumulative',
       data: channelsToShow.map(ch => calcMetric(filteredRows, ch.col, ch.isTotalTV)),
-      backgroundColor: '#1a1f2e',
-      borderRadius: 5,
+      backgroundColor: (ctx) => barGradient(ctx, '#1a1f2e', false),
+      borderRadius: 10,
     });
   }
 
@@ -1527,8 +1689,8 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
     datasets.push({
       label: weekLabels[i],
       data: channelsToShow.map(ch => calcMetric(weekRows[w], ch.col, ch.isTotalTV)),
-      backgroundColor: weekColors[i],
-      borderRadius: 5,
+      backgroundColor: (ctx) => barGradient(ctx, weekColors[i], false),
+      borderRadius: 10,
     });
   });
 
@@ -1550,7 +1712,7 @@ function renderPerWeek(filteredRows, metric, successfulCalls, watchedYDA, watche
       },
       scales: {
         y: { beginAtZero: true, ticks: { callback: v => v + suffix }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1616,8 +1778,8 @@ function renderNewsPerWeek(filteredRows, metric, successfulCalls, watchedYDA, wa
     datasets.push({
       label: 'Cumulative',
       data: channelsToShow.map(ch => calcMetric(filteredRows, ch.col, ch.isTotalTV)),
-      backgroundColor: '#1a1f2e',
-      borderRadius: 5,
+      backgroundColor: (ctx) => barGradient(ctx, '#1a1f2e', false),
+      borderRadius: 10,
     });
   }
 
@@ -1626,8 +1788,8 @@ function renderNewsPerWeek(filteredRows, metric, successfulCalls, watchedYDA, wa
     datasets.push({
       label: weekLabels[i],
       data: channelsToShow.map(ch => calcMetric(weekRows[w], ch.col, ch.isTotalTV)),
-      backgroundColor: weekColors[i],
-      borderRadius: 5,
+      backgroundColor: (ctx) => barGradient(ctx, weekColors[i], false),
+      borderRadius: 10,
     });
   });
 
@@ -1649,7 +1811,7 @@ function renderNewsPerWeek(filteredRows, metric, successfulCalls, watchedYDA, wa
       },
       scales: {
         y: { beginAtZero: true, ticks: { callback: v => v + suffix }, grid: { color: '#f1f4f9' } },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1766,7 +1928,7 @@ function renderShowTrend(channelName, showName) {
   const eDate = eVal ? new Date(eVal) : null;
   if (sDate) sDate.setHours(0,0,0,0);
   if (eDate) eDate.setHours(23,59,59,999);
-  const selectedDay = document.getElementById('period-select').value;
+  const checkedDays = [...document.querySelectorAll('.day-chk:checked')].map(cb => cb.value);
 
   const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
   const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
@@ -1790,7 +1952,7 @@ function renderShowTrend(channelName, showName) {
     if (!rowDate) continue;
     if (sDate && rowDate < sDate) continue;
     if (eDate && rowDate > eDate) continue;
-    if (selectedDay !== 'All Days' && DAY_NAMES[getViewingDayIndex(rowDate)] !== selectedDay) continue;
+    if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
     filtered.push(r);
   }
 
@@ -1836,12 +1998,12 @@ function renderShowTrend(channelName, showName) {
         label: `${showName} — % of ${channelName} viewers`,
         data: pctData,
         borderColor: '#3d5fc4',
-        backgroundColor: 'rgba(61,95,196,0.08)',
-        fill: false,
+        backgroundColor: (ctx) => lineGradient(ctx, '#3d5fc4'),
+        fill: true,
         borderWidth: 2.5,
-        pointRadius: 5,
+        pointRadius: mobileRadius(4),
         pointHoverRadius: 7,
-        tension: 0,
+        tension: 0.15,
       }]
     },
     options: {
@@ -1860,7 +2022,7 @@ function renderShowTrend(channelName, showName) {
           ticks: { callback: v => v > 100 ? '' : v+'%', stepSize: 10 },
           grid: { color: '#f1f4f9' }
         },
-        x: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
+        x: { ticks: { autoSkip: true, maxRotation: 0, minRotation: 0, font: { size: 10 } } }
       }
     }
   });
@@ -1988,6 +2150,8 @@ function toggleDrop(id) {
   document.getElementById('drop-gender').classList.add('hidden');
   document.getElementById('drop-age').classList.add('hidden');
   document.getElementById('drop-area').classList.add('hidden');
+  document.getElementById('drop-day')?.classList.add('hidden');
+  document.getElementById('drop-hourly')?.classList.add('hidden');
   
   // Open the one we clicked
   if (isHidden) el.classList.remove('hidden');
@@ -1999,6 +2163,8 @@ document.addEventListener('click', function(event) {
     document.getElementById('drop-gender').classList.add('hidden');
     document.getElementById('drop-age').classList.add('hidden');
     document.getElementById('drop-area').classList.add('hidden');
+    document.getElementById('drop-day')?.classList.add('hidden');
+    document.getElementById('drop-hourly')?.classList.add('hidden');
   }
 });
 
