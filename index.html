@@ -852,6 +852,7 @@ function mapWhereValue(raw) {
   if (v.includes('الساتلايت') || v.includes('كيبل')) return 'Satellite / Cable TV';
   return null;
 }
+const SHOW_CUTOFFS = { 'Mundial Roya': 3081, 'Al Holm Et7qaq': 3081, 'THE CONTENDERS': 3259, "Football's Greatest Stage": 3259 };
 const NEWS_1030_COL = 89;
 const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:00 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42 };
 
@@ -1730,13 +1731,30 @@ function updateDashboard() {
   function calculateList(configObj, denominatorCount) {
     const arr = [];
     for (const [name, colIdx] of Object.entries(configObj)) {
-      const count = filteredRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
+      let relevantRows = filteredRows;
+      if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+        relevantRows = filteredRows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
+      }
+
+      const count = relevantRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
+      let succ = successfulCalls, yda = watchedYDA, gen = watchesGen, spec = denominatorCount;
+
+      if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+        succ = relevantRows.filter(isCallSuccessful).length;
+        yda = relevantRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+        gen = relevantRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+        if (configObj === ROYA_SHOWS) {
+          const rCol = MAIN_CHANNELS['Roya TV'];
+          spec = relevantRows.filter(r => r.length > rCol && r[rCol].trim() === 'نعم').length;
+        }
+      }
+
       arr.push({
         name, count,
-        pct_successful: successfulCalls ? parseFloat((count/successfulCalls*100).toFixed(2)) : 0,
-        pct_yesterday:  watchedYDA      ? parseFloat((count/watchedYDA*100).toFixed(2))      : 0,
-        pct_general:    watchesGen      ? parseFloat((count/watchesGen*100).toFixed(2))       : 0,
-        pct_specific:   denominatorCount? parseFloat((count/denominatorCount*100).toFixed(2)) : 0
+        pct_successful: succ ? parseFloat((count/succ*100).toFixed(2)) : 0,
+        pct_yesterday:  yda  ? parseFloat((count/yda*100).toFixed(2))  : 0,
+        pct_general:    gen  ? parseFloat((count/gen*100).toFixed(2))  : 0,
+        pct_specific:   spec ? parseFloat((count/spec*100).toFixed(2)) : 0
       });
     }
     return arr;
@@ -2171,14 +2189,27 @@ function renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen
 
   const showsList = [];
   for (const [name, colIdx] of Object.entries(ROYA_SHOWS)) {
-    const count = filteredRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
+    let relevantRows = filteredRows;
+    if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+      relevantRows = filteredRows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
+    }
+
+    const count = relevantRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
+    let succ = successfulCalls, yda = watchedYDA, gen = watchesGen, spec = royaCount;
+
+    if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+      succ = relevantRows.filter(isCallSuccessful).length;
+      yda = relevantRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+      gen = relevantRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+      spec = relevantRows.filter(r => r.length > royaCol && r[royaCol].trim() === 'نعم').length;
+    }
+
     showsList.push({
-      name,
-      count,
-      pct_successful: successfulCalls ? parseFloat((count / successfulCalls * 100).toFixed(2)) : 0,
-      pct_yesterday:  watchedYDA      ? parseFloat((count / watchedYDA * 100).toFixed(2))      : 0,
-      pct_general:    watchesGen      ? parseFloat((count / watchesGen * 100).toFixed(2))       : 0,
-      pct_specific:   royaCount       ? parseFloat((count / royaCount * 100).toFixed(2))        : 0
+      name, count,
+      pct_successful: succ ? parseFloat((count / succ * 100).toFixed(2)) : 0,
+      pct_yesterday:  yda  ? parseFloat((count / yda * 100).toFixed(2))  : 0,
+      pct_general:    gen  ? parseFloat((count / gen * 100).toFixed(2))  : 0,
+      pct_specific:   spec ? parseFloat((count / spec * 100).toFixed(2)) : 0
     });
   }
 
@@ -2648,17 +2679,26 @@ function renderShowTrend() {
     const dens = [];
     const pctData = sortedDates.map(d => {
       const rws = byDate[d];
-      const showViewers = rws.filter(r => r.length > showCol && r[showCol].trim() === 'نعم' && r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+      const cutoff = (typeof SHOW_CUTOFFS !== 'undefined') ? SHOW_CUTOFFS[entry.show] : null;
+      const validRws = cutoff ? rws.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < cutoff) : rws;
+      
+      // If all calls for this date happened after the cutoff, break the line gracefully
+      if (cutoff && validRws.length === 0 && rws.length > 0) {
+        nums.push(0); dens.push(0);
+        return null;
+      }
+
+      const showViewers = validRws.filter(r => r.length > showCol && r[showCol].trim() === 'نعم' && r.length > channelCol && r[channelCol].trim() === 'نعم').length;
       
       let denominator = 0;
       if (showTrendMetric === 'pct_specific') {
-        denominator = rws.filter(r => r.length > channelCol && r[channelCol].trim() === 'نعم').length;
+        denominator = validRws.filter(r => r.length > channelCol && r[channelCol].trim() === 'نعم').length;
       } else if (showTrendMetric === 'pct_yesterday') {
-        denominator = rws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+        denominator = validRws.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
       } else if (showTrendMetric === 'pct_general') {
-        denominator = rws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+        denominator = validRws.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
       } else if (showTrendMetric === 'pct_successful') {
-        denominator = rws.filter(isCallSuccessful).length;
+        denominator = validRws.filter(isCallSuccessful).length;
       }
       
       nums.push(showViewers);
