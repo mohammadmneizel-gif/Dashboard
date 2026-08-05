@@ -122,9 +122,10 @@
           <button id="refresh-btn" class="flex items-center gap-1.5 hover:brightness-110 text-white text-xs font-semibold transition-colors" style="background: linear-gradient(120deg, #3d5fc4, #7c3aed 60%, #e8a838); padding:8px 16px; border-radius:20px; white-space:nowrap;">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg> Refresh
           </button>
-          <button id="nav-news-btn" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
-            <span id="nav-news-btn-label">News Dashboard →</span>
-          </button>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <button id="nav-btn-a" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
+            <button id="nav-btn-b" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
+          </div>
           <div class="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-xs" style="white-space:nowrap;">
             <span class="live-dot inline-block w-2 h-2 rounded-full bg-green-400"></span>
             <span class="text-white/80">Live · Natively Calculated</span>
@@ -572,6 +573,20 @@
               <option value="pct_specific">% of Channel Viewers</option>
               <option value="count">Raw Count</option>
             </select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-top8-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center gap-2 focus:ring-2 focus:ring-brand-500 justify-between min-w-[130px]">Shows ▾</button>
+              <div id="drop-top8-shows" class="hidden absolute top-full right-0 mt-1 w-52 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-top8-shows" class="accent-brand-600" checked onchange="toggleAll(this,'top8-show-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="HYD" checked> HYD</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="ROYA KITCHEN" checked> Roya Kitchen</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="KOL SABET" checked> Kol Sabet</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="NABD AL BALAD" checked> Nabd Al Balad</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="NEWS 7:30 PM" checked> News 7:30 PM</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="DYD" checked> DYD</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="MEN HUNA NABDA2" checked> Men Huna Nabda2</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="top8-show-chk accent-brand-600" value="CARAVAN" checked> Caravan</label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -583,15 +598,15 @@
               <span class="text-[10px] font-normal text-gray-400 capitalize">Fixed Score</span>
             </h3>
             <p class="text-[10px] text-gray-500 font-semibold mb-3 border-b border-gray-200 pb-2">IPSOS NUMBERS (From October 2025)</p>
-            <ol class="space-y-2 text-xs">
-              <li class="flex justify-between items-center bg-[#800000] text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">1. HYD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">9.6</span></li>
-              <li class="flex justify-between items-center bg-green-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">2. ROYA KITCHEN</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">9.0</span></li>
-              <li class="flex justify-between items-center bg-white text-gray-700 p-2.5 rounded-lg border border-gray-100 shadow-sm"><span class="font-bold">3. KOL SABET</span><span class="font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded">8.5</span></li>
-              <li class="flex justify-between items-center bg-blue-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">4. NABD AL BALAD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">8.4</span></li>
-              <li class="flex justify-between items-center bg-blue-900 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">5. NEWS 7:30 PM</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">7.5</span></li>
-              <li class="flex justify-between items-center bg-pink-500 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">6. DYD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">6.3</span></li>
-              <li class="flex justify-between items-center bg-gray-500 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">7. MEN HUNA NABDA2</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">5.6</span></li>
-              <li class="flex justify-between items-center bg-purple-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">8. CARAVAN</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">4.40</span></li>
+            <ol id="top8-ipsos-list" class="space-y-2 text-xs">
+              <li data-show="HYD" class="flex justify-between items-center bg-[#800000] text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">1. HYD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">9.6</span></li>
+              <li data-show="ROYA KITCHEN" class="flex justify-between items-center bg-green-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">2. ROYA KITCHEN</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">9.0</span></li>
+              <li data-show="KOL SABET" class="flex justify-between items-center bg-white text-gray-700 p-2.5 rounded-lg border border-gray-100 shadow-sm"><span class="font-bold">3. KOL SABET</span><span class="font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded">8.5</span></li>
+              <li data-show="NABD AL BALAD" class="flex justify-between items-center bg-blue-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">4. NABD AL BALAD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">8.4</span></li>
+              <li data-show="NEWS 7:30 PM" class="flex justify-between items-center bg-blue-900 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">5. NEWS 7:30 PM</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">7.5</span></li>
+              <li data-show="DYD" class="flex justify-between items-center bg-pink-500 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">6. DYD</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">6.3</span></li>
+              <li data-show="MEN HUNA NABDA2" class="flex justify-between items-center bg-gray-500 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">7. MEN HUNA NABDA2</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">5.6</span></li>
+              <li data-show="CARAVAN" class="flex justify-between items-center bg-purple-600 text-white p-2.5 rounded-lg shadow-sm"><span class="font-bold">8. CARAVAN</span><span class="font-bold text-brand-900 bg-white px-2 py-0.5 rounded">4.40</span></li>
             </ol>
           </div>
 
@@ -633,11 +648,36 @@
         </div>
       </section>
 
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="grid lg:grid-cols-2 gap-6">
         <div class="chart-card-soul flex flex-col">
           <div class="mb-4 flex flex-col gap-2">
             <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700 mb-1">Roya TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
             <select id="roya-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-roya-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center justify-between gap-2 focus:ring-2 focus:ring-brand-500 w-full">Shows ▾</button>
+              <div id="drop-roya-shows" class="hidden absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-roya-shows" class="accent-brand-600" checked onchange="toggleAll(this,'roya-show-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="DYD" checked> DYD</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="HYD" checked> HYD</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="News 7:00 AM" checked> News 7:00 AM</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Roya Kitchen" checked> Roya Kitchen</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Mn Huna Nabda2" checked> Mn Huna Nabda2</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="News 7:30 PM" checked> News 7:30 PM</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="10:30 PM News" checked> 10:30 PM News</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Nabd al Balad" checked> Nabd al Balad</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Caravan" checked> Caravan</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Mundial Roya" checked> Mundial Roya</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Al Mudaraj" checked> Al Mudaraj</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Al Holm Et7qaq" checked> Al Holm Et7qaq</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="THE CONTENDERS" checked> The Contenders</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Football's Greatest Stage" checked> Football's Greatest Stage</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Haki Siyasi" checked> Haki Siyasi</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Farah" checked> Farah</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Hakaya Maraya" checked> Hakaya Maraya</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Al Sabe3" checked> Al Sabe3</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Roya Kids" checked> Roya Kids</label>
+              </div>
+            </div>
           </div>
           <div class="flex-1 w-full" style="min-height:360px"><canvas id="chart-roya"></canvas></div>
         </div>
@@ -645,6 +685,19 @@
           <div class="mb-4 flex flex-col gap-2">
             <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700 mb-1">Jordan TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
             <select id="jordan-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-jordan-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center justify-between gap-2 focus:ring-2 focus:ring-brand-500 w-full">Shows ▾</button>
+              <div id="drop-jordan-shows" class="hidden absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-jordan-shows" class="accent-brand-600" checked onchange="toggleAll(this,'jordan-show-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="Yes3ed Sabahak" checked> Yes3ed Sabahak</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="Yawm Jadeed" checked> Yawm Jadeed</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="Nashama Al Watan" checked> Nashama Al Watan</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="Tahadi Al Nashama" checked> Tahadi Al Nashama</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="Trend Show" checked> Trend Show</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="60 Daqiqa" checked> 60 Daqiqa</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="jordan-show-chk accent-brand-600" value="JTV Kitchen" checked> JTV Kitchen</label>
+              </div>
+            </div>
           </div>
           <div class="flex-1 w-full" style="min-height:280px"><canvas id="chart-jordan"></canvas></div>
         </div>
@@ -652,8 +705,34 @@
           <div class="mb-4 flex flex-col gap-2">
             <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-orange-100 text-orange-700 mb-1">Amman TV</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
             <select id="amman-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-amman-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center justify-between gap-2 focus:ring-2 focus:ring-brand-500 w-full">Shows ▾</button>
+              <div id="drop-amman-shows" class="hidden absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-amman-shows" class="accent-brand-600" checked onchange="toggleAll(this,'amman-show-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="amman-show-chk accent-brand-600" value="Sa7 Se7" checked> Sa7 Se7</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="amman-show-chk accent-brand-600" value="Bhar o Nar" checked> Bhar o Nar</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="amman-show-chk accent-brand-600" value="Sahten o Hana" checked> Sahten o Hana</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="amman-show-chk accent-brand-600" value="Bisara7a" checked> Bisara7a</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="amman-show-chk accent-brand-600" value="Saba7 El Kher Ya Ordon" checked> Saba7 El Kher Ya Ordon</label>
+              </div>
+            </div>
           </div>
           <div class="flex-1 w-full" style="min-height:220px"><canvas id="chart-amman"></canvas></div>
+        </div>
+        <div class="chart-card-soul flex flex-col">
+          <div class="mb-4 flex flex-col gap-2">
+            <div><span class="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-red-100 text-red-700 mb-1">Al Mamlaka</span><h2 class="text-sm font-semibold text-gray-700">Shows</h2></div>
+            <select id="mamlaka-metric" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 w-full"><option value="pct_successful">% of Successful Calls</option><option value="pct_general">% of General Watch TV</option><option value="pct_yesterday">% of Yesterday Viewers</option><option value="pct_specific">% of Channel Viewers</option><option value="count">Raw Count</option></select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-mamlaka-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-1.5 bg-white hover:bg-gray-50 flex items-center justify-between gap-2 focus:ring-2 focus:ring-brand-500 w-full">Shows ▾</button>
+              <div id="drop-mamlaka-shows" class="hidden absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-mamlaka-shows" class="accent-brand-600" checked onchange="toggleAll(this,'mamlaka-show-chk')"> Select All</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="mamlaka-show-chk accent-brand-600" value="Da'irat Al Mundial" checked> Da'irat Al Mundial</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="mamlaka-show-chk accent-brand-600" value="4-4-2 (Thu Only)" checked> 4-4-2 (Thu Only)</label>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 w-full" style="min-height:220px"><canvas id="chart-mamlaka"></canvas></div>
         </div>
       </div>
     </main>
@@ -812,6 +891,84 @@
 
     </main>
   </div>
+
+  <div id="nonviewers-view" class="hidden">
+    <div class="max-w-screen-xl mx-auto px-6 pt-4">
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Non-Viewers Insights</p>
+    </div>
+
+    <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-12 space-y-10">
+
+      <section>
+        <div class="rounded-2xl overflow-hidden shadow-xl" style="border:1px solid #e2e7f2;">
+          <div class="flex items-center justify-between gap-3 flex-wrap px-6 py-4" style="background: linear-gradient(120deg,#0f1f5c, #1e3799 65%, #2d4db8);">
+            <p class="text-white text-sm font-semibold">Doesn't Watch TV At All</p>
+            <p class="text-white font-display text-3xl" id="nv-gen-count">—<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span></p>
+          </div>
+          <div class="bg-white px-6 pt-6 pb-2 space-y-6">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-1">Main Reason for Not Watching</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-gen-reason-sub">—</p>
+              <div style="min-height:220px"><canvas id="chart-nv-gen-reason"></canvas></div>
+            </div>
+            <div class="border-t border-gray-100 pt-5">
+              <h3 class="text-sm font-semibold text-gray-700 mb-1">Watched Something Online Instead?</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-gen-online-sub">—</p>
+              <div class="flex items-center justify-center" style="min-height:220px"><canvas id="chart-nv-gen-online"></canvas></div>
+            </div>
+            <div class="border-l-4 border-accent bg-amber-50/50 rounded-r-lg pl-4 pr-2 py-4 ml-2">
+              <h3 class="text-xs font-semibold text-amber-800 mb-1">→ What They Watched Online</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-gen-what-sub">—</p>
+              <div style="min-height:200px"><canvas id="chart-nv-gen-what"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="rounded-2xl overflow-hidden shadow-xl" style="border:1px solid #e2e7f2;">
+          <div class="flex items-center justify-between gap-3 flex-wrap px-6 py-4" style="background: linear-gradient(120deg,#3d0f5c,#5c1e99 65%,#6b2db8);">
+            <p class="text-white text-sm font-semibold">Watches TV Generally, But Not Yesterday</p>
+            <p class="text-white font-display text-3xl" id="nv-yda-count">—<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span></p>
+          </div>
+          <div class="bg-white px-6 pt-6 pb-2 space-y-6">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-1">Main Reason for Not Watching Yesterday</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-yda-reason-sub">—</p>
+              <div style="min-height:220px"><canvas id="chart-nv-yda-reason"></canvas></div>
+            </div>
+            <div class="border-t border-gray-100 pt-5">
+              <h3 class="text-sm font-semibold text-gray-700 mb-1">Watched Something Online Instead?</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-yda-online-sub">—</p>
+              <div class="flex items-center justify-center" style="min-height:220px"><canvas id="chart-nv-yda-online"></canvas></div>
+            </div>
+            <div class="border-l-4 border-accent bg-amber-50/50 rounded-r-lg pl-4 pr-2 py-4 ml-2">
+              <h3 class="text-xs font-semibold text-amber-800 mb-1">→ What They Watched Online</h3>
+              <p class="text-xs text-gray-400 mb-3" id="nv-yda-what-sub">—</p>
+              <div style="min-height:200px"><canvas id="chart-nv-yda-what"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Other Questions</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="rounded-xl p-5 text-white text-center" style="border:2px solid transparent; background: linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+            <p class="text-xs font-medium text-white/50 uppercase tracking-wide mb-2">10:30 PM News Coverage — Said Yes</p>
+            <p id="nv-1030-value" class="font-display text-4xl">—</p>
+            <p id="nv-1030-sub" class="text-xs text-white/40 mt-1">—</p>
+          </div>
+          <div class="rounded-xl p-5 text-white text-center" style="border:2px solid transparent; background: linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
+            <p class="text-xs font-medium text-white/50 uppercase tracking-wide mb-2">Roya Kitchen (Replay) — Said Yes</p>
+            <p id="nv-kitchen-value" class="font-display text-4xl">—</p>
+            <p id="nv-kitchen-sub" class="text-xs text-white/40 mt-1">—</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
   </div>
 <script>
 const FORM_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQf6dQpybX3EWUebDS9ZXbpPkurD75NyAdtIwAK5u1Ctu7QmrvvSYB19CcRqknrNRl9pcgELjBWNf41/pub?gid=805558787&single=true&output=csv';
@@ -932,8 +1089,216 @@ function renderNews1030Segment() {
   valEl.textContent = displayVal;
   if (subEl) subEl.textContent = subtext;
 }
+
+/* =================================================================
+   NON-VIEWERS INSIGHTS
+================================================================= */
+const REASON_NOT_WATCHING_COL_GEN = 90; // asked to: doesn't watch TV generally (col 8 === 'لا')
+const REASON_NOT_WATCHING_COL_YDA = 91; // asked to: watches TV generally, but not yesterday (col 8 === 'نعم' && col 9 === 'لا')
+const WATCHED_ONLINE_COL_GEN = 87;
+const WATCHED_ONLINE_WHAT_COL_GEN = 88;
+const WATCHED_ONLINE_COL_YDA = 92;
+const WATCHED_ONLINE_WHAT_COL_YDA = 93;
+const NEWS_1030_START_ROW = 3157;   // GLOBAL_FORM_ROWS index where col89 starts being asked
+const ROYA_KITCHEN_REPLAY_COL = 94;
+const ROYA_KITCHEN_REPLAY_START_ROW = 3308;
+
+const REASON_LABELS = {
+  'فضّلت استخدام الهاتف أو الإنترنت': 'Preferred Phone/Internet',
+  'لم أرغب في مشاهدة التلفاز': "Didn't Want to Watch TV",
+  'كنت في العمل أو الدراسة': 'At Work/Study',
+  'لا يوجد تلفاز': 'No TV Available',
+  'كنت مشغولاً بمهام منزلية أو عائلية': 'Busy w/ Household or Family Tasks',
+  'كنت خارج المنزل': 'Was Out of the House',
+  'أفضل عدم الإجابة': 'Prefer Not to Answer',
+  'كنت أقضي وقتاً مع العائلة أو الأصدقاء': 'Time w/ Family or Friends'
+};
+const ONLINE_INSTEAD_LABELS = {
+  'لا، لم أشاهد أياً منهما': 'No, Watched Neither',
+  'نعم، شاهدت بثاً مباشراً لقناة تلفزيونية (NOT CABLE TV)': 'Yes, Live TV Channel Stream',
+  'نعم، شاهدت بثاً مباشراً ومحتوى عبر منصة': 'Yes, Live Stream + Platform Content'
+};
+const ONLINE_COLOR_MAP = {
+  'No, Watched Neither': '#c7cee3',
+  'Yes, Live Stream + Platform Content': '#e8a838',
+  'Yes, Live TV Channel Stream': '#3d5fc4'
+};
+function mapWhatWatchedOnline(raw) {
+  const v = (raw || '').trim();
+  if (!v) return null;
+  if (v.includes('لم أشاهد') || v === 'لاء' || v === 'لا') return "Didn't Watch";
+  if (v.toLowerCase().includes('youtube') || v.includes('التواصل الاجتماعي')) return 'YouTube / Social Media';
+  if (v.toLowerCase().includes('netflix') || v.includes('نيتفلكس')) return 'Netflix';
+  if (v.includes('رؤيا')) return 'Roya App/Website';
+  if (v.includes('قناة تلفزيونية أخرى')) return 'Other TV Channel Stream';
+  if (v.toLowerCase().includes('shahid') || v.includes('شاهد')) return 'Shahid';
+  if (v.toLowerCase().includes('iptv')) return 'IPTV';
+  return 'Other';
+}
+
+// Same filter logic as updateDashboard (date/day/demographics), starting from a given
+// GLOBAL_FORM_ROWS index and with an optional extra predicate for the survey branch.
+function filterRowsForSegment(startIdx, branchFilter) {
+  const sVal = document.getElementById('date-start').value;
+  const eVal = document.getElementById('date-end').value;
+  const sDate = sVal ? new Date(sVal) : null;
+  const eDate = eVal ? new Date(eVal) : null;
+  if (sDate) sDate.setHours(0,0,0,0);
+  if (eDate) eDate.setHours(23,59,59,999);
+  const checkedDays = [...document.querySelectorAll('.day-chk:checked')].map(cb => cb.value);
+  const checkedGenders = [...document.querySelectorAll('.gender-chk:checked')].map(cb => cb.value);
+  const checkedAges = [...document.querySelectorAll('.age-chk:checked')].map(cb => cb.value);
+  const checkedAreas = [...document.querySelectorAll('.area-chk:checked')].map(cb => cb.value);
+  const out = [];
+  for (let i = startIdx; i < GLOBAL_FORM_ROWS.length; i++) {
+    const r = GLOBAL_FORM_ROWS[i];
+    if (!r || !r[0] || !r[0].trim()) continue;
+    const rowArea = r[3] ? r[3].trim() : '';
+    const rowAge = r[4] ? r[4].trim() : '';
+    const rowGender = r[6] ? r[6].trim() : '';
+    if (rowArea !== '' && !checkedAreas.includes(rowArea)) continue;
+    if (rowAge !== '' && !checkedAges.includes(rowAge)) continue;
+    if (rowGender !== '' && !checkedGenders.includes(rowGender)) continue;
+    const rowDate = parseDateStr(r[0]);
+    if (!rowDate) continue;
+    if (sDate && rowDate < sDate) continue;
+    if (eDate && rowDate > eDate) continue;
+    if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
+    if (branchFilter && !branchFilter(r)) continue;
+    out.push(r);
+  }
+  return out;
+}
+
+function tallyCategories(rows, colIdx, mapFn) {
+  const counts = {};
+  let total = 0;
+  rows.forEach(r => {
+    const raw = r.length > colIdx ? r[colIdx].trim() : '';
+    if (!raw) return;
+    const label = mapFn ? mapFn(raw) : raw;
+    if (!label) return;
+    counts[label] = (counts[label] || 0) + 1;
+    total++;
+  });
+  return { counts, total };
+}
+
+function renderCategoryBar(canvasId, counts, color) {
+  const key = canvasId.replace('chart-', '');
+  destroyChart(key);
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const total = entries.reduce((s, [, v]) => s + v, 0);
+  const canvas = document.getElementById(canvasId);
+  canvas.height = Math.max(180, entries.length * 34);
+  if (!entries.length) return;
+  CHARTS[key] = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: { labels: entries.map(e => e[0]), datasets: [{ data: entries.map(e => e[1]), backgroundColor: (ctx) => barGradient(ctx, color, true), borderRadius: 10 }] },
+    options: {
+      maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x} (${total ? (ctx.parsed.x / total * 100).toFixed(1) : 0}%)` } } },
+      scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+}
+
+function renderCategoryDoughnut(canvasId, counts, colorMap) {
+  const key = canvasId.replace('chart-', '');
+  destroyChart(key);
+  const entries = Object.entries(counts);
+  const total = entries.reduce((s, [, v]) => s + v, 0);
+  if (!entries.length) return;
+  CHARTS[key] = new Chart(document.getElementById(canvasId).getContext('2d'), {
+    type: 'doughnut',
+    data: { labels: entries.map(e => e[0]), datasets: [{ data: entries.map(e => e[1]), backgroundColor: entries.map(([l]) => (colorMap && colorMap[l]) || '#94a3b8'), borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 }, usePointStyle: true } },
+        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} (${total ? (c.parsed / total * 100).toFixed(1) : 0}%)` } }
+      }
+    }
+  });
+}
+
+function renderNonViewersInsights() {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+
+  const genFilter = r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'لا';
+  const ydaFilter  = r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم' && r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'لا';
+
+  // --- Branch 1: doesn't watch TV at all ---
+  const genAll = filterRowsForSegment(1, genFilter);
+  document.getElementById('nv-gen-count').innerHTML = genAll.length + '<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span>';
+
+  const genReasonRows = filterRowsForSegment(3179, genFilter);
+  const genReason = tallyCategories(genReasonRows, REASON_NOT_WATCHING_COL_GEN, v => REASON_LABELS[v] || v);
+  document.getElementById('nv-gen-reason-sub').textContent = `${genReason.total} out of ${genReasonRows.length} in this group answered`;
+  renderCategoryBar('chart-nv-gen-reason', genReason.counts, '#3d5fc4');
+
+  const genOnlineRows = filterRowsForSegment(3087, genFilter);
+  const genOnline = tallyCategories(genOnlineRows, WATCHED_ONLINE_COL_GEN, v => ONLINE_INSTEAD_LABELS[v] || v);
+  document.getElementById('nv-gen-online-sub').textContent = `${genOnline.total} out of ${genOnlineRows.length} in this group answered`;
+  renderCategoryDoughnut('chart-nv-gen-online', genOnline.counts, ONLINE_COLOR_MAP);
+
+  const genWhat = tallyCategories(genOnlineRows, WATCHED_ONLINE_WHAT_COL_GEN, mapWhatWatchedOnline);
+  document.getElementById('nv-gen-what-sub').textContent = genWhat.total ? `${genWhat.total} respondents who said they watched something` : 'Nobody in this group said yes above';
+  renderCategoryBar('chart-nv-gen-what', genWhat.counts, '#e8a838');
+
+  // --- Branch 2: watches TV generally, but not yesterday ---
+  const ydaAll = filterRowsForSegment(1, ydaFilter);
+  document.getElementById('nv-yda-count').innerHTML = ydaAll.length + '<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span>';
+
+  const ydaReasonRows = filterRowsForSegment(3177, ydaFilter);
+  const ydaReason = tallyCategories(ydaReasonRows, REASON_NOT_WATCHING_COL_YDA, v => REASON_LABELS[v] || v);
+  document.getElementById('nv-yda-reason-sub').textContent = `${ydaReason.total} out of ${ydaReasonRows.length} in this group answered`;
+  renderCategoryBar('chart-nv-yda-reason', ydaReason.counts, '#7c3aed');
+
+  const ydaOnlineRows = filterRowsForSegment(3177, ydaFilter);
+  const ydaOnline = tallyCategories(ydaOnlineRows, WATCHED_ONLINE_COL_YDA, v => ONLINE_INSTEAD_LABELS[v] || v);
+  document.getElementById('nv-yda-online-sub').textContent = `${ydaOnline.total} out of ${ydaOnlineRows.length} in this group answered`;
+  renderCategoryDoughnut('chart-nv-yda-online', ydaOnline.counts, ONLINE_COLOR_MAP);
+
+  const ydaWhat = tallyCategories(ydaOnlineRows, WATCHED_ONLINE_WHAT_COL_YDA, mapWhatWatchedOnline);
+  document.getElementById('nv-yda-what-sub').textContent = ydaWhat.total ? `${ydaWhat.total} respondents who said they watched something` : 'Nobody in this group said yes above';
+  renderCategoryBar('chart-nv-yda-what', ydaWhat.counts, '#e8a838');
+
+  // --- Standalone KPIs ---
+  const news1030Rows = filterRowsForSegment(NEWS_1030_START_ROW, null);
+  const news1030Answered = news1030Rows.filter(r => r.length > NEWS_1030_COL && r[NEWS_1030_COL].trim());
+  document.getElementById('nv-1030-value').textContent = news1030Answered.filter(r => r[NEWS_1030_COL].trim() === 'نعم').length;
+  document.getElementById('nv-1030-sub').textContent = `out of ${news1030Answered.length} asked`;
+
+  const kitchenRows = filterRowsForSegment(ROYA_KITCHEN_REPLAY_START_ROW, null);
+  const kitchenAnswered = kitchenRows.filter(r => r.length > ROYA_KITCHEN_REPLAY_COL && r[ROYA_KITCHEN_REPLAY_COL].trim());
+  document.getElementById('nv-kitchen-value').textContent = kitchenAnswered.filter(r => r[ROYA_KITCHEN_REPLAY_COL].trim() === 'نعم').length;
+  document.getElementById('nv-kitchen-sub').textContent = `out of ${kitchenAnswered.length} asked`;
+}
+
 const JORDAN_SHOWS = { 'Yes3ed Sabahak': 43, 'Yawm Jadeed': 44, 'Nashama Al Watan': 45, 'Tahadi Al Nashama': 46, 'Trend Show': 47, '60 Daqiqa': 48, 'JTV Kitchen': 49 };
 const AMMAN_SHOWS = { 'Sa7 Se7': 50, 'Bhar o Nar': 51, 'Sahten o Hana': 52, 'Bisara7a': 53, 'Saba7 El Kher Ya Ordon': 54 };
+const AL_MAMLAKA_SHOWS = { "Da'irat Al Mundial": 82, '4-4-2 (Thu Only)': 83 };
+
+// "10:30 PM News" (col 89) only started being asked partway through the survey, so it needs
+// its own cutoff-restricted population instead of going through calculateList()/SHOW_CUTOFFS
+// (which only supports upper-bound cutoffs). Used to inject it into the Roya Shows picker.
+function calc1030NewsShowEntry() {
+  const rows = filterRowsForSegment(NEWS_1030_START_ROW, null);
+  const succ = rows.filter(isCallSuccessful).length;
+  const gen  = rows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
+  const yda  = rows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
+  const royaCol = MAIN_CHANNELS['Roya TV'];
+  const spec = rows.filter(r => r.length > royaCol && r[royaCol].trim() === 'نعم').length;
+  const count = rows.filter(r => r.length > NEWS_1030_COL && r[NEWS_1030_COL].trim() === 'نعم').length;
+  return {
+    name: '10:30 PM News', count,
+    pct_successful: succ ? parseFloat((count / succ * 100).toFixed(2)) : 0,
+    pct_yesterday:  yda  ? parseFloat((count / yda  * 100).toFixed(2)) : 0,
+    pct_general:    gen  ? parseFloat((count / gen  * 100).toFixed(2)) : 0,
+    pct_specific:   spec ? parseFloat((count / spec * 100).toFixed(2)) : 0
+  };
+}
 
 const PALETTE = ['#3d5fc4','#e8a838','#22b573','#e84040','#9b59b6','#1abc9c','#e67e22','#2980b9','#d35400','#16a085','#8e44ad','#c0392b'];
 const PALETTE_DARK = ['#2e4a9c','#b8842c','#1a8a58','#b33232','#7a468f','#14927a','#b3631a','#1f6390','#a34200','#117d68','#6f3587','#962d22'];
@@ -985,25 +1350,35 @@ Chart.defaults.plugins.tooltip.displayColors = true;
 let GLOBAL_FORM_ROWS = [];
 
 /* =================================================================
-   VIEW NAVIGATION LOGIC (Main vs News)
+   VIEW NAVIGATION LOGIC (Main / News / Non-Viewers Insights)
 ================================================================= */
-document.getElementById('nav-news-btn').addEventListener('click', () => {
-  const mainView = document.getElementById('main-view');
-  const newsView = document.getElementById('news-view');
-  const label = document.getElementById('nav-news-btn-label');
-  const onNewsPage = !newsView.classList.contains('hidden');
+const VIEWS = {
+  main:       { id: 'main-view',       label: 'Main Dashboard' },
+  news:       { id: 'news-view',       label: 'News Dashboard' },
+  nonviewers: { id: 'nonviewers-view', label: 'Non-Viewers Insights' }
+};
+let currentView = 'main';
 
-  if (onNewsPage) {
-    newsView.classList.add('hidden');
-    mainView.classList.remove('hidden');
-    label.textContent = 'News Dashboard →';
-  } else {
-    mainView.classList.add('hidden');
-    newsView.classList.remove('hidden');
-    label.textContent = '← Main Dashboard';
-  }
+function updateNavButtons() {
+  const others = Object.keys(VIEWS).filter(k => k !== currentView);
+  const btnA = document.getElementById('nav-btn-a');
+  const btnB = document.getElementById('nav-btn-b');
+  btnA.textContent = VIEWS[others[0]].label + ' →';
+  btnA.onclick = () => switchView(others[0]);
+  btnB.textContent = VIEWS[others[1]].label + ' →';
+  btnB.onclick = () => switchView(others[1]);
+}
+
+function switchView(target) {
+  if (target === currentView || !VIEWS[target]) return;
+  Object.values(VIEWS).forEach(v => document.getElementById(v.id).classList.add('hidden'));
+  document.getElementById(VIEWS[target].id).classList.remove('hidden');
+  currentView = target;
+  updateNavButtons();
   window.dispatchEvent(new Event('resize'));
-});
+}
+
+updateNavButtons();
 
 /* =================================================================
    UI INTERACTIONS & FILTERING LOGIC
@@ -1771,17 +2146,28 @@ function updateDashboard() {
   renderNewsWhen(filteredRows);
   renderPerWeek(filteredRows, document.getElementById('perweek-metric').value, successfulCalls, watchedYDA, watchesGen);
 
-  const royaCount   = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV']   && r[MAIN_CHANNELS['Roya TV']].trim()   === 'نعم').length;
-  const jordanCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV'] && r[MAIN_CHANNELS['Jordan TV']].trim() === 'نعم').length;
-  const ammanCount  = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV']  && r[MAIN_CHANNELS['Amman TV']].trim()  === 'نعم').length;
+  const royaCount    = filteredRows.filter(r => r.length > MAIN_CHANNELS['Roya TV']    && r[MAIN_CHANNELS['Roya TV']].trim()    === 'نعم').length;
+  const jordanCount  = filteredRows.filter(r => r.length > MAIN_CHANNELS['Jordan TV']  && r[MAIN_CHANNELS['Jordan TV']].trim()  === 'نعم').length;
+  const ammanCount   = filteredRows.filter(r => r.length > MAIN_CHANNELS['Amman TV']   && r[MAIN_CHANNELS['Amman TV']].trim()   === 'نعم').length;
+  const mamlakaCount = filteredRows.filter(r => r.length > MAIN_CHANNELS['Al Mamlaka'] && r[MAIN_CHANNELS['Al Mamlaka']].trim() === 'نعم').length;
 
   const royaMetric = document.getElementById('roya-metric').value;
   const jordanMetric = document.getElementById('jordan-metric').value;
   const ammanMetric = document.getElementById('amman-metric').value;
+  const mamlakaMetric = document.getElementById('mamlaka-metric').value;
 
-  renderShowsChart('chart-roya',   calculateList(ROYA_SHOWS,   royaCount),   royaMetric, 'roya',   '#7c3aed');
-  renderShowsChart('chart-jordan', calculateList(JORDAN_SHOWS, jordanCount), jordanMetric, 'jordan', '#16a34a');
-  renderShowsChart('chart-amman',  calculateList(AMMAN_SHOWS,  ammanCount),  ammanMetric, 'amman',  '#ea580c');
+  const checkedRoyaShows    = [...document.querySelectorAll('.roya-show-chk:checked')].map(cb => cb.value);
+  const checkedJordanShows  = [...document.querySelectorAll('.jordan-show-chk:checked')].map(cb => cb.value);
+  const checkedAmmanShows   = [...document.querySelectorAll('.amman-show-chk:checked')].map(cb => cb.value);
+  const checkedMamlakaShows = [...document.querySelectorAll('.mamlaka-show-chk:checked')].map(cb => cb.value);
+
+  const royaShowsList = calculateList(ROYA_SHOWS, royaCount).filter(s => checkedRoyaShows.includes(s.name));
+  if (checkedRoyaShows.includes('10:30 PM News')) royaShowsList.push(calc1030NewsShowEntry());
+
+  renderShowsChart('chart-roya',    royaShowsList,                                                              royaMetric,    'roya',    '#7c3aed');
+  renderShowsChart('chart-jordan',  calculateList(JORDAN_SHOWS,     jordanCount).filter(s => checkedJordanShows.includes(s.name)),  jordanMetric,  'jordan',  '#16a34a');
+  renderShowsChart('chart-amman',   calculateList(AMMAN_SHOWS,      ammanCount).filter(s => checkedAmmanShows.includes(s.name)),    ammanMetric,   'amman',   '#ea580c');
+  renderShowsChart('chart-mamlaka', calculateList(AL_MAMLAKA_SHOWS, mamlakaCount).filter(s => checkedMamlakaShows.includes(s.name)), mamlakaMetric, 'mamlaka', '#e84040');
 
   renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen);
   renderNews1030Segment();
@@ -2049,6 +2435,7 @@ function updateDashboard() {
   }
   renderHourlyTrend();
   renderFullHourlyComparison();
+  renderNonViewersInsights();
 
 }
 
@@ -2164,9 +2551,30 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
   });
 }
 
+const TOP8_IPSOS_TO_LIVE = {
+  'HYD': 'HYD',
+  'ROYA KITCHEN': 'Roya Kitchen',
+  'KOL SABET': null, // no live equivalent tracked in the survey
+  'NABD AL BALAD': 'Nabd al Balad',
+  'NEWS 7:30 PM': 'News 7:30 PM',
+  'DYD': 'DYD',
+  'MEN HUNA NABDA2': 'Mn Huna Nabda2',
+  'CARAVAN': 'Caravan'
+};
+
 function renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen) {
   const container = document.getElementById('top8-current-list');
   if (!container) return;
+
+  // The Shows filter applies to both columns. Unchecking a show hides it from Ipsos AND
+  // Current Research. Kol Sabet has no live survey column, so it can never contribute to
+  // Current Research — if that leaves fewer than 8, Current Research just shows fewer,
+  // it does not backfill with an unrelated show.
+  const checkedTop8Shows = [...document.querySelectorAll('.top8-show-chk:checked')].map(cb => cb.value);
+  document.querySelectorAll('#top8-ipsos-list li[data-show]').forEach(li => {
+    li.classList.toggle('hidden', !checkedTop8Shows.includes(li.dataset.show));
+  });
+  const allowedLiveNames = checkedTop8Shows.map(n => TOP8_IPSOS_TO_LIVE[n]).filter(Boolean);
 
   const royaCol = MAIN_CHANNELS['Roya TV'];
   const royaCount = filteredRows.filter(r => r.length > royaCol && r[royaCol].trim() === 'نعم').length;
@@ -2187,8 +2595,7 @@ function renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen
     return { box: 'bg-white text-gray-700 border border-gray-100', badge: 'bg-brand-50 text-brand-700' };
   };
 
-  const showsList = [];
-  for (const [name, colIdx] of Object.entries(ROYA_SHOWS)) {
+  function computeShowEntry(name, colIdx) {
     let relevantRows = filteredRows;
     if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
       relevantRows = filteredRows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
@@ -2204,16 +2611,41 @@ function renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen
       spec = relevantRows.filter(r => r.length > royaCol && r[royaCol].trim() === 'نعم').length;
     }
 
-    showsList.push({
+    return {
       name, count,
       pct_successful: succ ? parseFloat((count / succ * 100).toFixed(2)) : 0,
       pct_yesterday:  yda  ? parseFloat((count / yda * 100).toFixed(2))  : 0,
       pct_general:    gen  ? parseFloat((count / gen * 100).toFixed(2))  : 0,
       pct_specific:   spec ? parseFloat((count / spec * 100).toFixed(2)) : 0
-    });
+    };
   }
 
+  const showsList = [];
+  for (const [name, colIdx] of Object.entries(ROYA_SHOWS)) {
+    if (!allowedLiveNames.includes(name)) continue;
+    showsList.push(computeShowEntry(name, colIdx));
+  }
   showsList.sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
+
+  // Backfill: a checked Ipsos show with no live survey column (e.g. Kol Sabet) can't
+  // contribute a real row — fill its slot with the next-best real performer instead of
+  // leaving Current Research short.
+  const noDataSelectedCount = checkedTop8Shows.filter(n => TOP8_IPSOS_TO_LIVE[n] === null).length;
+  if (noDataSelectedCount > 0) {
+    const alreadyIncluded = new Set(showsList.map(s => s.name));
+    // Shows you deliberately unchecked (e.g. Roya Kitchen) must stay excluded from the
+    // backfill pool too — only shows with no Ipsos checkbox at all (like Hakaya Maraya) or
+    // ones you left checked are eligible to fill a no-data slot like Kol Sabet's.
+    const excludedByUser = new Set(
+      Object.values(TOP8_IPSOS_TO_LIVE).filter(liveName => liveName && !allowedLiveNames.includes(liveName))
+    );
+    const candidates = Object.entries(ROYA_SHOWS)
+      .filter(([name]) => !alreadyIncluded.has(name) && !excludedByUser.has(name))
+      .map(([name, colIdx]) => computeShowEntry(name, colIdx))
+      .sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
+    showsList.push(...candidates.slice(0, noDataSelectedCount));
+    showsList.sort((a, b) => (b[metric] || 0) - (a[metric] || 0));
+  }
 
   const top8 = showsList.slice(0, 8);
   const isCount = metric === 'count';
@@ -2832,6 +3264,22 @@ document.getElementById('news1030-metric').addEventListener('change', updateDash
 document.getElementById('roya-metric').addEventListener('change', updateDashboard);
 document.getElementById('jordan-metric').addEventListener('change', updateDashboard);
 document.getElementById('amman-metric').addEventListener('change', updateDashboard);
+document.getElementById('mamlaka-metric').addEventListener('change', updateDashboard);
+
+// Shows multi-select controls (Roya/Jordan/Amman/Al Mamlaka)
+function wireShowCheckboxGroup(masterId, itemClass) {
+  const master = document.getElementById(masterId);
+  document.querySelectorAll('.' + itemClass).forEach(cb => cb.addEventListener('change', function() {
+    if (!this.checked) master.checked = false;
+    if (document.querySelectorAll('.' + itemClass + ':not(:checked)').length === 0) master.checked = true;
+    updateDashboard();
+  }));
+}
+wireShowCheckboxGroup('all-roya-shows', 'roya-show-chk');
+wireShowCheckboxGroup('all-jordan-shows', 'jordan-show-chk');
+wireShowCheckboxGroup('all-amman-shows', 'amman-show-chk');
+wireShowCheckboxGroup('all-mamlaka-shows', 'mamlaka-show-chk');
+wireShowCheckboxGroup('all-top8-shows', 'top8-show-chk');
 
 // Demographics Checkbox controls
 document.querySelectorAll('.demo-chk').forEach(cb => {
@@ -2888,18 +3336,10 @@ window.addEventListener('resize', function() {
 function toggleDrop(id) {
   const el = document.getElementById(id);
   const isHidden = el.classList.contains('hidden');
-  
+
   // Close all menus first
-  document.getElementById('drop-gender').classList.add('hidden');
-  document.getElementById('drop-age').classList.add('hidden');
-  document.getElementById('drop-area').classList.add('hidden');
-  document.getElementById('drop-day')?.classList.add('hidden');
-  document.getElementById('drop-hourly')?.classList.add('hidden');
-  document.getElementById('drop-fh-channels')?.classList.add('hidden');
-  document.getElementById('drop-fh-gender')?.classList.add('hidden');
-  document.getElementById('drop-fh-age')?.classList.add('hidden');
-  document.getElementById('drop-fh-area')?.classList.add('hidden');
-  
+  document.querySelectorAll('[id^="drop-"]').forEach(d => d.classList.add('hidden'));
+
   // Open the one we clicked
   if (isHidden) el.classList.remove('hidden');
 }
@@ -2907,15 +3347,7 @@ function toggleDrop(id) {
 // Close menus when clicking outside of them
 document.addEventListener('click', function(event) {
   if (!event.target.closest('button[onclick^="toggleDrop"]') && !event.target.closest('div[id^="drop-"]')) {
-    document.getElementById('drop-gender').classList.add('hidden');
-    document.getElementById('drop-age').classList.add('hidden');
-    document.getElementById('drop-area').classList.add('hidden');
-    document.getElementById('drop-day')?.classList.add('hidden');
-    document.getElementById('drop-hourly')?.classList.add('hidden');
-    document.getElementById('drop-fh-channels')?.classList.add('hidden');
-    document.getElementById('drop-fh-gender')?.classList.add('hidden');
-    document.getElementById('drop-fh-age')?.classList.add('hidden');
-    document.getElementById('drop-fh-area')?.classList.add('hidden');
+    document.querySelectorAll('[id^="drop-"]').forEach(d => d.classList.add('hidden'));
   }
 });
 
