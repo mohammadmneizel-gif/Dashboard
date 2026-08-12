@@ -45,6 +45,87 @@
     .kpi-hero { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#0f1f5c, #0f1f5c) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.18); padding: 1.5rem 1.75rem; }
     .chart-card { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.12); padding: 1.5rem; min-width: 0; }
     .chart-card-soul { border: 3px solid transparent; border-radius: 16px; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(120deg, #3d5fc4, #7c3aed 50%, #e8a838) border-box; box-shadow: 0 10px 28px rgba(15,31,92,.12); padding: 1.5rem; min-width: 0; }
+    /* ---- Profiling dashboard ---- */
+    .pf-grid-top { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+    @media (max-width: 700px) { .pf-grid-top { grid-template-columns: 1fr; } }
+    .pf-grid-top .chart-card { display: flex; flex-direction: column; min-height: clamp(300px, 30vw, 480px); }
+    .pf-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .pf-card-head h3 { margin: 0; font-size: 14px; font-weight: 700; color: #1a1f2e; }
+    .pf-donut-pair { display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px; flex: 1; }
+    .pf-donut-wrapper { position: relative; width: clamp(132px, 13vw, 220px); height: clamp(132px, 13vw, 220px); text-align: center; margin: 0 auto; }
+    .pf-donut-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .pf-donut-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: block;
+      filter: drop-shadow(0 3px 5px rgba(15,31,92,.18)); }
+    .pf-icon-male { width: clamp(32px, 3.1vw, 53px); height: auto; }
+    .pf-icon-female { width: clamp(44px, 4.3vw, 73px); height: auto; }
+    .pf-donut-label { margin-top: 10px; font-size: clamp(13px, 1vw, 16px); color: #6b7280; font-weight: 600; }
+    .pf-donut-value { font-size: clamp(28px, 2.4vw, 38px); font-weight: 800; color: #1a1f2e; margin-top: 2px; }
+    .pf-card-footer { text-align: center; font-size: 11.5px; color: #8891a8; margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e5e7eb; }
+    .pf-card-footer b { color: #5b6478; }
+    .pf-age-svg { width: 100%; height: auto; aspect-ratio: 400 / 260; display: block; flex: 1; }
+    .pf-age-tag { position: absolute; background: #e8a838; color: #402a05; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; transform: translate(-50%, -100%); white-space: nowrap; }
+    .pf-x-axis { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 4px; font-size: 10.5px; font-weight: 700; }
+    .pf-geo-split { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; }
+    @media (max-width: 620px) { .pf-geo-split { grid-template-columns: 1fr; } }
+    /* Grid items default to min-width:auto, which lets an aspect-ratio child's intrinsic size
+       override the track width and blow the grid out. min-width:0 is the standard fix. */
+    .pf-geo-split > * { min-width: 0; }
+    .pf-bubble-field { position: relative; width: 100%; aspect-ratio: 340 / 320; }
+    .pf-bubble { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center;
+      color: #fff; font-weight: 800; line-height: 1.1; transform: translate(-50%, -50%); padding: 4px;
+      box-shadow: inset 0 -6px 14px rgba(0,0,0,.12), 0 3px 8px rgba(30,20,80,.18); }
+    .pf-map-wrap { display: flex; flex-direction: column; gap: 10px; }
+    .pf-map-svg-wrap { position: relative; background: #f7f9fd; border-radius: 10px; padding: 6px; }
+    .pf-map-svg-wrap svg { width: 100%; height: auto; aspect-ratio: 800 / 600; display: block; }
+    #Jordan path[data-gov] { cursor: pointer; transition: filter .12s ease; }
+    #Jordan path.pf-gov-active {
+      stroke: #e8a838; stroke-width: 1.6;
+      animation: pf-gov-pulse 1.1s ease-in-out infinite;
+    }
+    @keyframes pf-gov-pulse {
+      0%, 100% { filter: drop-shadow(0 0 3px rgba(232,168,56,.8)) brightness(1.08); }
+      50% { filter: drop-shadow(0 0 11px rgba(232,168,56,1)) brightness(1.28); }
+    }
+    .pf-bubble-g { cursor: pointer; }
+    .pf-bubble-g circle { transition: filter .12s ease, stroke-width .12s ease; }
+    .pf-bubble-g.pf-bubble-active circle {
+      stroke: #e8a838; stroke-width: 2.6;
+      animation: pf-gov-pulse 1.1s ease-in-out infinite;
+    }
+    .pf-map-tooltip {
+      position: absolute; z-index: 20; pointer-events: none; left: 0; top: 0;
+      background: #0f1f5c; color: #fff; font-size: 12px; font-weight: 700;
+      padding: 6px 10px; border-radius: 8px; box-shadow: 0 6px 16px rgba(15,31,92,.35);
+      white-space: nowrap; opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px)) scale(0.92);
+      transition: opacity .08s ease, transform .08s ease;
+    }
+    .pf-map-tooltip.visible { opacity: 1; transform: translate(-50%, calc(-100% - 12px)) scale(1); }
+    .pf-map-tooltip::after {
+      content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+      border: 5px solid transparent; border-top-color: #0f1f5c;
+    }
+    /* left + transform:translateX(-50%) shifts the box after layout, but the browser still sizes
+       its shrink-to-fit width using the space between `left` and the containing block's right edge
+       — near the right side that space shrinks, so a wrapping (white-space:normal) tooltip gets
+       squeezed into a narrow column. width:max-content sizes it from its own content instead. */
+    #pf-age-tooltip { white-space: normal; text-align: left; width: max-content; max-width: 280px; }
+    #pf-age-tooltip .att-ttl { font-size: 12.5px; font-weight: 800; margin-bottom: 4px; }
+    #pf-age-tooltip .att-row { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; }
+    #pf-age-tooltip .att-row + .att-row { margin-top: 2px; }
+    #pf-age-tooltip .att-row i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; flex: none; }
+    #pf-age-tooltip .att-sum { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,.15); font-size: 11px; font-weight: 700; color: rgba(255,255,255,.65); font-variant-numeric: tabular-nums; }
+    .pf-age-badge { cursor: pointer; }
+    .pf-age-badge rect { transition: filter .12s ease, stroke-width .12s ease; }
+    .pf-age-badge.pf-age-active rect {
+      stroke: #e8a838; stroke-width: 1.6;
+      animation: pf-gov-pulse 1.1s ease-in-out infinite;
+    }
+    .pf-geo-list { font-size: 11.5px; }
+    .pf-geo-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+    .pf-geo-row .pf-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+    .pf-geo-row .pf-nm { flex: 1; color: #1a1f2e; }
+    .pf-geo-row .pf-cp { font-weight: 700; color: #6b7280; white-space: nowrap; font-variant-numeric: tabular-nums; }
     select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25em; padding-right: 2.5rem; }
     @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
     .live-dot { animation: pulse-dot 2s ease-in-out infinite; }
@@ -53,6 +134,10 @@
     ::-webkit-scrollbar-thumb { background: #c7d0e8; border-radius: 4px; }
     .time-btn.active { background: white; color: #1e3799; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .chart-card > div:last-child, #show-trend-container, .w-full.h-\[40vh\] { overflow-x: auto; min-width: 0; }
+    /* #pf-age-wrap and #pf-geo-wrap both happen to be the last direct <div> child of their
+       .chart-card, so the rule above was clipping their hover tooltips (overflow-x:auto forces
+       overflow-y non-visible too). IDs win the cascade regardless of source order. */
+    #pf-age-wrap, #pf-geo-wrap { overflow: visible; }
     @media (min-width: 701px) {
       #chart-channels, #chart-perweek, #chart-trend-general, #chart-trend-yesterday, #chart-show-trend, #chart-news-channels, #chart-news-perweek, #chart-trend-news, #chart-news-where, #chart-news-when { min-width: 700px !important; }
     }
@@ -125,6 +210,10 @@
           <div style="display:flex; flex-direction:column; gap:6px;">
             <button id="nav-btn-a" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
             <button id="nav-btn-b" class="flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
+          </div>
+          <div id="nav-more-wrap" class="hidden relative">
+            <button id="nav-more-btn" class="flex items-center gap-1 px-3 py-2 rounded-full text-white/70 text-xs font-semibold transition-colors justify-center bg-white/10 hover:bg-white/20" style="white-space:nowrap;">⋯ More</button>
+            <div id="nav-more-drop" class="hidden absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg p-1 z-50"></div>
           </div>
           <div class="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-xs" style="white-space:nowrap;">
             <span class="live-dot inline-block w-2 h-2 rounded-full bg-green-400"></span>
@@ -676,6 +765,9 @@
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Hakaya Maraya" checked> Hakaya Maraya</label>
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Al Sabe3" checked> Al Sabe3</label>
                 <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Roya Kids" checked> Roya Kids</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Nasamat Ayloul" checked> Nasamat Ayloul</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Al Fusul Al Arbaa" checked> Al Fusul Al Arbaa</label>
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer"><input type="checkbox" class="roya-show-chk accent-brand-600" value="Roya Kitchen (Replay)" checked> Roya Kitchen (Replay)</label>
               </div>
             </div>
           </div>
@@ -903,7 +995,6 @@
         <div class="rounded-2xl overflow-hidden shadow-xl" style="border:1px solid #e2e7f2;">
           <div class="flex items-center justify-between gap-3 flex-wrap px-6 py-4" style="background: linear-gradient(120deg,#0f1f5c, #1e3799 65%, #2d4db8);">
             <p class="text-white text-sm font-semibold">Doesn't Watch TV At All</p>
-            <p class="text-white font-display text-3xl" id="nv-gen-count">—<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span></p>
           </div>
           <div class="bg-white px-6 pt-6 pb-2 space-y-6">
             <div>
@@ -929,7 +1020,6 @@
         <div class="rounded-2xl overflow-hidden shadow-xl" style="border:1px solid #e2e7f2;">
           <div class="flex items-center justify-between gap-3 flex-wrap px-6 py-4" style="background: linear-gradient(120deg,#3d0f5c,#5c1e99 65%,#6b2db8);">
             <p class="text-white text-sm font-semibold">Watches TV Generally, But Not Yesterday</p>
-            <p class="text-white font-display text-3xl" id="nv-yda-count">—<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span></p>
           </div>
           <div class="bg-white px-6 pt-6 pb-2 space-y-6">
             <div>
@@ -951,22 +1041,225 @@
         </div>
       </section>
 
+    </main>
+  </div>
+
+  <div id="profiling-view" class="hidden">
+    <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-6">
       <section>
-        <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Other Questions</h2>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="rounded-xl p-5 text-white text-center" style="border:2px solid transparent; background: linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
-            <p class="text-xs font-medium text-white/50 uppercase tracking-wide mb-2">10:30 PM News Coverage — Said Yes</p>
-            <p id="nv-1030-value" class="font-display text-4xl">—</p>
-            <p id="nv-1030-sub" class="text-xs text-white/40 mt-1">—</p>
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Channel</label>
+            <select disabled class="text-xs border border-gray-200 rounded-lg px-3 py-2 font-semibold w-44" style="background-color:#3d5fc4; color:#fff;">
+              <option>Roya TV</option>
+            </select>
           </div>
-          <div class="rounded-xl p-5 text-white text-center" style="border:2px solid transparent; background: linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;">
-            <p class="text-xs font-medium text-white/50 uppercase tracking-wide mb-2">Roya Kitchen (Replay) — Said Yes</p>
-            <p id="nv-kitchen-value" class="font-display text-4xl">—</p>
-            <p id="nv-kitchen-sub" class="text-xs text-white/40 mt-1">—</p>
+          <div>
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Show</label>
+            <select id="pf-show-select" class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white w-56 focus:outline-none focus:ring-2 focus:ring-brand-500"></select>
           </div>
         </div>
       </section>
 
+      <section>
+        <div class="pf-grid-top">
+          <div class="chart-card">
+            <div class="pf-card-head"><h3>Audience Gender Split</h3></div>
+            <div class="pf-donut-pair">
+              <div>
+                <div class="pf-donut-wrapper">
+                  <svg class="pf-donut-svg" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="16" fill="none" stroke="#f1f4f9" stroke-width="3"></circle>
+                    <circle id="pf-male-ring" cx="18" cy="18" r="16" fill="none" stroke="#3d5fc4" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                  </svg>
+                  <svg class="pf-donut-icon pf-icon-male" viewBox="0 0 197 513.12" fill-rule="evenodd" clip-rule="evenodd">
+                    <path fill="#3d5fc4" fill-rule="nonzero" d="M98.5 0c23.85 0 43.18 19.33 43.18 43.18 0 23.84-19.33 43.17-43.18 43.17S55.32 67.02 55.32 43.18C55.32 19.33 74.65 0 98.5 0zm54.56 162.57v326.67c0 13.13-10.74 23.88-23.87 23.88s-23.87-10.74-23.87-23.88V297.16H92.31v192.08c0 13.13-10.75 23.88-23.87 23.88-13.13 0-23.88-10.74-23.88-23.88V162.57h-8.34V282.6c0 23.95-36.22 23.95-36.22 0V153.42c-.04-21 7.07-35.73 19.94-45.42 22.12-16.68 134.96-16.69 157.1-.02 12.88 9.69 20 24.43 19.96 45.44V282.6c0 23.95-36.22 23.95-36.22 0V162.57h-7.72z"/>
+                  </svg>
+                </div>
+                <div class="pf-donut-label">Males</div>
+                <div class="pf-donut-value" id="pf-male-value">—</div>
+              </div>
+              <div>
+                <div class="pf-donut-wrapper">
+                  <svg class="pf-donut-svg" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="16" fill="none" stroke="#f1f4f9" stroke-width="3"></circle>
+                    <circle id="pf-female-ring" cx="18" cy="18" r="16" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="100" stroke-dashoffset="50" stroke-linecap="round"></circle>
+                  </svg>
+                  <svg class="pf-donut-icon pf-icon-female" viewBox="0 0 268 511.71" fill-rule="evenodd" clip-rule="evenodd">
+                    <path fill="#7c3aed" d="M82.08 168.2L30.15 383.23h51.93v104.68c0 13.09 10.71 23.8 23.81 23.8 13.09 0 23.81-10.71 23.81-23.8V383.23h9.38v104.68c0 13.09 10.71 23.8 23.81 23.8 13.09 0 23.8-10.71 23.8-23.8V383.23h49l-49-209.44v-11.66h7.7l.54-.14 36.74 130.7c2.76 9.84 12.98 15.58 22.82 12.82s15.58-12.98 12.82-22.82l-37.23-132.43c-.22-.78-.48-1.54-.79-2.26-4.72-19.64-6.82-31.38-18.69-40.32-22.07-16.62-128.71-16.61-150.78.02C47 117.37 42.34 132.14 36.75 153l.37.09L.69 282.69c-2.76 9.84 2.98 20.06 12.82 22.82 9.84 2.76 20.06-2.98 22.82-12.82l36.75-130.73.68.17h8.32v6.07zM134.07 0c23.78 0 43.06 19.28 43.06 43.06s-19.28 43.05-43.06 43.05c-23.77 0-43.05-19.27-43.05-43.05C91.02 19.28 110.3 0 134.07 0z"/>
+                  </svg>
+                </div>
+                <div class="pf-donut-label">Females</div>
+                <div class="pf-donut-value" id="pf-female-value">—</div>
+              </div>
+            </div>
+            <div class="pf-card-footer">Total sample: <b id="pf-gender-n">—</b> viewers</div>
+          </div>
+
+          <div class="chart-card">
+            <div class="pf-card-head"><h3>Viewer Age Distribution</h3></div>
+            <div id="pf-age-wrap" style="position:relative; display:flex; flex-direction:column; flex:1; min-height:0;">
+              <div id="pf-age-tooltip" class="pf-map-tooltip"></div>
+              <svg class="pf-age-svg" id="pf-age-svg" viewBox="0 0 400 260">
+                <defs>
+                  <linearGradient id="pfAgeGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#3d5fc4" stop-opacity="0.04"/>
+                  </linearGradient>
+                </defs>
+                <path id="pf-age-fill" fill="url(#pfAgeGrad)"></path>
+                <path id="pf-age-line" fill="none" stroke="#5847c9" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"></path>
+                <g id="pf-age-badges"></g>
+              </svg>
+              <div class="pf-x-axis" id="pf-age-xaxis"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="chart-card">
+            <div class="pf-card-head"><h3>Top Viewing Governorates (Ranked) — Heat Map</h3></div>
+            <div class="pf-geo-split" id="pf-geo-wrap">
+              <div class="pf-bubble-field" id="pf-bubble-wrap">
+                <div id="pf-bubble-tooltip" class="pf-map-tooltip"></div>
+                <svg viewBox="0 0 340 320" width="100%" height="100%"><g id="pf-bubble-field"></g></svg>
+              </div>
+              <div class="pf-map-wrap">
+                <div class="pf-map-svg-wrap">
+                    <div id="pf-map-tooltip" class="pf-map-tooltip"></div>
+                    <svg viewBox="0 0 800 600" fill-rule="evenodd" clip-rule="evenodd">
+                        <!-- Placeholder fill — recolored per-render as a heat map by renderProfilingView().
+                             data-gov identifies each shape; determined by parsing its coordinates and matching
+                             against real Jordan geography (no governorate names were present in the source map
+                             file). Amman's single region combines the "Amman (East)"/"Amman (West)" survey split,
+                             since that split is a polling boundary, not a real governorate line. -->
+                        <g id="Jordan">
+                            <path fill="#e5e7eb" data-gov="Irbid" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M248.885,112.59l0.693-0.344l0.653-0.142l0.573,0.102l0.47,0.369l-0.012,0.014v0.01l1.02,1.295l11.916,2.772
+                                l1.054,0.617l1.914,1.941l0.55,0.183l1.432-0.017l0.424,0.227l0.172,0.874l-0.149,0.85l-0.355,0.535l-0.413-0.061l1.008,1.253
+                                l0.974,0.918l1.157,0.403l1.604-0.295l2.589,0.2l0.516,1.49l-0.332,2.231l0.08,2.461l1.043,2.193l4.996,7.58l0.619,1.525
+                                l0.023,0.561l0.401,0.095l1.334,0.043l1.364,10.727l-0.773,3.397l-0.791,0.273l-0.968-0.203l-2.028-1.59l-1.255-0.436l-1.375,0.233
+                                l-1.587,1.307l-0.378,1.064l0.137,1.067l0.584,1.05l0.567,1.3l0.344,1.937l-0.149,1.002l-0.865,1.134l-3.678-0.155l-3.443-0.992
+                                l-1.478,0.445l-3.804,1.626l-2.389-3.364l-2.183-1.769l-0.55-1.07l-0.481-1.708l-0.745-0.334l-0.791,0.513l-0.79,1.107
+                                l-1.323,0.777l-1.805,0.27l-3.22-0.182l-1.822,0.358l-3.374,1.856l-2.664,0.759l-2.79-0.189l-1.925,0.148l-1.581,0.675
+                                l-1.083,1.373l-0.779,2.024l-1.701,8.168l0.189,1.989l0.67,2.113l1.535,3.521l0.275,1.129l-0.086,0.765l-0.498,1.3l-7.711-0.926
+                                l-0.711,0.073l1.438-6.158h-1.455l0.183-0.725l0.298-0.479l0.424-0.351l0.55-0.314l-0.882-1.524l-0.413-2.485l0.034-2.489
+                                l0.493-1.521l-1.008-1.94l0.092-3.917l-0.596-1.272v-0.898h0.825v0.898h0.688l-0.183-1.188l-0.332-1.003l-0.458-0.81l-0.538-0.571
+                                l-0.263-0.425l-0.493-1.442l1.077-0.209l0.47-0.365l-0.103-0.527l-0.688-0.686v-0.811h0.825l-0.172-0.611l-0.183-0.088
+                                l-0.229,0.044l-0.241-0.23l1.512-0.98l-0.688-0.892l0.756-0.338l0.699-0.473v-0.977l-0.493-0.101l-0.298-0.176l-0.252-0.243
+                                l-0.413-0.291l0.206-0.875l0.413-0.892l0.665-0.693l0.997-0.297v-0.818l-1.043-1.085l-0.229-0.554l-0.791-1.166l-0.458-0.02
+                                l-0.584,0.068v-0.886h1.512l-0.309-0.842l-0.378-2.739l0.688,0.896l0.504-1.404l0.264-0.467l0.149,0.477l0.057,0.308l0.16-0.074
+                                l0.458-0.71l-0.619-1.62l-0.344-3.377l-0.63-1.178v-0.978h0.768v-0.816l-0.939-0.555l-0.447-0.944l0.057-1.076l0.241-0.433
+                                l0.791-0.335l0.985-0.873l1.673-2.218l2.039-1.466l0.012,0.002l2.623,0.313l1.776-0.921l3.678-3.286l6.096-3.843l1.913-0.491
+                                L248.885,112.59z"/>
+                            <path fill="#e5e7eb" data-gov="Madaba" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M215.575,283.296l0.156-7.514l-0.046-0.04l0.069,0.047l0.046-0.04l-0.012-0.12l-0.034-0.207l0.607-9.598
+                                l1.764-9.398l2.477-5.734l1.362,0.165l7.625,0.425l1.547-0.734l1.392-1.347l1.822-3.301l1.295-3.492l0.67-0.875l1.341-0.892
+                                l1.375-0.419l2.962-0.265l1.426-0.848l4.165-1.08l5.603-0.02l1.707-0.426l1.392-0.573l0.739,0.117l0.791,0.744l0.258,9.396
+                                l-0.241,1.213l-0.653,1.196l-1.908,2.285l-0.55,0.991l-0.155,1.125l0.172,1.256l0.859,3.338l0.825,2.035l4.818,5.19l0.67,1.639
+                                l-0.086,1.231l-0.378,0.936l0.103,1.027l0.653,0.803l0.877,0.849l0.206,0.796l-0.344,0.819l-1.53,2.22l-0.739,1.407l-1.896,5.851
+                                l-0.481,0.842l-0.842,0.878l-0.67,0.521l-1.203,1.146l-4.955-1.139l-2.337-0.047l-3.787,0.367l-3.426,1.092l-1.53-0.013
+                                l-2.097-0.418l-11.114-3.711l-8.393-0.337L215.575,283.296z"/>
+                            <path fill="#e5e7eb" data-gov="Karak" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M203.378,349.161l2.992-2.885l1.237-2.333l-0.011-4.036l0.71-3.771l5.202-10.276l0.527-3.669l-0.779-3.524
+                                l-1.65-3.218l-1.18-2.592l-1.054-3.313l-0.607-3.534l1.386-3.141l1.558-2.709l0.183-2.789l-0.825-0.934l2.062-3.718l1.971-5.195
+                                l0.447-2.932l0.027-1.295l2.368-0.639l8.393,0.337l11.114,3.711l2.097,0.418l1.53,0.013l3.426-1.092l3.787-0.367l2.337,0.047
+                                l4.955,1.139l2.698,4.741l0.756,2.46l0.292,1.699l-0.206,1.161l-0.894,2.569l-0.412,1.828l-0.275,2.511l0.395,1.551l1.1,0.98
+                                l33.549,0.814l1.856,12.656l2.595,7.179L291.382,345l-12.987,24.159l-4.749-4.764l-4.698-3.482l-0.877-0.979l-1.152-1.936
+                                l-0.865-0.94l-1.151-0.691l-4.022-1.856l-1.392-0.996l-1.037-0.996l-0.464-0.914l-0.309-0.784l-0.739-0.651l-17.771-7.082
+                                l-9.458-0.465l-1.587-0.622l-1.547-1.011l-1.238-1.1l-1.255-0.376l-1.409-0.093l-1.965,0.283l-1.409-0.06l-1.048,0.336
+                                l-0.687,1.007l-0.481,2.616l-1.123,3.334l-0.705,5.226l-0.722,1.276l-1.238,0.751l-1.976-0.139l-1.547-0.422l-5.54-3.883
+                                L203.378,349.161z"/>
+                            <path fill="#e5e7eb" data-gov="Tafilah" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M194.151,375.204l0.853-3.047l0.504-3.244l0.378-1.446l0.733-1.553l0.859-1.009l1.879-1.686l0.642-1.221
+                                l0.378-2.842l-0.057-2.875l0.298-2.909l1.409-2.91l1.351-1.302l0.855,0.584l5.54,3.883l1.547,0.422l1.976,0.139l1.238-0.751
+                                l0.722-1.276l0.705-5.226l1.123-3.334l0.481-2.616l0.687-1.007l1.048-0.336l1.409,0.06l1.965-0.283l1.409,0.093l1.255,0.376
+                                l1.238,1.1l1.547,1.011l1.587,0.622l9.458,0.465l17.771,7.082l0.739,0.651l0.309,0.784l0.464,0.914l1.037,0.996l1.392,0.996
+                                l4.022,1.856l1.151,0.691l0.865,0.94l1.152,1.936l0.877,0.979l4.698,3.482l4.749,4.764l-8.433,14.196l-4.045,1.498l-2.973-1.16
+                                l-1.169-0.096l-1.186,0.255l-1.381,0.961l-1.1,1.077l-1.564,0.99l-7.86,1.885l-10.358,1.394l-3.77-0.338l-11.022,0.348
+                                l-4.526-0.679l-4.44,0.01l-2.526-0.109l-1.255-0.457l-1.57-0.778l-1.358-1.765l-1.323-2.299l-1.444-1.302l-1.707-0.898
+                                l-7.568-5.419L194.151,375.204z"/>
+                            <path fill="#e5e7eb" data-gov="Aqaba" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M159.972,523.291l0.475-3.452l0.791-2.779l1.478-2.396l1.054-3.167l0.584-7.135l0.825-3.167l5.145-13.881
+                                l0.47-2.583l0.103-7.732l0.814-4.322l0.435-1.099l0.55-0.987l0.412-1.125l0.069-1.533l1.283-5.023l4.743-7.1l1.799-4.289V447.5
+                                l-2.269-7.808l0.046-3.648l0.791-2.197l1.043-6.654l0.665-1.598l0.745-1.314l0.607-1.374l0.241-1.777l-0.309-1.817l-1.593-2.59
+                                l-0.55-1.315v-3.074l1.925-5.204l0.527-3.049l4.789-15.682l6.485-13.169l0.007-0.024l1.666,1.267l7.568,5.419l1.707,0.898
+                                l1.444,1.302l1.323,2.299l1.358,1.765l1.57,0.778l1.255,0.457l2.526,0.109l-0.636,8.005l-2.269,10.139l-4.921,15.585l0.223,14.381
+                                l-0.894,3.721l-6.485,12.776l-1.272,6.337l-0.258,3.355l0.516,2.386l0.584,1.247l0.859,1.471l1.014,1.323l1.358,1.257l1.518,0.888
+                                l1.822,0.602l1.77,0.076l1.65-0.207l1.432-0.52l1.427-0.293l2.853-0.082l3.306,0.648l2.062,0.77l2.171,1.204l2.148,1.878
+                                l1.994,2.131l1.65,2.558l5.832,13.165l7.19,29.219l5.488,40.081l0.252,1.084l0.008,0.036l-13.105-2.27l-16.453-2.829l-15.411-2.666
+                                l-17.244-2.974l-13.165-2.282l-12.298-2.15l1.444-1.023l0.731-11.53l0.785-3.32l2.409-5.187l-0.108-2.017l-2.301-2.316h-1.516
+                                l-0.09-0.413v-0.341l-0.153-0.181L159.972,523.291z"/>
+                            <path fill="#e5e7eb" data-gov="Balqa" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M220.603,250.69l2.783-6.446l3.529-3.929l-2.337-7.003v-0.966l1.192-1.617l-2.704-10.4l0.309-1.055
+                                l0.688-0.383l0.768-0.222l0.504-0.598l0.08-1.035l-0.653-1.438l-0.183-1.082l-0.069-1.774l-0.241-1.385l-1.203-3.052l-0.206-6.006
+                                l0.607-2.247l1.868-1.527l-1.169-1.615l0.069-1.508l1.856-3.177l-0.584-0.835v-0.707l0.504-0.586l0.905-0.465v-0.97l-0.47-1.546
+                                l0.487-2.083l0.711-0.073l7.711,0.926l1.805,2.25l1.873,0.764l2.893,0.589l0.155,1.088l1.134,0.421l1.478,0.141l9.636-0.242
+                                l2.183,0.414l1.547,0.663l1.255,1.266l0.831,1.097l4.073,3.036l0.636,3.361l0.567,0.673l0.899,0.841l0.756,0.33l2.166,1.281
+                                l-3.266,1.069l-3.46,3.389l-1.736,0.975l-4.216,1.287l-1.65,1.365l-4.99,5.9l-2.773,2.015l-6.451,3.301l-1.667,1.494l-0.773,1.43
+                                l0.241,1.195l0.773,0.903l1.186,0.604l1.467,0.433l2.544,0.419l0.636,0.698l0.189,1.101l-1.409,3.979l-0.258,1.368l-0.206,2.321
+                                l-1.426,0.848l-2.962,0.265l-1.375,0.419l-1.341,0.892l-0.67,0.875l-1.295,3.492l-1.822,3.301l-1.392,1.347l-1.547,0.734
+                                l-7.625-0.425L220.603,250.69z"/>
+                            <path fill="#e5e7eb" data-gov="Mafraq" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M441.453,119.71l10.207-6.528l18.997-12.164l18.997-12.194l14.116-9.069l19.306-12.111l9.408-5.912
+                                l23.705-14.908L583.345,30l5.156,18.833l4.606,16.913l3.838,14.003l5.053,18.667l5.236,19.26l7.448,27.37l-8.559,2.687
+                                l-0.149,0.047l-0.046,0.095l0.046,0.162l0.149,0.213l5.408,18.786l0.825,1.956l1.123,0.634l21.002-5.793l2.28,1.329l1.638,4.011
+                                l2.314,8.8l-2.83,4.128l-13.337,11.342l0.023,1.003l-1.123,0.363l-2.154,1.622l-13.165,12.492l-3.838,1.62v0.02l-0.011-0.007
+                                l-12.592,3.65l-24.932,7.209l-24.909,7.211l-24.921,7.2l-20.936,6.043l-3.996,1.153l-20.96,6.271l-0.065-0.024l-0.16-0.06
+                                L333.18,201.575l-3.901-2.264l-3.529-3.318l-1.942-1.02l-5.987-0.646l-2.051,0.205l-1.427,0.646l-1.169,0.895l-1.427,0.653
+                                l-1.667,0.044l-1.707-0.505l-1.942-1.413l-4.474-2.205l-4.486-0.434l-1.381,0.182l-1.152,0.273l-2.303,0.939l-1.535,0.128
+                                l-1.701-0.461l-2.698-2.05l-1.392-0.862l-1.106-0.145l-1.512,1.502l-1.117,0.616l-1.306,0.279l-1.186-0.209l-1.14-0.798
+                                l-0.55-0.899l-0.086-1.236l0.327-0.939l0.498-0.798l0.172-0.845l-0.395-0.899l-0.945-1.017l-2.234-0.758l-1.152-2.665l-1.461-2.44
+                                l-0.762-0.694l-0.911-0.607l-0.533-0.89l0.086-1.288l1.066-2.033l5.041-5.683l1.564-3.182l0.865-1.134l0.149-1.002l-0.344-1.937
+                                l-0.567-1.3l-0.584-1.05l-0.137-1.067l0.378-1.064l1.587-1.307l1.375-0.233l1.255,0.436l2.028,1.59l0.968,0.203l0.791-0.273
+                                l0.773-3.397l-1.364-10.727l1.587,0.052l4.102-0.555l0.699,0.074l1.146,0.446l0.664,0.122l0.55-0.264l1.26-1.139l0.573-0.183
+                                l1.203,0.659l3.609,3.624l7.15,4.923l9.739,9.216l1.638,0.928l2.188,0.665l6.245,0.631l1.799,1.124l4.047,0.493l15.168,1.849
+                                l3.999,3.03l1.925-1.133l2.406,0.071l7.081,1.862l1.558,0.064l1.421-0.489l17.817-12.18l16.969-11.047h0.023l12.271-7.834
+                                l18.974-12.145L441.453,119.71z"/>
+                            <path fill="#e5e7eb" data-gov="Ma'an" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M411.2,307.35l14.209,15.354l14.425,15.58l0.344,0.406l0.355,0.412l0.344,0.412l0.355,0.412l12.157,14.31
+                                l12.168,14.286l12.18,14.263l12.157,14.253l5.488,6.426l0.034,0.086l-0.046,0.053l-0.103,0.04l-0.745,0.457l-8.112,4.537
+                                l-13.394,7.504l-12.042,6.753l-2.567,2.14l-1.444,2.311l-3.254,7.928l-3.987,9.67l-3.667,8.885l-4.927,11.993l-2.383,2.119
+                                l-13.062,2.705l-14.838,3.079l-15.823,3.289l-15.949,3.314l-9.865,2.038l-9.613,1.998l-3.048,1.525l-2.647,2.845l-6.13,10.391
+                                l-5.099,8.627l-6.909,11.683l-7.115,12.019l-8.548,7.057l-12.89,10.641l-11.721,9.675l-12.031,9.902l-2.842,1.156L277.581,570
+                                l-11.527-1.988l-12.776-2.197l-6.316-1.094l-0.008-0.036l-0.252-1.084l-5.488-40.081l-7.19-29.219l-5.832-13.165l-1.65-2.558
+                                l-1.994-2.131l-2.148-1.878l-2.171-1.204l-2.062-0.77l-3.306-0.648l-2.853,0.082l-1.427,0.293l-1.432,0.52l-1.65,0.207l-1.77-0.076
+                                l-1.822-0.602l-1.518-0.888l-1.358-1.257l-1.014-1.323l-0.859-1.471l-0.584-1.247l-0.516-2.386l0.258-3.355l1.272-6.337
+                                l6.485-12.776l0.894-3.721l-0.223-14.381l4.921-15.585l2.269-10.139l0.636-8.005l4.44-0.01l4.526,0.679l11.022-0.348l3.77,0.338
+                                l10.358-1.394l7.86-1.885l1.564-0.99l1.1-1.077l1.381-0.961l1.186-0.255l1.169,0.096l2.973,1.16l4.045-1.498l8.433-14.196
+                                L291.382,345l5.654-17.988l-2.595-7.179l-1.856-12.656L411.2,307.35z"/>
+                            <path fill="#e5e7eb" data-gov="Amman" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M386.388,274.592l-4.255,1.27l14.425,15.634l14.425,15.621l0.216,0.233l-118.615-0.173l-33.549-0.814
+                                l-1.1-0.98l-0.395-1.551l0.275-2.511l0.412-1.828l0.894-2.569l0.206-1.161l-0.292-1.699l-0.756-2.46l-2.698-4.741l1.203-1.146
+                                l0.67-0.521l0.842-0.878l0.481-0.842l1.896-5.851l0.739-1.407l1.53-2.22l0.344-0.819l-0.206-0.796l-0.877-0.849l-0.653-0.803
+                                l-0.103-1.027l0.378-0.936l0.086-1.231l-0.67-1.639l-4.818-5.19l-0.825-2.035l-0.859-3.338l-0.172-1.256l0.155-1.125l0.55-0.991
+                                l1.908-2.285l0.653-1.196l0.241-1.213l-0.258-9.396l-0.791-0.744l-0.739-0.117l-1.392,0.573l-1.707,0.426l-5.603,0.02l-4.165,1.08
+                                l0.206-2.321l0.258-1.368l1.409-3.979l-0.189-1.101l-0.636-0.698l-2.544-0.419l-1.467-0.433l-1.186-0.604l-0.773-0.903
+                                l-0.241-1.195l0.773-1.43l1.667-1.494l6.451-3.301l2.773-2.015l4.99-5.9l1.65-1.365l4.216-1.287l1.736-0.975l3.46-3.389
+                                l3.266-1.069l2.544,3.342l2.67,2.458l3.735,4.547l2.148,1.539l1.461,0.453l2.166-1.236l1.363-0.282l1.787-0.161l5.437-1.731
+                                l7.138,0.05l2.286-0.427l1.432-0.88l2.114-2.568l1.323-1.146l2.36-0.508l11.727,1.022l2.326,1.042l2.286,1.923l6.296,6.902
+                                l3.185,4.134l0.189,2.051l-1.02,1.588l-3.111,1.943l-2.492,2.037l-0.848,1.158l-0.155,1.218l0.693,1.422l2.99,3.408l4.973,4.624
+                                l4.818,3.298l2.578,0.968l2.08-0.06l5.265-3.248l1.896-0.516l2.062,0.483l31.051,31.669l0.344,0.187L386.388,274.592z"/>
+                            <path fill="#e5e7eb" data-gov="Zarqa" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M471.031,249.295l-6.504,1.945l-27.464,8.217l-27.464,8.205l-23.21,6.93l-0.05-0.027l-0.344-0.187
+                                l-31.051-31.669l-2.062-0.483l-1.896,0.516l-5.265,3.248l-2.08,0.06l-2.578-0.968l-4.818-3.298l-4.973-4.624l-2.99-3.408
+                                l-0.693-1.422l0.155-1.218l0.848-1.158l2.492-2.037l3.111-1.943l1.02-1.588l-0.189-2.051l-3.185-4.134l-6.296-6.902l-2.286-1.923
+                                l-2.326-1.042l-11.727-1.022l-2.36,0.508l-1.323,1.146l-2.114,2.568l-1.432,0.88l-2.286,0.427l-7.138-0.05l-5.437,1.731
+                                l-1.787,0.161l-1.363,0.282l-2.166,1.236l-1.461-0.453l-2.148-1.539l-3.735-4.547l-2.67-2.458l-2.544-3.342l-2.166-1.281
+                                l-0.756-0.33l-0.899-0.841l-0.567-0.673l-0.636-3.361l4.148-5.564l1.289-1.013l1.753-1.044l1.449-0.677l0.945-0.97l0.55-1.152
+                                l0.378-2.742l2.234,0.758l0.945,1.017l0.395,0.899l-0.172,0.845l-0.498,0.798l-0.327,0.939l0.086,1.236l0.55,0.899l1.14,0.798
+                                l1.186,0.209l1.306-0.279l1.117-0.616l1.512-1.502l1.106,0.145l1.392,0.862l2.698,2.05l1.701,0.461l1.535-0.128l2.303-0.939
+                                l1.152-0.273l1.381-0.182l4.486,0.434l4.474,2.205l1.942,1.413l1.707,0.505l1.667-0.044l1.427-0.653l1.169-0.895l1.427-0.646
+                                l2.051-0.205l5.987,0.646l1.942,1.02l3.529,3.318l3.901,2.264l137.626,47.636l0.16,0.06L471.031,249.295z"/>
+                            <path fill="#e5e7eb" data-gov="Ajloun" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M241.924,189.492l-2.893-0.589l-1.873-0.764l-1.805-2.25l0.498-1.3l0.086-0.765l-0.275-1.129l-1.535-3.521
+                                l-0.67-2.113l-0.189-1.989l1.701-8.168l0.779-2.024l1.083-1.373l1.581-0.675l1.925-0.148l2.79,0.189l2.664-0.759l3.374-1.856
+                                l1.822-0.358l3.22,0.182l1.805-0.27l1.323-0.777l0.79-1.107l0.791-0.513l0.745,0.334l0.481,1.708l0.55,1.07l2.183,1.769
+                                l2.389,3.364l-2.355,1.296l-1.203,0.516l-1.724,1.147l-1.753,1.74l-1.873,2.951l-0.773,2.148l-0.309,1.817l0.086,1.244
+                                l-0.258,1.159l-0.997,1.139l-7.556,3.42L241.924,189.492z"/>
+                            <path fill="#e5e7eb" data-gov="Jerash" stroke="#808080" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" d="M241.924,189.492l4.623-5.257l7.556-3.42l0.997-1.139l0.258-1.159l-0.086-1.244l0.309-1.817l0.773-2.148
+                                l1.873-2.951l1.753-1.74l1.724-1.147l1.203-0.516l2.355-1.296l3.804-1.626l1.478-0.445l3.443,0.992l3.678,0.155l-1.564,3.182
+                                l-5.041,5.683l-1.066,2.033l-0.086,1.288l0.533,0.89l0.911,0.607l0.762,0.694l1.461,2.44l1.152,2.665l-0.378,2.742l-0.55,1.152
+                                l-0.945,0.97l-1.449,0.677l-1.753,1.044l-1.289,1.013l-4.148,5.564l-4.073-3.036l-0.831-1.097l-1.255-1.266l-1.547-0.663
+                                l-2.183-0.414l-9.636,0.242l-1.478-0.141l-1.134-0.421L241.924,189.492z"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="pf-geo-list" id="pf-geo-list"></div>
+              </div>
+            </div>
+        </div>
+      </section>
     </main>
   </div>
   </div>
@@ -1010,8 +1303,61 @@ function mapWhereValue(raw) {
   return null;
 }
 const SHOW_CUTOFFS = { 'Mundial Roya': 3081, 'Al Holm Et7qaq': 3081, 'THE CONTENDERS': 3259, "Football's Greatest Stage": 3259 };
+// 'Roya Kitchen (Replay)' (col 94) is the "watched the replay?" question that used to power a
+// standalone stat on the Non-Viewers Insights page; it's a real per-respondent yes/no column
+// asked from row 3308 onward, so it slots into the show list like any other windowed show.
+const SHOW_START_ROWS = { 'Nasamat Ayloul': 3616, 'Al Fusul Al Arbaa': 3623, 'Roya Kitchen (Replay)': 3308 }; // GLOBAL_FORM_ROWS index where these show columns start being asked
+function hasShowWindow(name) { return !!(SHOW_CUTOFFS[name] || SHOW_START_ROWS[name]); }
+function rowsInShowWindow(rows, name) {
+  if (SHOW_CUTOFFS[name]) return rows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
+  if (SHOW_START_ROWS[name]) return rows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) >= SHOW_START_ROWS[name]);
+  return rows;
+}
 const NEWS_1030_COL = 89;
-const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:00 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42 };
+const ROYA_SHOWS = { 'DYD': 25, 'HYD': 26, 'News 7:00 AM': 27, 'Roya Kitchen': 28, 'Mn Huna Nabda2': 29, 'News 7:30 PM': 30, 'Nabd al Balad': 31, 'Caravan': 32, 'Mundial Roya': 33, 'Al Mudaraj': 34, 'Al Holm Et7qaq': 35, 'THE CONTENDERS': 36, "Football's Greatest Stage": 37, 'Haki Siyasi': 38, 'Farah': 39, 'Hakaya Maraya': 40, 'Al Sabe3': 41, 'Roya Kids': 42, 'Nasamat Ayloul': 111, 'Al Fusul Al Arbaa': 119, 'Roya Kitchen (Replay)': 94 };
+
+/* =================================================================
+   PROFILING DASHBOARD — data constants
+================================================================= */
+const COL_AREA = 3, COL_AGE = 4, COL_GENDER = 6;
+// Fixed display order (Arabic value ↔ English label), matching the order used everywhere else in Profiling
+const PF_AGE_ORDER = ['تحت 18 عاماً', '18-24 عاماً', '25-34 عاماً', '35-44 عاماً', '45-54 عاماً', '55-64 عاماً', '65 عاماً فأكثر'];
+const PF_AGE_LABELS = ['Under 18', '18-24', '25-34', '35-44', '45-54', '55-64', '65+'];
+const PF_AGE_COLORS = ['#8891a8', '#4aa3d6', '#3d5fc4', '#7c3aed', '#a256c9', '#e8a838', '#d9556b'];
+const PF_AREA_ORDER = ['عمان (شرق)', 'إربد', 'الزرقاء', 'عمان (غرب)', 'البلقاء', 'المفرق', 'الكرك', 'جرش', 'عجلون', 'العقبة', 'مادبا', 'الطفيلة', 'معان'];
+const PF_AREA_LABELS = ['Amman (East)', 'Irbid', 'Zarqa', 'Amman (West)', 'Balqa', 'Mafraq', 'Karak', 'Jerash', 'Ajloun', 'Aqaba', 'Madaba', 'Tafilah', "Ma'an"];
+// Bubble slots: two collision-safe rings around a fixed center. Position = governorate identity
+// (matches the real Jordan map below), radius and heat color are both data-driven per render.
+// minR/maxR per ring are sized so two adjacent bubbles both at max size still can't touch.
+const PF_BUBBLE_SLOTS = [
+  { label: 'Amman (East)', idx: 0,  cx: 170, cy: 160, minR: 20, maxR: 50 },
+  { label: 'Irbid',        idx: 1,  cx: 118, cy: 69,  minR: 15, maxR: 38 },
+  { label: 'Zarqa',        idx: 2,  cx: 275, cy: 160, minR: 15, maxR: 38 },
+  { label: 'Amman (West)', idx: 3,  cx: 65,  cy: 160, minR: 15, maxR: 38 },
+  { label: 'Mafraq',       idx: 5,  cx: 223, cy: 69,  minR: 15, maxR: 38 },
+  { label: 'Balqa',        idx: 4,  cx: 118, cy: 251, minR: 15, maxR: 38 },
+  { label: 'Karak',        idx: 6,  cx: 223, cy: 251, minR: 15, maxR: 38 },
+  { label: 'Jerash',       idx: 7,  cx: 170, cy: 15,  minR: 10, maxR: 22 },
+  { label: 'Ajloun',       idx: 8,  cx: 44,  cy: 88,  minR: 10, maxR: 22 },
+  { label: 'Aqaba',        idx: 9,  cx: 170, cy: 305, minR: 10, maxR: 22 },
+  { label: 'Tafilah',      idx: 11, cx: 44,  cy: 232, minR: 10, maxR: 22 },
+  { label: "Ma'an",        idx: 12, cx: 296, cy: 232, minR: 10, maxR: 22 },
+];
+// Heat scale: one hue, light → dark, intensity = share of the show's most-watched governorate.
+// Bubbles/list keep a mid-tone floor so white text stays legible; the map (no text on it) can go near-white.
+const PF_HEAT_BUBBLE = ['#7d97e0', '#16266b'];
+const PF_HEAT_MAP = ['#e4e9f8', '#1e3799'];
+function pfHeatColor(t, [light, dark]) {
+  t = Math.max(0, Math.min(1, t));
+  const a = light.match(/\w\w/g).map(x => parseInt(x, 16));
+  const b = dark.match(/\w\w/g).map(x => parseInt(x, 16));
+  return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join('');
+}
+// Which real Jordan governorate a survey area label belongs to — Amman's East/West split is a
+// polling boundary, not a real governorate line, so both map to the single "Amman" map region.
+const PF_MAP_GOV = { 'Amman (East)': 'Amman', 'Amman (West)': 'Amman', 'Irbid': 'Irbid', 'Zarqa': 'Zarqa',
+  'Balqa': 'Balqa', 'Mafraq': 'Mafraq', 'Karak': 'Karak', 'Jerash': 'Jerash', 'Ajloun': 'Ajloun',
+  'Aqaba': 'Aqaba', 'Madaba': 'Madaba', 'Tafilah': 'Tafilah', "Ma'an": "Ma'an" };
 
 function renderNews1030Segment() {
   const valEl = document.getElementById('news1030-value');
@@ -1100,8 +1446,6 @@ const WATCHED_ONLINE_WHAT_COL_GEN = 88;
 const WATCHED_ONLINE_COL_YDA = 92;
 const WATCHED_ONLINE_WHAT_COL_YDA = 93;
 const NEWS_1030_START_ROW = 3157;   // GLOBAL_FORM_ROWS index where col89 starts being asked
-const ROYA_KITCHEN_REPLAY_COL = 94;
-const ROYA_KITCHEN_REPLAY_START_ROW = 3308;
 
 const REASON_LABELS = {
   'فضّلت استخدام الهاتف أو الإنترنت': 'Preferred Phone/Internet',
@@ -1229,9 +1573,6 @@ function renderNonViewersInsights() {
   const ydaFilter  = r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم' && r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'لا';
 
   // --- Branch 1: doesn't watch TV at all ---
-  const genAll = filterRowsForSegment(1, genFilter);
-  document.getElementById('nv-gen-count').innerHTML = genAll.length + '<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span>';
-
   const genReasonRows = filterRowsForSegment(3179, genFilter);
   const genReason = tallyCategories(genReasonRows, REASON_NOT_WATCHING_COL_GEN, v => REASON_LABELS[v] || v);
   document.getElementById('nv-gen-reason-sub').textContent = `${genReason.total} out of ${genReasonRows.length} in this group answered`;
@@ -1247,9 +1588,6 @@ function renderNonViewersInsights() {
   renderCategoryBar('chart-nv-gen-what', genWhat.counts, '#e8a838');
 
   // --- Branch 2: watches TV generally, but not yesterday ---
-  const ydaAll = filterRowsForSegment(1, ydaFilter);
-  document.getElementById('nv-yda-count').innerHTML = ydaAll.length + '<span class="text-xs font-sans font-normal text-white/60 ml-2">respondents</span>';
-
   const ydaReasonRows = filterRowsForSegment(3177, ydaFilter);
   const ydaReason = tallyCategories(ydaReasonRows, REASON_NOT_WATCHING_COL_YDA, v => REASON_LABELS[v] || v);
   document.getElementById('nv-yda-reason-sub').textContent = `${ydaReason.total} out of ${ydaReasonRows.length} in this group answered`;
@@ -1263,17 +1601,6 @@ function renderNonViewersInsights() {
   const ydaWhat = tallyCategories(ydaOnlineRows, WATCHED_ONLINE_WHAT_COL_YDA, mapWhatWatchedOnline);
   document.getElementById('nv-yda-what-sub').textContent = ydaWhat.total ? `${ydaWhat.total} respondents who said they watched something` : 'Nobody in this group said yes above';
   renderCategoryBar('chart-nv-yda-what', ydaWhat.counts, '#e8a838');
-
-  // --- Standalone KPIs ---
-  const news1030Rows = filterRowsForSegment(NEWS_1030_START_ROW, null);
-  const news1030Answered = news1030Rows.filter(r => r.length > NEWS_1030_COL && r[NEWS_1030_COL].trim());
-  document.getElementById('nv-1030-value').textContent = news1030Answered.filter(r => r[NEWS_1030_COL].trim() === 'نعم').length;
-  document.getElementById('nv-1030-sub').textContent = `out of ${news1030Answered.length} asked`;
-
-  const kitchenRows = filterRowsForSegment(ROYA_KITCHEN_REPLAY_START_ROW, null);
-  const kitchenAnswered = kitchenRows.filter(r => r.length > ROYA_KITCHEN_REPLAY_COL && r[ROYA_KITCHEN_REPLAY_COL].trim());
-  document.getElementById('nv-kitchen-value').textContent = kitchenAnswered.filter(r => r[ROYA_KITCHEN_REPLAY_COL].trim() === 'نعم').length;
-  document.getElementById('nv-kitchen-sub').textContent = `out of ${kitchenAnswered.length} asked`;
 }
 
 const JORDAN_SHOWS = { 'Yes3ed Sabahak': 43, 'Yawm Jadeed': 44, 'Nashama Al Watan': 45, 'Tahadi Al Nashama': 46, 'Trend Show': 47, '60 Daqiqa': 48, 'JTV Kitchen': 49 };
@@ -1350,23 +1677,40 @@ Chart.defaults.plugins.tooltip.displayColors = true;
 let GLOBAL_FORM_ROWS = [];
 
 /* =================================================================
-   VIEW NAVIGATION LOGIC (Main / News / Non-Viewers Insights)
+   VIEW NAVIGATION LOGIC (Main / News / Non-Viewers Insights / Profiling)
 ================================================================= */
 const VIEWS = {
   main:       { id: 'main-view',       label: 'Main Dashboard' },
   news:       { id: 'news-view',       label: 'News Dashboard' },
-  nonviewers: { id: 'nonviewers-view', label: 'Non-Viewers Insights' }
+  nonviewers: { id: 'nonviewers-view', label: 'Non-Viewers Insights' },
+  profiling:  { id: 'profiling-view',  label: 'Profiling' }
 };
+// Non-Viewers Insights and Profiling always get the 2 quick-access buttons; Main is the fallback
+// third choice; News never gets a quick button and always lives in the "More" menu instead —
+// there are 4 views and only 2 button slots, so News is the one that got bumped.
+const QUICK_NAV_PRIORITY = ['profiling', 'nonviewers', 'main'];
 let currentView = 'main';
 
 function updateNavButtons() {
-  const others = Object.keys(VIEWS).filter(k => k !== currentView);
+  const quick = QUICK_NAV_PRIORITY.filter(k => k !== currentView).slice(0, 2);
   const btnA = document.getElementById('nav-btn-a');
   const btnB = document.getElementById('nav-btn-b');
-  btnA.textContent = VIEWS[others[0]].label + ' →';
-  btnA.onclick = () => switchView(others[0]);
-  btnB.textContent = VIEWS[others[1]].label + ' →';
-  btnB.onclick = () => switchView(others[1]);
+  btnA.textContent = VIEWS[quick[0]].label + ' →';
+  btnA.onclick = () => switchView(quick[0]);
+  btnB.textContent = VIEWS[quick[1]].label + ' →';
+  btnB.onclick = () => switchView(quick[1]);
+
+  const moreKeys = Object.keys(VIEWS).filter(k => k !== currentView && !quick.includes(k));
+  const moreWrap = document.getElementById('nav-more-wrap');
+  const moreDrop = document.getElementById('nav-more-drop');
+  if (moreKeys.length === 0) {
+    moreWrap.classList.add('hidden');
+  } else {
+    moreWrap.classList.remove('hidden');
+    moreDrop.innerHTML = moreKeys.map(k =>
+      `<button class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 rounded-md" data-view="${k}">${VIEWS[k].label} →</button>`
+    ).join('');
+  }
 }
 
 function switchView(target) {
@@ -1375,8 +1719,22 @@ function switchView(target) {
   document.getElementById(VIEWS[target].id).classList.remove('hidden');
   currentView = target;
   updateNavButtons();
+  document.getElementById('nav-more-drop').classList.add('hidden');
   window.dispatchEvent(new Event('resize'));
 }
+
+document.getElementById('nav-more-btn').addEventListener('click', () => {
+  document.getElementById('nav-more-drop').classList.toggle('hidden');
+});
+document.getElementById('nav-more-drop').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-view]');
+  if (btn) switchView(btn.dataset.view);
+});
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('nav-more-wrap').contains(e.target)) {
+    document.getElementById('nav-more-drop').classList.add('hidden');
+  }
+});
 
 updateNavButtons();
 
@@ -2107,14 +2465,14 @@ function updateDashboard() {
     const arr = [];
     for (const [name, colIdx] of Object.entries(configObj)) {
       let relevantRows = filteredRows;
-      if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
-        relevantRows = filteredRows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
+      if (hasShowWindow(name)) {
+        relevantRows = rowsInShowWindow(filteredRows, name);
       }
 
       const count = relevantRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
       let succ = successfulCalls, yda = watchedYDA, gen = watchesGen, spec = denominatorCount;
 
-      if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+      if (hasShowWindow(name)) {
         succ = relevantRows.filter(isCallSuccessful).length;
         yda = relevantRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
         gen = relevantRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
@@ -2436,8 +2794,263 @@ function updateDashboard() {
   renderHourlyTrend();
   renderFullHourlyComparison();
   renderNonViewersInsights();
+  renderProfilingView();
 
 }
+
+/* =================================================================
+   PROFILING DASHBOARD — rendering
+================================================================= */
+function populateProfilingShowSelect() {
+  const sel = document.getElementById('pf-show-select');
+  if (!sel || sel.options.length) return;
+  Object.keys(ROYA_SHOWS).forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  sel.value = 'Nabd al Balad';
+  sel.addEventListener('change', renderProfilingView);
+}
+populateProfilingShowSelect();
+
+function renderProfilingView() {
+  if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
+  const sel = document.getElementById('pf-show-select');
+  if (!sel || !sel.value) return;
+  const showName = sel.value;
+  const showCol = ROYA_SHOWS[showName];
+
+  // Date + day-of-week filter only. The gender/age/area checkboxes in the global toolbar are
+  // deliberately ignored here — this view exists to show that exact breakdown, so pre-filtering
+  // by it (e.g. "only males") would make the chart it's about self-contradictory.
+  const sVal = inputStart.value, eVal = inputEnd.value;
+  const sDate = sVal ? new Date(sVal) : null;
+  const eDate = eVal ? new Date(eVal) : null;
+  if (sDate) sDate.setHours(0,0,0,0);
+  if (eDate) eDate.setHours(23,59,59,999);
+  const checkedDays = [...document.querySelectorAll('.day-chk:checked')].map(cb => cb.value);
+
+  let rows = [];
+  for (let i = 1; i < GLOBAL_FORM_ROWS.length; i++) {
+    const r = GLOBAL_FORM_ROWS[i];
+    if (!r[0] || !r[0].trim()) continue;
+    const rowDate = parseDateStr(r[0]);
+    if (!rowDate) continue;
+    if (sDate && rowDate < sDate) continue;
+    if (eDate && rowDate > eDate) continue;
+    if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
+    rows.push(r);
+  }
+  if (hasShowWindow(showName)) rows = rowsInShowWindow(rows, showName);
+
+  const watchers = rows.filter(r => r.length > showCol && r[showCol] && r[showCol].trim() === 'نعم');
+  const total = watchers.length;
+
+  const maleN = watchers.filter(r => (r[COL_GENDER]||'').trim() === 'ذكر').length;
+  const femaleN = watchers.filter(r => (r[COL_GENDER]||'').trim() === 'أنثى').length;
+  const malePct = total ? maleN/total*100 : 0;
+  const femalePct = total ? femaleN/total*100 : 0;
+
+  document.getElementById('pf-gender-n').textContent = total;
+  document.getElementById('pf-male-value').textContent = total ? malePct.toFixed(0)+'%' : '—';
+  document.getElementById('pf-female-value').textContent = total ? femalePct.toFixed(0)+'%' : '—';
+  document.getElementById('pf-male-ring').setAttribute('stroke-dashoffset', (100 - malePct).toFixed(1));
+  document.getElementById('pf-female-ring').setAttribute('stroke-dashoffset', (100 - femalePct).toFixed(1));
+
+  // ---- age mountain chart ----
+  const ageCounts = PF_AGE_ORDER.map(av => watchers.filter(r => (r[COL_AGE]||'').trim() === av).length);
+  const agePct = ageCounts.map(n => total ? n/total*100 : 0);
+  const W = 400, H = 260, PAD = 6, baseline = 250, topY = 15;
+  const maxV = Math.max(...agePct, 0.0001);
+  const stepX = (W - PAD*2) / (agePct.length - 1);
+  const pts = agePct.map((v,i) => [PAD + i*stepX, baseline - (v/maxV) * (baseline - topY)]);
+  let fillPath = `M0,${baseline} L${pts[0][0]},${pts[0][1]}`;
+  let linePath = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i=0;i<pts.length-1;i++){
+    const [x0,y0]=pts[i], [x1,y1]=pts[i+1];
+    const mx=(x0+x1)/2;
+    fillPath += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`;
+    linePath += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`;
+  }
+  fillPath += ` L${W},${baseline} L${W},${H} L0,${H} Z`;
+  document.getElementById('pf-age-fill').setAttribute('d', fillPath);
+  document.getElementById('pf-age-line').setAttribute('d', linePath);
+
+  // Male/female counts per age bracket, expressed as % of ALL viewers (not % of the bracket)
+  // so they visually add up to the bracket's own badge percentage — read by the hover tooltip.
+  const ageMaleCounts = PF_AGE_ORDER.map(av => watchers.filter(r => (r[COL_AGE]||'').trim() === av && (r[COL_GENDER]||'').trim() === 'ذكر').length);
+  const ageFemaleCounts = PF_AGE_ORDER.map(av => watchers.filter(r => (r[COL_AGE]||'').trim() === av && (r[COL_GENDER]||'').trim() === 'أنثى').length);
+
+  document.getElementById('pf-age-badges').innerHTML = pts.map((p, i) => {
+    const label = (total ? agePct[i].toFixed(0) : '0') + '%';
+    const w = 15 + label.length * 7;
+    const color = PF_AGE_COLORS[i];
+    const bx = Math.min(Math.max(p[0] - w/2, 2), W - w - 2);
+    const by = Math.max(p[1] - 26, 2);
+    const mN = ageMaleCounts[i], fN = ageFemaleCounts[i];
+    const mPct = (total ? mN/total*100 : 0).toFixed(0) + '%';
+    const fPct = (total ? fN/total*100 : 0).toFixed(0) + '%';
+    return `<g class="pf-age-badge" data-age="${PF_AGE_LABELS[i]}" data-total="${ageCounts[i]}" data-pct="${label}" data-m="${mN}" data-mpct="${mPct}" data-f="${fN}" data-fpct="${fPct}" transform="translate(${bx}, ${by})">
+      <rect width="${w}" height="20" rx="4" fill="${color}"></rect>
+      <text x="${w/2}" y="14" fill="white" font-size="10" font-weight="bold" text-anchor="middle" style="pointer-events:none">${label}</text>
+    </g>`;
+  }).join('');
+  document.getElementById('pf-age-xaxis').innerHTML = PF_AGE_LABELS.map((l, i) =>
+    `<span style="color:${PF_AGE_COLORS[i]}">${l}</span>`).join('');
+
+  // ---- governorates: bubbles + list, sorted by real value ----
+  const areaCounts = PF_AREA_ORDER.map(av => watchers.filter(r => (r[COL_AREA]||'').trim() === av).length);
+  const ranked = PF_AREA_LABELS.map((label, i) => ({ label, n: areaCounts[i], pct: total ? areaCounts[i]/total*100 : 0 })).sort((a,b) => b.n - a.n);
+  const maxN = Math.max(ranked[0].n, 1);
+
+  document.getElementById('pf-bubble-field').innerHTML = PF_BUBBLE_SLOTS.map(slot => {
+    const v = areaCounts[slot.idx];
+    const r = slot.minR + Math.sqrt(v / maxN) * (slot.maxR - slot.minR);
+    const pct = (total ? v/total*100 : 0).toFixed(1) + '%';
+    const nameLines = slot.label.includes('(') ? slot.label.split(' (').map((s,i)=> i===1 ? '('+s : s) : [slot.label];
+    const nameFont = Math.max(7, Math.min(14, r / 3.1));
+    const pctFont = Math.max(6.5, Math.min(12, r / 3.8));
+    let lines;
+    if (r < 17) {
+      lines = [{ t: pct, dy: 0, size: pctFont, weight: 700 }];
+    } else if (nameLines.length > 1) {
+      lines = [
+        { t: nameLines[0], dy: -r*0.34, size: nameFont, weight: 600 },
+        { t: nameLines[1], dy: -r*0.34 + nameFont*1.05, size: nameFont, weight: 600 },
+        { t: pct, dy: -r*0.34 + nameFont*2.3, size: pctFont, weight: 800 },
+      ];
+    } else {
+      lines = [
+        { t: nameLines[0], dy: -r*0.22, size: nameFont, weight: 600 },
+        { t: pct, dy: -r*0.22 + nameFont*1.2, size: pctFont, weight: 800 },
+      ];
+    }
+    const textEls = lines.map(l => `<text x="${slot.cx}" y="${(slot.cy + l.dy).toFixed(1)}" fill="white" font-size="${l.size.toFixed(1)}" font-weight="${l.weight}" text-anchor="middle">${l.t}</text>`).join('');
+    const heatColor = pfHeatColor(v / maxN, PF_HEAT_BUBBLE);
+    // data-* read by the delegated hover tooltip (initProfilingBubbleTooltip) — the small
+    // bubbles only fit a percentage, so hover is the only place their name is readable.
+    return `<g class="pf-bubble-g" data-gov="${slot.label}" data-count="${v}" data-pct="${pct}"><circle cx="${slot.cx}" cy="${slot.cy}" r="${r.toFixed(1)}" fill="${heatColor}"></circle>${textEls}</g>`;
+  }).join('');
+
+  document.getElementById('pf-geo-list').innerHTML = ranked.map(item => `
+    <div class="pf-geo-row">
+      <span class="pf-dot" style="background:${pfHeatColor(item.n / maxN, PF_HEAT_BUBBLE)}"></span>
+      <span class="pf-nm">${item.label}</span>
+      <span class="pf-cp">${item.n} (${item.pct.toFixed(1)}%)</span>
+    </div>`).join('');
+
+  // ---- Jordan map: heat-color each real governorate by its combined viewer share ----
+  const govTotals = {};
+  PF_AREA_LABELS.forEach((label, i) => {
+    const gov = PF_MAP_GOV[label];
+    govTotals[gov] = (govTotals[gov] || 0) + areaCounts[i];
+  });
+  const mapMax = Math.max(...Object.values(govTotals), 1);
+  document.querySelectorAll('#Jordan path[data-gov]').forEach(path => {
+    const gov = path.dataset.gov;
+    const v = govTotals[gov] || 0;
+    path.setAttribute('fill', pfHeatColor(v / mapMax, PF_HEAT_MAP));
+    // Read by the instant custom hover tooltip (see initProfilingMapTooltip) instead of the
+    // browser's native <title> tooltip, which has a multi-second show delay.
+    path.dataset.count = v;
+    path.dataset.pct = total ? (v / total * 100).toFixed(1) : '0.0';
+  });
+}
+
+// Instant hover tooltip + glow highlight for the Jordan map — attached once since the
+// paths are static DOM; renderProfilingView() only keeps their data-count/data-pct fresh.
+function initProfilingMapTooltip() {
+  const wrap = document.querySelector('.pf-map-svg-wrap');
+  const tip = document.getElementById('pf-map-tooltip');
+  if (!wrap || !tip) return;
+  document.querySelectorAll('#Jordan path[data-gov]').forEach(path => {
+    path.addEventListener('mouseenter', () => {
+      path.classList.add('pf-gov-active');
+      tip.textContent = `${path.dataset.gov} — ${path.dataset.count || 0} (${path.dataset.pct || '0.0'}%)`;
+      tip.classList.add('visible');
+    });
+    path.addEventListener('mousemove', (e) => {
+      const rect = wrap.getBoundingClientRect();
+      tip.style.left = (e.clientX - rect.left) + 'px';
+      tip.style.top = (e.clientY - rect.top) + 'px';
+    });
+    path.addEventListener('mouseleave', () => {
+      path.classList.remove('pf-gov-active');
+      tip.classList.remove('visible');
+    });
+  });
+}
+initProfilingMapTooltip();
+
+// Same instant tooltip + glow treatment for the bubble chart. Unlike the map paths, bubbles
+// are regenerated on every render, so listeners are delegated on the stable wrapper div instead
+// of attached to the (disposable) <g> elements themselves.
+function initProfilingBubbleTooltip() {
+  const wrap = document.getElementById('pf-bubble-wrap');
+  const tip = document.getElementById('pf-bubble-tooltip');
+  if (!wrap || !tip) return;
+  let activeG = null;
+  wrap.addEventListener('mouseover', (e) => {
+    const g = e.target.closest('.pf-bubble-g');
+    if (!g || g === activeG) return;
+    if (activeG) activeG.classList.remove('pf-bubble-active');
+    activeG = g;
+    g.classList.add('pf-bubble-active');
+    tip.textContent = `${g.dataset.gov} — ${g.dataset.count} (${g.dataset.pct})`;
+    tip.classList.add('visible');
+  });
+  wrap.addEventListener('mousemove', (e) => {
+    if (!activeG) return;
+    const rect = wrap.getBoundingClientRect();
+    tip.style.left = (e.clientX - rect.left) + 'px';
+    tip.style.top = (e.clientY - rect.top) + 'px';
+  });
+  wrap.addEventListener('mouseout', (e) => {
+    const g = e.target.closest('.pf-bubble-g');
+    if (!g || (e.relatedTarget && g.contains(e.relatedTarget))) return;
+    g.classList.remove('pf-bubble-active');
+    if (activeG === g) activeG = null;
+    tip.classList.remove('visible');
+  });
+}
+initProfilingBubbleTooltip();
+
+// Same instant tooltip + glow treatment for the age-distribution badges, delegated for the
+// same reason as the bubbles: the badges are regenerated on every render.
+function initProfilingAgeTooltip() {
+  const wrap = document.getElementById('pf-age-wrap');
+  const tip = document.getElementById('pf-age-tooltip');
+  if (!wrap || !tip) return;
+  let activeG = null;
+  wrap.addEventListener('mouseover', (e) => {
+    const g = e.target.closest('.pf-age-badge');
+    if (!g || g === activeG) return;
+    if (activeG) activeG.classList.remove('pf-age-active');
+    activeG = g;
+    g.classList.add('pf-age-active');
+    const d = g.dataset;
+    tip.innerHTML = `<div class="att-ttl">${d.age} — ${d.pct} of all viewers (${d.total} people)</div>` +
+      `<div class="att-row"><i style="background:#3d5fc4"></i>Males: ${d.mpct} (${d.m} people)</div>` +
+      `<div class="att-row"><i style="background:#7c3aed"></i>Females: ${d.fpct} (${d.f} people)</div>` +
+      `<div class="att-sum">${d.mpct} + ${d.fpct} = ${d.pct}</div>`;
+    tip.classList.add('visible');
+  });
+  wrap.addEventListener('mousemove', (e) => {
+    if (!activeG) return;
+    const rect = wrap.getBoundingClientRect();
+    tip.style.left = (e.clientX - rect.left) + 'px';
+    tip.style.top = (e.clientY - rect.top) + 'px';
+  });
+  wrap.addEventListener('mouseout', (e) => {
+    const g = e.target.closest('.pf-age-badge');
+    if (!g || (e.relatedTarget && g.contains(e.relatedTarget))) return;
+    g.classList.remove('pf-age-active');
+    if (activeG === g) activeG = null;
+    tip.classList.remove('visible');
+  });
+}
+initProfilingAgeTooltip();
 
 function destroyChart(id) { if (CHARTS[id]) { CHARTS[id].destroy(); delete CHARTS[id]; } }
 function renderChannels(channels, metric, filteredRows, totalCalls, watchedYDA, watchesGen, successfulCalls) {
@@ -2547,7 +3160,7 @@ function renderShowsChart(canvasId, shows, pctKey, chartKey, color) {
   CHARTS[chartKey] = new Chart(document.getElementById(canvasId).getContext('2d'), {
     type: 'bar',
     data: { labels: sorted.map(s => s.name), datasets: [{ data: sorted.map(s => s[pctKey] ?? 0), backgroundColor: (ctx) => barGradient(ctx, color, true), borderColor: color, borderWidth: 1.5, borderRadius: 10 }] },
-    options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}${pctKey === 'count' ? '' : '%'}` } } }, scales: { x: { beginAtZero: true, ticks: { callback: v=>v+(pctKey === 'count' ? '' : '%') } } } } // ADDED
+    options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}${pctKey === 'count' ? '' : '%'}` } } }, scales: { x: { beginAtZero: true, ticks: { maxRotation: 0, minRotation: 0, callback: v=>v+(pctKey === 'count' ? '' : '%') } } } } // ADDED
   });
 }
 
@@ -2597,14 +3210,14 @@ function renderTop8Ranking(filteredRows, successfulCalls, watchedYDA, watchesGen
 
   function computeShowEntry(name, colIdx) {
     let relevantRows = filteredRows;
-    if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
-      relevantRows = filteredRows.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < SHOW_CUTOFFS[name]);
+    if (hasShowWindow(name)) {
+      relevantRows = rowsInShowWindow(filteredRows, name);
     }
 
     const count = relevantRows.filter(r => r.length > colIdx && r[colIdx].trim() === 'نعم').length;
     let succ = successfulCalls, yda = watchedYDA, gen = watchesGen, spec = royaCount;
 
-    if (typeof SHOW_CUTOFFS !== 'undefined' && SHOW_CUTOFFS[name]) {
+    if (hasShowWindow(name)) {
       succ = relevantRows.filter(isCallSuccessful).length;
       yda = relevantRows.filter(r => r[COL_WATCH_YDA] && r[COL_WATCH_YDA].trim() === 'نعم').length;
       gen = relevantRows.filter(r => r[COL_WATCH_GEN] && r[COL_WATCH_GEN].trim() === 'نعم').length;
@@ -3111,11 +3724,11 @@ function renderShowTrend() {
     const dens = [];
     const pctData = sortedDates.map(d => {
       const rws = byDate[d];
-      const cutoff = (typeof SHOW_CUTOFFS !== 'undefined') ? SHOW_CUTOFFS[entry.show] : null;
-      const validRws = cutoff ? rws.filter(r => GLOBAL_FORM_ROWS.indexOf(r) < cutoff) : rws;
-      
-      // If all calls for this date happened after the cutoff, break the line gracefully
-      if (cutoff && validRws.length === 0 && rws.length > 0) {
+      const hasWindow = hasShowWindow(entry.show);
+      const validRws = hasWindow ? rowsInShowWindow(rws, entry.show) : rws;
+
+      // If all calls for this date fall outside this show's valid window, break the line gracefully
+      if (hasWindow && validRws.length === 0 && rws.length > 0) {
         nums.push(0); dens.push(0);
         return null;
       }
