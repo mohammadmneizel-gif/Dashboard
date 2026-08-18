@@ -1048,15 +1048,33 @@
         <div class="flex flex-wrap items-end gap-4">
           <div>
             <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Channel</label>
-            <select disabled class="text-xs border border-gray-200 rounded-lg px-3 py-2 font-semibold w-44" style="background-color:#3d5fc4; color:#fff;">
-              <option>Roya TV</option>
-            </select>
+            <div class="relative">
+              <button type="button" onclick="toggleDrop('drop-pf-channel')" class="text-xs border border-gray-200 rounded-lg px-3 py-2 font-semibold w-44 flex items-center justify-between" style="background-color:#3d5fc4; color:#fff;">Roya TV <span>▾</span></button>
+              <div id="drop-pf-channel" class="hidden absolute top-full left-0 mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50">
+                <label class="flex items-center gap-2 text-xs text-gray-700 p-1 cursor-not-allowed opacity-60"><input type="checkbox" checked disabled class="accent-brand-600"> Roya TV</label>
+              </div>
+            </div>
           </div>
           <div>
-            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Show</label>
-            <select id="pf-show-select" class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white w-56 focus:outline-none focus:ring-2 focus:ring-brand-500"></select>
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Show(s)</label>
+            <div class="relative">
+              <button type="button" id="pf-show-btn" onclick="toggleDrop('drop-pf-shows')" class="text-xs border border-gray-200 rounded-lg px-3 py-2 bg-white w-56 flex items-center justify-between gap-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <span id="pf-show-btn-label" class="truncate">— Pick Show(s) —</span> <span class="text-gray-400 flex-shrink-0">▾</span>
+              </button>
+              <div id="drop-pf-shows" class="hidden absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-50 max-h-64 overflow-y-auto">
+                <label class="flex items-center gap-2 text-xs font-bold text-brand-700 p-1 hover:bg-gray-50 cursor-pointer border-b border-gray-100 mb-1"><input type="checkbox" id="all-pf-shows" class="accent-brand-600" onchange="toggleAll(this,'pf-show-chk')"> Select All</label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Audience</label>
+            <div class="flex items-center bg-gray-100 p-1 rounded-lg" id="pf-audience-toggle">
+              <button type="button" data-mode="viewers" class="pf-aud-btn active px-3 py-1.5 text-xs font-semibold rounded bg-white text-brand-700 shadow-sm">Viewers</button>
+              <button type="button" data-mode="nonviewers" class="pf-aud-btn px-3 py-1.5 text-xs font-medium rounded text-gray-500">Non-Viewers</button>
+            </div>
           </div>
         </div>
+        <p id="pf-status-line" class="text-xs font-semibold mt-3"></p>
       </section>
 
       <section>
@@ -1091,7 +1109,7 @@
                 <div class="pf-donut-value" id="pf-female-value">—</div>
               </div>
             </div>
-            <div class="pf-card-footer">Total sample: <b id="pf-gender-n">—</b> viewers</div>
+            <div class="pf-card-footer">Total sample: <b id="pf-gender-n">—</b> <span id="pf-gender-n-label">viewers</span></div>
           </div>
 
           <div class="chart-card">
@@ -2885,25 +2903,62 @@ function updateDashboard() {
 /* =================================================================
    PROFILING DASHBOARD — rendering
 ================================================================= */
-function populateProfilingShowSelect() {
-  const sel = document.getElementById('pf-show-select');
-  if (!sel || sel.options.length) return;
+// Show(s) picker: same JS-populated checkbox-panel pattern the Show Viewership Trend picker
+// already uses (rebuildShowPanel()) — built from ROYA_SHOWS so there's one source of truth,
+// not a third hand-copied list. Defaults to just 'Nabd al Balad' checked, matching the single
+// show this view always showed before the picker became multi-select.
+function populateProfilingShowPicker() {
+  const panel = document.getElementById('drop-pf-shows');
+  if (!panel || panel.dataset.populated) return;
   Object.keys(ROYA_SHOWS).forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name; opt.textContent = name;
-    sel.appendChild(opt);
+    const label = document.createElement('label');
+    label.className = 'flex items-center gap-2 text-xs text-gray-700 p-1 hover:bg-gray-50 cursor-pointer';
+    label.innerHTML = `<input type="checkbox" class="pf-show-chk accent-brand-600" value="${name}" ${name === 'Nabd al Balad' ? 'checked' : ''}> ${name}`;
+    panel.appendChild(label);
   });
-  sel.value = 'Nabd al Balad';
-  sel.addEventListener('change', renderProfilingView);
+  panel.dataset.populated = '1';
+  updatePfShowBtnLabel();
 }
-populateProfilingShowSelect();
+populateProfilingShowPicker();
+
+function updatePfShowBtnLabel() {
+  const checked = [...document.querySelectorAll('.pf-show-chk:checked')].map(cb => cb.value);
+  const label = document.getElementById('pf-show-btn-label');
+  if (!checked.length) label.textContent = '— Pick Show(s) —';
+  else if (checked.length === 1) label.textContent = checked[0];
+  else label.textContent = checked.length + ' shows selected';
+}
+document.querySelectorAll('#drop-pf-shows').forEach(panel => {
+  panel.addEventListener('change', (e) => {
+    if (e.target.matches('.pf-show-chk, #all-pf-shows')) updatePfShowBtnLabel();
+  });
+});
+
+let pfAudienceMode = 'viewers';
+document.querySelectorAll('.pf-aud-btn').forEach(btn => btn.addEventListener('click', function() {
+  document.querySelectorAll('.pf-aud-btn').forEach(b => {
+    b.classList.remove('active', 'bg-white', 'text-brand-700', 'shadow-sm');
+    b.classList.add('text-gray-500');
+  });
+  this.classList.remove('text-gray-500');
+  this.classList.add('active', 'bg-white', 'text-brand-700', 'shadow-sm');
+  pfAudienceMode = this.dataset.mode;
+  renderProfilingView();
+}));
+
+// A row is only "eligible" for a windowed show (Nasamat Ayloul, Roya Kitchen (Replay), etc.) if
+// it falls inside that show's asked-window; unwindowed shows were asked of every row.
+function pfRowEligibleForShow(row, name) {
+  if (!hasShowWindow(name)) return true;
+  const idx = GLOBAL_FORM_ROWS.indexOf(row);
+  if (SHOW_CUTOFFS[name]) return idx < SHOW_CUTOFFS[name];
+  if (SHOW_START_ROWS[name]) return idx >= SHOW_START_ROWS[name];
+  return true;
+}
 
 function renderProfilingView() {
   if (!GLOBAL_FORM_ROWS || GLOBAL_FORM_ROWS.length < 2) return;
-  const sel = document.getElementById('pf-show-select');
-  if (!sel || !sel.value) return;
-  const showName = sel.value;
-  const showCol = ROYA_SHOWS[showName];
+  const checkedShowNames = [...document.querySelectorAll('.pf-show-chk:checked')].map(cb => cb.value);
 
   // Date + day-of-week filter only. The gender/age/area checkboxes in the global toolbar are
   // deliberately ignored here — this view exists to show that exact breakdown, so pre-filtering
@@ -2926,10 +2981,36 @@ function renderProfilingView() {
     if (!checkedDays.includes(DAY_NAMES[getViewingDayIndex(rowDate)])) continue;
     rows.push(r);
   }
-  if (hasShowWindow(showName)) rows = rowsInShowWindow(rows, showName);
 
-  const watchers = rows.filter(r => r.length > showCol && r[showCol] && r[showCol].trim() === 'نعم');
+  // Viewers = watched ANY checked show ("OR", same logic as every other multi-select picker on
+  // this dashboard). Non-Viewers = the logical complement — said No to every checked show they
+  // were actually asked about, and were asked about at least one (rows never asked about any
+  // checked show are excluded from both pools, not counted as non-viewers by default).
+  const watchersOfAny = rows.filter(r => checkedShowNames.some(name => {
+    const col = ROYA_SHOWS[name];
+    return pfRowEligibleForShow(r, name) && r.length > col && r[col] && r[col].trim() === 'نعم';
+  }));
+  const nonViewersOfAll = rows.filter(r => {
+    const asked = checkedShowNames.filter(name => pfRowEligibleForShow(r, name));
+    if (!asked.length) return false;
+    const saidYesToAny = asked.some(name => { const col = ROYA_SHOWS[name]; return r.length > col && r[col] && r[col].trim() === 'نعم'; });
+    if (saidYesToAny) return false;
+    return asked.some(name => { const col = ROYA_SHOWS[name]; return r.length > col && r[col] && r[col].trim() === 'لا'; });
+  });
+  const watchers = pfAudienceMode === 'nonviewers' ? nonViewersOfAll : watchersOfAny;
   const total = watchers.length;
+
+  const statusLine = document.getElementById('pf-status-line');
+  if (!checkedShowNames.length) {
+    statusLine.textContent = 'Pick at least one show above.';
+    statusLine.style.color = '#9ca3af';
+  } else {
+    const showList = checkedShowNames.join(' + ');
+    statusLine.textContent = pfAudienceMode === 'nonviewers'
+      ? `Showing: Non-Viewers — said No to ${showList}`
+      : `Showing: Viewers — watched ${showList}`;
+    statusLine.style.color = pfAudienceMode === 'nonviewers' ? '#dc2626' : '#3d5fc4';
+  }
 
   const maleN = watchers.filter(r => (r[COL_GENDER]||'').trim() === 'ذكر').length;
   const femaleN = watchers.filter(r => (r[COL_GENDER]||'').trim() === 'أنثى').length;
@@ -2937,6 +3018,7 @@ function renderProfilingView() {
   const femalePct = total ? femaleN/total*100 : 0;
 
   document.getElementById('pf-gender-n').textContent = total;
+  document.getElementById('pf-gender-n-label').textContent = pfAudienceMode === 'nonviewers' ? 'non-viewers' : 'viewers';
   document.getElementById('pf-male-value').textContent = total ? malePct.toFixed(0)+'%' : '—';
   document.getElementById('pf-female-value').textContent = total ? femalePct.toFixed(0)+'%' : '—';
   document.getElementById('pf-male-ring').setAttribute('stroke-dashoffset', (100 - malePct).toFixed(1));
@@ -3977,6 +4059,7 @@ wireShowCheckboxGroup('all-jordan-shows', 'jordan-show-chk');
 wireShowCheckboxGroup('all-amman-shows', 'amman-show-chk');
 wireShowCheckboxGroup('all-mamlaka-shows', 'mamlaka-show-chk');
 wireShowCheckboxGroup('all-top8-shows', 'top8-show-chk');
+wireShowCheckboxGroup('all-pf-shows', 'pf-show-chk');
 
 // Demographics Checkbox controls
 document.querySelectorAll('.demo-chk').forEach(cb => {
