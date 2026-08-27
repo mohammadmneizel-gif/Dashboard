@@ -152,6 +152,109 @@
       #top-toolbar > .w-px { display: none !important; }
       #top-toolbar .ml-auto { margin-left: 0 !important; }
     }
+
+    /* ---- Team Call Tracking view ---- */
+    .cv-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3d5fc4; margin: 0 0 6px; }
+    .cv-h2 { font-family: 'DM Serif Display', serif; font-weight: 400; font-size: 20px; margin: 0 0 6px; color: #1a1f2e; }
+    .cv-lede { color: #5b6478; font-size: 13.5px; max-width: 680px; line-height: 1.55; margin: 0 0 14px; }
+
+    .cv-trend-strip { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+    .cv-trend-svg-wrap { flex: none; }
+    .cv-trend-labels { display: flex; gap: 20px; }
+    .cv-trend-m { text-align: center; }
+    .cv-trend-m .mo { font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; color: #5b6478; }
+    .cv-trend-m .rate { font-size: 16px; font-weight: 800; color: #1a1f2e; margin-top: 2px; }
+    .cv-trend-delta { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: #fdf2e4; color: #a9660a; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px; white-space: nowrap; }
+    .cv-trend-caption { flex-basis: 100%; font-size: 11.5px; color: #5b6478; margin-top: 2px; }
+    .cv-trend-caption b { color: #1a1f2e; }
+
+    .cv-month-toggle { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .cv-month-toggle .mt-label { font-size: 12px; color: #5b6478; }
+    .cv-month-seg { display: flex; background: #eef1f9; padding: 3px; border-radius: 10px; gap: 2px; }
+    .cv-month-seg button { border: none; background: transparent; padding: 6px 15px; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: #5b6478; cursor: pointer; font-family: inherit; }
+    .cv-month-seg button.active { background: #fff; color: #0f1f5c; box-shadow: 0 2px 6px rgba(15,31,92,.15); }
+    .cv-month-note { font-size: 12px; color: #5b6478; }
+    .cv-caveat { font-size: 12px; color: #c0362c; margin: 8px 0 0; animation: cv-caveat-glow 2.6s ease-in-out infinite; }
+    @keyframes cv-caveat-glow { 0%, 100% { text-shadow: 0 0 0 rgba(192,54,44,0); } 50% { text-shadow: 0 0 6px rgba(192,54,44,.6); } }
+
+    .cv-ticker { position: relative; background: linear-gradient(100deg, #0f1f5c, #16266e 60%, #0f1f5c); border-radius: 14px; padding: 14px 20px; display: flex; align-items: center; overflow-x: auto; box-shadow: 0 12px 30px rgba(15,31,92,.25); }
+    .cv-ticker::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(180deg, #e8a838, #7c3aed); border-radius: 14px 0 0 14px; }
+    .cv-tchip { display: flex; flex-direction: column; padding: 0 22px; white-space: nowrap; }
+    .cv-tchip + .cv-tchip { border-left: 1px solid rgba(255,255,255,.16); }
+    .cv-tchip .tval { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; }
+    .cv-tchip .tval.g { color: #6ee7a0; }
+    .cv-tchip .tval.a { color: #e8a838; }
+    .cv-tchip .tlab { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.62); margin-top: 3px; }
+    .cv-tlive { display: flex; align-items: center; gap: 8px; margin-left: auto; padding-left: 22px; border-left: 1px solid rgba(255,255,255,.16); white-space: nowrap; }
+    .cv-tlive .dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #e8a838; flex: none; }
+    .cv-tlive .dot::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid #e8a838; animation: cv-pulse-ring 1.8s ease-out infinite; }
+    .cv-tlive span { font-size: 11.5px; color: rgba(255,255,255,.78); }
+    @keyframes cv-pulse-ring { 0% { transform: scale(.5); opacity: .9; } 100% { transform: scale(2.1); opacity: 0; } }
+
+    .cv-board { display: grid; grid-template-columns: 240px repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; align-items: stretch; }
+    @media (max-width: 1020px) { .cv-board { grid-template-columns: 1fr 1fr; } .cv-pulse-card { grid-column: 1 / -1; } }
+    @media (max-width: 620px) { .cv-board { grid-template-columns: 1fr; } }
+
+    .cv-pulse-card { align-items: center; text-align: center; justify-content: center; gap: 10px; display: flex; flex-direction: column; }
+    .cv-pulse-ring-wrap { position: relative; width: 148px; height: 148px; }
+    .cv-pulse-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .cv-pulse-ring-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .cv-pulse-ring-num .n { font-size: 30px; font-weight: 800; color: #16a34a; line-height: 1; }
+    .cv-pulse-ring-num .l { font-size: 10px; color: #5b6478; margin-top: 3px; }
+    .cv-pulse-foot { font-size: 12.5px; color: #5b6478; }
+    .cv-pulse-foot b { color: #1a1f2e; }
+
+    .cv-rep { position: relative; }
+    .cv-rep-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .cv-rep-id { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .cv-rep-role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cv-avatar { width: 38px; height: 38px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 15px; box-shadow: 0 4px 10px rgba(15,31,92,.25); }
+    .cv-rep-name { font-size: 15px; font-weight: 700; color: #1a1f2e; line-height: 1.2; }
+    .cv-rep-role { font-size: 11.5px; color: #5b6478; }
+    .cv-onair { display: flex; align-items: center; gap: 6px; cursor: help; flex: none; }
+    .cv-onair .dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #16a34a; flex: none; }
+    .cv-onair .dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid #16a34a; animation: cv-pulse-ring 1.8s ease-out infinite; }
+    .cv-onair span { font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #16a34a; }
+    .cv-onair.off .dot { background: #b7bfd4; }
+    .cv-onair.off .dot::after { display: none; }
+    .cv-onair.off span { color: #8891a8; }
+    .cv-onair-note { font-size: 11.5px; color: #5b6478; margin: -2px 0 -8px; }
+    .cv-onair-note b { color: #1a1f2e; }
+    .cv-ribbon { position: absolute; top: -9px; right: 14px; background: #e8a838; color: #3a2a04; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; box-shadow: 0 3px 8px rgba(232,168,56,.4); }
+
+    .cv-rep-nums { display: flex; align-items: flex-end; gap: 18px; margin-bottom: 12px; }
+    .cv-rep-nums .num-block .n { font-size: 26px; font-weight: 800; color: #1a1f2e; line-height: 1; }
+    .cv-rep-nums .num-block .l { font-size: 10.5px; color: #5b6478; margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; }
+    .cv-rep-nums .num-block .n.green { color: #16a34a; }
+    .cv-signal { display: flex; align-items: flex-end; gap: 2.5px; height: 22px; margin-left: auto; }
+    .cv-signal i { display: block; width: 5px; border-radius: 2px; background: #eef1f9; }
+    .cv-signal i:nth-child(1) { height: 30%; } .cv-signal i:nth-child(2) { height: 48%; } .cv-signal i:nth-child(3) { height: 64%; }
+    .cv-signal i:nth-child(4) { height: 82%; } .cv-signal i:nth-child(5) { height: 100%; }
+    .cv-signal i.on { background: #16a34a; }
+    .cv-rate-lab { font-size: 11px; color: #5b6478; text-align: right; margin-left: auto; margin-top: 4px; }
+    .cv-rate-lab b { color: #1a1f2e; font-size: 13px; }
+    .cv-vs-avg { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-top: 2px; }
+    .cv-vs-avg.up { background: #eafaf0; color: #16a34a; }
+    .cv-vs-avg.down { background: #fdf2e4; color: #a9660a; }
+
+    .cv-wave-lab { font-size: 10.5px; color: #5b6478; text-transform: uppercase; letter-spacing: .07em; margin: 14px 0 6px; }
+    .cv-wave-legend { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 10.5px; color: #5b6478; margin-bottom: 8px; }
+    .cv-wave-legend .wl-item { display: inline-flex; align-items: center; gap: 6px; }
+    .cv-wave-legend .wl-bar { width: 8px; height: 14px; background: #3d5fc4; display: inline-block; border-radius: 2px; }
+    .cv-wave-legend .wl-grad { width: 44px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #94a3b8, #16a34a); display: inline-block; }
+    /* .cv-wave-wrap is the last direct <div> child of .chart-card, which the existing
+       ".chart-card > div:last-child { overflow-x: auto }" rule (see above) would otherwise
+       clip vertically — same bug as #pf-age-wrap/#pf-geo-wrap, fixed the same way. */
+    .cv-wave-wrap { position: relative; overflow: visible !important; }
+    .cv-wave-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .cv-bar { cursor: pointer; transition: opacity .15s ease; }
+    .cv-bar:hover { opacity: .78; }
+    .cv-bar-gap { fill: #eef1f9; }
+
+    #cv-tip { position: fixed; z-index: 60; pointer-events: none; opacity: 0; transform: translate(-50%, -100%) scale(.96); transition: opacity .1s ease, transform .1s ease; background: #0f1f5c; color: #fff; padding: 8px 11px; border-radius: 9px; font-size: 12px; line-height: 1.5; box-shadow: 0 10px 24px rgba(15,31,92,.35); width: max-content; max-width: 200px; }
+    #cv-tip.show { opacity: 1; transform: translate(-50%, calc(-100% - 8px)) scale(1); }
+    #cv-tip b { color: #e8a838; }
+    #cv-tip .g { color: #6ee7a0; }
   </style>
 </head>
 <body>
@@ -217,6 +320,7 @@
           <button id="nav-btn-a" class="nav-icon-btn flex items-center gap-2 text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; padding:5px 14px 5px 7px; border-radius:20px; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
           <button id="nav-btn-b" class="nav-icon-btn flex items-center gap-2 text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; padding:5px 14px 5px 7px; border-radius:20px; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
           <button id="nav-btn-c" class="nav-icon-btn flex items-center gap-2 text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; padding:5px 14px 5px 7px; border-radius:20px; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
+          <button id="nav-btn-d" class="nav-icon-btn flex items-center gap-2 text-white text-xs font-semibold transition-colors justify-center" style="white-space:nowrap; border:2px solid transparent; padding:5px 14px 5px 7px; border-radius:20px; background:linear-gradient(#0f1f5c,#0f1f5c) padding-box, linear-gradient(120deg,#3d5fc4,#7c3aed 50%,#e8a838) border-box;"></button>
         </div>
         <div id="last-updated" class="text-white/40 text-xs"></div>
       </div>
@@ -1278,6 +1382,62 @@
       </section>
     </main>
   </div>
+
+  <div id="calls-view" class="hidden">
+    <div class="max-w-screen-xl mx-auto px-6 pt-4">
+      <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Team Call Tracking</p>
+    </div>
+    <main class="max-w-screen-xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+
+      <section class="chart-card">
+        <p class="cv-eyebrow">Team Trend</p>
+        <h2 class="cv-h2">Quarter at a glance</h2>
+        <p class="cv-lede">Connect rate across every month tracked so far, pulled straight from the same workbook the team already uses.</p>
+        <div class="cv-trend-strip">
+          <div class="cv-trend-svg-wrap" id="cv-trend-svg"></div>
+          <div class="cv-trend-labels" id="cv-trend-labels"></div>
+          <div class="cv-trend-delta" id="cv-trend-delta"></div>
+          <p class="cv-trend-caption">Line height = the team's <b>connect rate</b> that month. Dot color repeats the same reading, grey to green.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="cv-month-toggle">
+          <span class="mt-label">Viewing:</span>
+          <div class="cv-month-seg" id="cv-month-seg"></div>
+          <span class="cv-month-note" id="cv-month-note"></span>
+        </div>
+        <p class="cv-caveat">Note: the numbers may look slightly different because tracking didn't start from the very beginning of the department.</p>
+      </section>
+
+      <section class="cv-ticker">
+        <div class="cv-tchip"><div class="tval" id="cv-tick-total">–</div><div class="tlab">Total Calls</div></div>
+        <div class="cv-tchip"><div class="tval g" id="cv-tick-green">–</div><div class="tlab">Green Calls</div></div>
+        <div class="cv-tchip"><div class="tval a" id="cv-tick-rate">–</div><div class="tlab">Connect Rate</div></div>
+        <div class="cv-tlive"><span class="dot"></span><span id="cv-tick-range">Loading…</span></div>
+      </section>
+
+      <p class="cv-onair-note" id="cv-onair-note"></p>
+
+      <section class="cv-board" id="cv-board">
+        <div class="chart-card cv-pulse-card">
+          <div class="cv-eyebrow">Team Pulse</div>
+          <div class="cv-pulse-ring-wrap">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#eef1f9" stroke-width="12" />
+              <circle id="cv-pulse-ring-fg" cx="60" cy="60" r="50" fill="none" stroke="#16a34a" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="314.16" stroke-dashoffset="314.16" style="transition: stroke-dashoffset .4s ease;" />
+            </svg>
+            <div class="cv-pulse-ring-num"><div class="n" id="cv-pulse-pct">–</div><div class="l">connect rate</div></div>
+          </div>
+          <div class="cv-pulse-foot"><b id="cv-pulse-total">–</b> calls · <b id="cv-pulse-green">–</b> green</div>
+        </div>
+        <!-- per-caller cards injected by renderCvBoard() -->
+      </section>
+
+    </main>
+  </div>
+  <div id="cv-tip"></div>
   </div>
 <script>
 const FORM_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQf6dQpybX3EWUebDS9ZXbpPkurD75NyAdtIwAK5u1Ctu7QmrvvSYB19CcRqknrNRl9pcgELjBWNf41/pub?gid=805558787&single=true&output=csv';
@@ -1699,11 +1859,12 @@ const VIEWS = {
   main:       { id: 'main-view',       label: 'Main Dashboard' },
   news:       { id: 'news-view',       label: 'News Dashboard' },
   nonviewers: { id: 'nonviewers-view', label: 'Non-Viewers Insights' },
-  profiling:  { id: 'profiling-view',  label: 'Profiling' }
+  profiling:  { id: 'profiling-view',  label: 'Profiling' },
+  calls:      { id: 'calls-view',      label: 'Team Call Tracking' }
 };
-// Fixed display order for the 3 always-visible quick-nav buttons (whichever view is current
-// drops out, so the other 3 fill nav-btn-a/b/c in this order — no "More" menu needed).
-const NAV_ORDER = ['main', 'profiling', 'nonviewers', 'news'];
+// Fixed display order for the 4 always-visible quick-nav buttons (whichever view is current
+// drops out, so the other 4 fill nav-btn-a/b/c/d in this order — no "More" menu needed).
+const NAV_ORDER = ['main', 'profiling', 'nonviewers', 'news', 'calls'];
 let currentView = 'main';
 
 // Short label + animated icon per view, recolored to the dashboard's own navy/blue/purple/amber
@@ -1815,6 +1976,30 @@ const NAV_ICONS = {
       <text x="268" y="292" text-anchor="middle" fill="#e8a838" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="46" letter-spacing="3">UPDATE</text>
     </g>
     <rect x="238" y="380" width="36" height="36" fill="#33406b"/><rect x="134" y="402" width="66" height="12" rx="6" fill="#33406b"/><rect x="312" y="402" width="66" height="12" rx="6" fill="#33406b"/><rect x="196" y="414" width="120" height="14" rx="7" fill="#33406b"/>
+  </svg>` },
+
+  calls: { short: 'Calls', svg: `<svg viewBox="0 0 512 512">
+    <style>
+      .nb-c-ring{transform-box:fill-box;transform-origin:368px 118px;animation:nb-c-pulse 2.2s ease-out infinite}
+      .nb-c-r2{animation-delay:.5s}.nb-c-r3{animation-delay:1s}
+      .nb-c-dot{animation:nb-c-blink 1.6s ease-in-out infinite}
+      .nb-c-d2{animation-delay:.25s}.nb-c-d3{animation-delay:.5s}
+      @keyframes nb-c-pulse{0%{transform:scale(.55);opacity:1}100%{transform:scale(1.3);opacity:0}}
+      @keyframes nb-c-blink{0%,100%{opacity:1}50%{opacity:.3}}
+    </style>
+    <defs><linearGradient id="nb-c-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3799"/><stop offset="1" stop-color="#0f1f5c"/></linearGradient></defs>
+    <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#nb-c-bg)"/>
+    <circle class="nb-c-ring" cx="368" cy="118" r="26" fill="none" stroke="#e8a838" stroke-width="12"/>
+    <circle class="nb-c-ring nb-c-r2" cx="368" cy="118" r="26" fill="none" stroke="#3d5fc4" stroke-width="12"/>
+    <circle class="nb-c-ring nb-c-r3" cx="368" cy="118" r="26" fill="none" stroke="#7c3aed" stroke-width="12"/>
+    <g stroke="#0f1f5c" stroke-width="14" stroke-linejoin="round">
+      <rect x="238" y="175" width="44" height="150" rx="22" fill="#e8a838" transform="rotate(-45 260 250)"/>
+      <circle cx="330" cy="170" r="58" fill="#e8a838"/>
+      <circle cx="190" cy="330" r="58" fill="#e8a838"/>
+    </g>
+    <ellipse class="nb-c-dot" cx="312" cy="158" rx="7" ry="9" fill="#fff"/>
+    <ellipse class="nb-c-dot nb-c-d2" cx="330" cy="152" rx="7" ry="9" fill="#fff"/>
+    <ellipse class="nb-c-dot nb-c-d3" cx="348" cy="158" rx="6" ry="8" fill="#fff"/>
   </svg>` }
 };
 
@@ -1823,7 +2008,8 @@ function updateNavButtons() {
   const btnA = document.getElementById('nav-btn-a');
   const btnB = document.getElementById('nav-btn-b');
   const btnC = document.getElementById('nav-btn-c');
-  [[btnA, quick[0]], [btnB, quick[1]], [btnC, quick[2]]].forEach(([btn, key]) => {
+  const btnD = document.getElementById('nav-btn-d');
+  [[btnA, quick[0]], [btnB, quick[1]], [btnC, quick[2]], [btnD, quick[3]]].forEach(([btn, key]) => {
     btn.innerHTML = NAV_ICONS[key].svg + `<span>${NAV_ICONS[key].short}</span>`;
     btn.onclick = () => switchView(key);
   });
@@ -1835,6 +2021,7 @@ function switchView(target) {
   document.getElementById(VIEWS[target].id).classList.remove('hidden');
   currentView = target;
   updateNavButtons();
+  if (target === 'calls') renderCallsView();
   window.dispatchEvent(new Event('resize'));
 }
 
@@ -3686,6 +3873,293 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
   });
 });
 setInterval(() => initData(false), 5 * 60 * 1000);
+
+/* =================================================================
+   TEAM CALL TRACKING (Calls view)
+   Reads a Google Apps Script web app deployed on the Research team's
+   "Tracking - Research Department" sheet. The script itself walks every
+   month tab (skipping Planning / Actual Schedule / Work Shifts) and
+   returns one flat JSON record per person per tracked day — see
+   call-tracking-apps-script.gs for the script source.
+================================================================= */
+const CALLS_FEED_URL = 'https://script.google.com/macros/s/AKfycbyDBBBk44GRg3zigmkbWVDg1qZBf-MAWa4pnITPKMEFzi_6ur3yEtJijpDg9GqPS9_0/exec';
+const CV_HEAT = ['#94a3b8', '#16a34a'];
+const CV_PALETTE = ['#3d5fc4', '#7c3aed', '#e8a838', '#1e3799', '#0f7a37'];
+let CALLS_RECORDS = [];
+let cvModel = null;
+let cvCurrentMonth = null;
+
+function loadCallsData() {
+  fetch(CALLS_FEED_URL)
+    .then(r => r.json())
+    .then(data => {
+      CALLS_RECORDS = data.records || [];
+      if (currentView === 'calls') renderCallsView();
+    })
+    .catch(err => console.error('Calls feed error:', err));
+}
+
+function buildCallsModel(records) {
+  const monthMap = {};
+  records.forEach(r => {
+    const key = r.date.slice(0, 7);
+    if (!monthMap[key]) monthMap[key] = { totalCalls: 0, green: 0, reps: {} };
+    const mm = monthMap[key];
+    mm.totalCalls += r.calls;
+    mm.green += (r.green || 0);
+    if (!mm.reps[r.name]) mm.reps[r.name] = { total: 0, green: 0 };
+    mm.reps[r.name].total += r.calls;
+    mm.reps[r.name].green += (r.green || 0);
+  });
+
+  const monthsOrder = Object.keys(monthMap).sort();
+  monthsOrder.forEach(key => {
+    const mm = monthMap[key];
+    mm.rate = mm.totalCalls ? (mm.green / mm.totalCalls * 100) : 0;
+    Object.values(mm.reps).forEach(rr => { rr.rate = rr.total ? (rr.green / rr.total * 100) : 0; });
+    const d = new Date(Number(key.slice(0, 4)), Number(key.slice(5, 7)) - 1, 1);
+    mm.label = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    mm.short = d.toLocaleDateString('en-US', { month: 'short' });
+  });
+
+  const repNames = Array.from(new Set(records.map(r => r.name))).sort();
+  const latestKey = monthsOrder[monthsOrder.length - 1];
+  const latestDates = Array.from(new Set(records.filter(r => r.date.slice(0, 7) === latestKey).map(r => r.date))).sort();
+
+  const byPersonDate = {};
+  records.forEach(r => { byPersonDate[r.name + '|' + r.date] = r; });
+
+  const dailyByPerson = {};
+  repNames.forEach(name => {
+    dailyByPerson[name] = latestDates.map(dateStr => {
+      const rec = byPersonDate[name + '|' + dateStr];
+      const label = new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return rec ? [label, rec.calls, rec.green] : [label, null, null];
+    });
+  });
+
+  // "On air" reflects real logged status on the single most recent tracked day across the
+  // whole feed (not whichever month is toggled) — it's meant to answer "is this current."
+  const latestDateOverall = records.map(r => r.date).sort().pop();
+  const lastDayStatus = {};
+  repNames.forEach(name => {
+    const rec = byPersonDate[name + '|' + latestDateOverall];
+    lastDayStatus[name] = !!(rec && rec.status);
+  });
+  const latestDateLabel = latestDateOverall
+    ? new Date(latestDateOverall + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
+    : null;
+
+  return { monthMap, monthsOrder, repNames, latestKey, dailyByPerson, lastDayStatus, latestDateLabel };
+}
+
+function cvBuildBars(days) {
+  const w = 300, h = 64, pad = 2, gap = 3;
+  const vals = days.map(d => d[1]).filter(v => v !== null);
+  if (!vals.length) return '<svg viewBox="0 0 300 64"></svg>';
+  const max = Math.max(...vals);
+  const n = days.length;
+  const barW = Math.max(1.5, (w - pad * 2 - gap * (n - 1)) / n);
+  const bars = days.map((d, i) => {
+    const x = pad + i * (barW + gap);
+    if (d[1] === null) {
+      return `<rect class="cv-bar-gap" x="${x.toFixed(1)}" y="${(h - 4).toFixed(1)}" width="${barW.toFixed(1)}" height="4" rx="1.5"></rect>`;
+    }
+    const barH = Math.max(3, (d[1] / max) * (h - 4));
+    const y = h - barH;
+    const pct = d[2] / d[1];
+    const color = pfHeatColor((pct - 0.20) / 0.50, CV_HEAT);
+    return `<rect class="cv-bar" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" rx="1.5" fill="${color}"
+      data-date="${d[0]}" data-calls="${d[1]}" data-green="${d[2]}" data-pct="${Math.round(pct * 100)}"></rect>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${bars}</svg>`;
+}
+
+function cvRepCardHtml(name, index, days, onAir, dateLabel) {
+  const initial = name.trim().charAt(0).toUpperCase();
+  const color = CV_PALETTE[index % CV_PALETTE.length];
+  const onAirTitle = onAir
+    ? `Logged calls on ${dateLabel}, the most recently tracked day`
+    : `No calls logged for ${name} on ${dateLabel}, the most recently tracked day`;
+  return `
+  <div class="chart-card cv-rep" id="cv-card-${name}">
+    <div class="cv-ribbon" id="cv-ribbon-${name}" style="display:none;">Top Connector</div>
+    <div class="cv-rep-top">
+      <div class="cv-rep-id">
+        <div class="cv-avatar" style="background:${color}">${initial}</div>
+        <div style="min-width:0;">
+          <div class="cv-rep-name">${name}</div>
+          <div class="cv-rep-role">${name.trim() === 'Rania' ? 'Part-time Research Caller' : 'Research Caller'}</div>
+        </div>
+      </div>
+      <div class="cv-onair ${onAir ? '' : 'off'}" title="${onAirTitle}"><span class="dot"></span><span>${onAir ? 'On air' : 'Off'}</span></div>
+    </div>
+
+    <div class="cv-rep-nums">
+      <div class="num-block"><div class="n" id="cv-total-${name}">–</div><div class="l">Calls</div></div>
+      <div class="num-block"><div class="n green" id="cv-green-${name}">–</div><div class="l">Green</div></div>
+      <div style="margin-left:auto; text-align:right;">
+        <div class="cv-signal" id="cv-bars-${name}"></div>
+        <div class="cv-rate-lab"><b id="cv-rate-${name}">–</b> connect</div>
+      </div>
+    </div>
+    <div class="cv-vs-avg" id="cv-vsavg-${name}"></div>
+
+    <div class="cv-wave-lab">Daily call trail</div>
+    <div class="cv-wave-legend">
+      <span class="wl-item"><span class="wl-bar"></span>Bar height = calls that day</span>
+      <span class="wl-item"><span class="wl-grad"></span>Bar color = that day's connect rate</span>
+    </div>
+    <div class="cv-wave-wrap">${cvBuildBars(days)}</div>
+  </div>`;
+}
+
+function renderCvBoard(model) {
+  const board = document.getElementById('cv-board');
+  board.querySelectorAll('.cv-rep').forEach(el => el.remove());
+  model.repNames.forEach((name, i) => {
+    board.insertAdjacentHTML('beforeend', cvRepCardHtml(name, i, model.dailyByPerson[name], model.lastDayStatus[name], model.latestDateLabel));
+  });
+  document.getElementById('cv-onair-note').innerHTML =
+    `<b>On air</b> = logged calls on <b>${model.latestDateLabel}</b>, the most recently tracked day · grey "Off" = no calls logged that day.`;
+}
+
+function renderCvTrend(model) {
+  const w = 220, h = 86, pad = 14, topPad = 22;
+  const rates = model.monthsOrder.map(k => model.monthMap[k].rate);
+  const max = Math.max(...rates), min = Math.min(...rates);
+  const stepX = (w - pad * 2) / Math.max(1, model.monthsOrder.length - 1);
+  const pts = rates.map((v, i) => {
+    const x = pad + i * stepX;
+    const norm = max === min ? 0.5 : (v - min) / (max - min);
+    return { x, y: topPad + (h - topPad - pad) - norm * (h - topPad - pad * 2), v };
+  });
+  const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+  const dots = pts.map(p => `
+    <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${pfHeatColor((p.v - 20) / 50, CV_HEAT)}" stroke="#fff" stroke-width="1.5"></circle>
+    <text x="${p.x.toFixed(1)}" y="${(p.y - 10).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1f2e">${Math.round(p.v)}%</text>
+  `).join('');
+  document.getElementById('cv-trend-svg').innerHTML = `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+    <path d="${path}" fill="none" stroke="#e8a838" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
+    ${dots}
+  </svg>`;
+
+  document.getElementById('cv-trend-labels').innerHTML = model.monthsOrder.map(k => {
+    const mm = model.monthMap[k];
+    return `<div class="cv-trend-m"><div class="mo">${mm.short}</div><div class="rate">${Math.round(mm.rate)}%</div></div>`;
+  }).join('');
+
+  // Compares each month to the one right before it (not always back to the first-ever
+  // tracked month) so this stays meaningful no matter how many months pile up over time.
+  const deltaEl = document.getElementById('cv-trend-delta');
+  if (model.monthsOrder.length < 2) {
+    deltaEl.textContent = 'Only one month tracked so far';
+  } else {
+    const lastKey = model.monthsOrder[model.monthsOrder.length - 1];
+    const prevKey = model.monthsOrder[model.monthsOrder.length - 2];
+    const delta = Math.round(model.monthMap[lastKey].rate - model.monthMap[prevKey].rate);
+    deltaEl.textContent = `${delta < 0 ? '▼' : '▲'} ${Math.abs(delta)}pt connect rate vs ${model.monthMap[prevKey].short}`;
+  }
+}
+
+function renderCvMonthToggle(model) {
+  const seg = document.getElementById('cv-month-seg');
+  seg.innerHTML = model.monthsOrder.map(k => `<button data-month="${k}" class="${k === cvCurrentMonth ? 'active' : ''}">${model.monthMap[k].short}</button>`).join('');
+  seg.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateCvMonth(btn.dataset.month);
+    });
+  });
+  document.getElementById('cv-month-note').textContent =
+    `Totals, rate and signal bars update per month — the day-by-day trail always shows ${model.monthMap[model.latestKey].label}, the most recently tracked month.`;
+}
+
+function updateCvMonth(key) {
+  cvCurrentMonth = key;
+  const mm = cvModel.monthMap[key];
+
+  document.getElementById('cv-tick-total').textContent = mm.totalCalls.toLocaleString();
+  document.getElementById('cv-tick-green').textContent = mm.green.toLocaleString();
+  document.getElementById('cv-tick-rate').textContent = Math.round(mm.rate) + '%';
+  document.getElementById('cv-tick-range').textContent = 'Tracked: ' + mm.label;
+
+  const circumference = 314.16;
+  document.getElementById('cv-pulse-ring-fg').style.strokeDashoffset = (circumference * (1 - mm.rate / 100)).toFixed(1);
+  document.getElementById('cv-pulse-pct').textContent = Math.round(mm.rate) + '%';
+  document.getElementById('cv-pulse-total').textContent = mm.totalCalls.toLocaleString();
+  document.getElementById('cv-pulse-green').textContent = mm.green.toLocaleString();
+
+  let topName = null, topRate = -1;
+  cvModel.repNames.forEach(name => {
+    const rr = mm.reps[name];
+    if (rr && rr.rate > topRate) { topRate = rr.rate; topName = name; }
+  });
+
+  cvModel.repNames.forEach(name => {
+    const rr = mm.reps[name];
+    const totalEl = document.getElementById('cv-total-' + name);
+    const ribbonEl = document.getElementById('cv-ribbon-' + name);
+    if (!rr) {
+      totalEl.textContent = '0';
+      document.getElementById('cv-green-' + name).textContent = '0';
+      document.getElementById('cv-rate-' + name).textContent = '–';
+      document.getElementById('cv-bars-' + name).innerHTML = '';
+      document.getElementById('cv-vsavg-' + name).textContent = '';
+      ribbonEl.style.display = 'none';
+      return;
+    }
+    const bars = Math.max(1, Math.min(5, Math.round(rr.rate / 50 * 5)));
+    let barsHtml = '';
+    for (let i = 1; i <= 5; i++) barsHtml += `<i class="${i <= bars ? 'on' : ''}"></i>`;
+    totalEl.textContent = rr.total.toLocaleString();
+    document.getElementById('cv-green-' + name).textContent = rr.green.toLocaleString();
+    document.getElementById('cv-rate-' + name).textContent = Math.round(rr.rate) + '%';
+    document.getElementById('cv-bars-' + name).innerHTML = barsHtml;
+
+    const delta = Math.round(rr.rate - mm.rate);
+    const up = delta >= 0;
+    const vsEl = document.getElementById('cv-vsavg-' + name);
+    vsEl.className = 'cv-vs-avg ' + (up ? 'up' : 'down');
+    vsEl.textContent = `${up ? '▲' : '▼'} ${Math.abs(delta)}pt ${up ? 'above' : 'below'} team avg`;
+
+    ribbonEl.style.display = (name === topName) ? '' : 'none';
+  });
+}
+
+function renderCallsView() {
+  if (!CALLS_RECORDS.length) return;
+  cvModel = buildCallsModel(CALLS_RECORDS);
+  cvCurrentMonth = cvModel.latestKey;
+  renderCvTrend(cvModel);
+  renderCvBoard(cvModel);
+  renderCvMonthToggle(cvModel);
+  updateCvMonth(cvModel.latestKey);
+}
+
+const cvTip = document.getElementById('cv-tip');
+document.getElementById('cv-board').addEventListener('mouseover', e => {
+  const dot = e.target.closest('.cv-bar');
+  if (!dot) return;
+  const { date, calls, green, pct } = dot.dataset;
+  cvTip.innerHTML = `<b>${date}</b><br>${calls} calls · <span class="g">${green} green</span><br>${pct}% connect rate`;
+  cvTip.classList.add('show');
+});
+document.getElementById('cv-board').addEventListener('mousemove', e => {
+  const dot = e.target.closest('.cv-bar');
+  if (!dot) return;
+  cvTip.style.left = e.clientX + 'px';
+  cvTip.style.top = e.clientY + 'px';
+});
+document.getElementById('cv-board').addEventListener('mouseout', e => {
+  if (!e.target.closest('.cv-bar')) return;
+  cvTip.classList.remove('show');
+});
+
+loadCallsData();
+document.getElementById('refresh-btn').addEventListener('click', loadCallsData);
+setInterval(loadCallsData, 5 * 60 * 1000);
 
 /* =================================================================
    SHOW TREND GRAPH
